@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace ServiceBooking.BLL.Infrastructure
+﻿namespace ServiceBooking.BLL.Infrastructure
 {
     public class OperationDetails
     {
@@ -14,8 +8,11 @@ namespace ServiceBooking.BLL.Infrastructure
             Message = message;
             Property = prop;
         }
-        public bool Succedeed { get; private set; }
-        public string Message { get; private set; }
-        public string Property { get; private set; }
+
+        public bool Succedeed { get; set; }
+
+        public string Message { get; set; }
+
+        public string Property { get; set; }
     }
 }

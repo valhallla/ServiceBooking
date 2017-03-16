@@ -8,6 +8,7 @@ namespace ServiceBooking.DAL.Entities
 {
     public class Comment
     {
+        [Key]
         public int Id { get; set; }
 
         [Required]
@@ -16,6 +17,7 @@ namespace ServiceBooking.DAL.Entities
         [Required]
         public int Rating { get; set; }
 
-        //public string UserId { get; set; }
+        public int ClientId { get; set; }
+        public ClientUser ClientUser { get; set; }
     }
 }

@@ -8,10 +8,11 @@ namespace ServiceBooking.DAL.Entities
 {
     public class Order
     {
+        [Key]
         public int Id { get; set; }
 
         [Required]
-        public  string Name { get; set; }
+        public string Name { get; set; }
 
         [DataType(DataType.MultilineText)]
         public string Description { get; set; }
@@ -19,7 +20,7 @@ namespace ServiceBooking.DAL.Entities
         public int? CategoryId { get; set; }
         public Category Category { get; set; }
 
-        public  int StatusId { get; set; }
+        public int StatusId { get; set; }
         public Status Status { get; set; }
 
         public bool AdminStatus { get; set; }
@@ -34,13 +35,9 @@ namespace ServiceBooking.DAL.Entities
         [Required]
         public int Price { get; set; }
 
-        //public string UserId { get; set; }
+        public virtual int ClientUserId { get; set; }
+        public ClientUser ClientUser { get; set; }
 
-        public ICollection<Response> Responses { get; set; }
-
-        public Order()
-        {
-            Responses = new List<Response>();
-        }
+        public virtual ICollection<Response> Responses { get; set; }
     }
 }

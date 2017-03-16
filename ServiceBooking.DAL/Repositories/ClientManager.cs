@@ -6,21 +6,28 @@ namespace ServiceBooking.DAL.Repositories
 {
     public class ClientManager : IClientManager
     {
-        public ApplicationContext Database { get; set; }
+        public ApplicationContext Db { get; set; }
+
         public ClientManager(ApplicationContext db)
         {
-            Database = db;
+            Db = db;
         }
 
-        public void Create(ClientProfile item)
+        public void Create(ClientUser item)
         {
-            Database.ClientProfiles.Add(item);
-            Database.SaveChanges();
+            Db.Clients.Add(item);
+            Db.SaveChanges();
+        }
+
+        public void Delete(ClientUser item)
+        {
+            Db.Clients.Remove(item);
+            Db.SaveChanges();
         }
 
         public void Dispose()
         {
-            Database.Dispose();
+            Db.Dispose();
         }
     }
 }

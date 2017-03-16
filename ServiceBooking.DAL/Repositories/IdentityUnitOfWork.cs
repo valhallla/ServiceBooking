@@ -39,7 +39,7 @@ namespace ServiceBooking.DAL.Repositories
             get { return roleManager; }
         }
 
-        public async Task SaveAsync()
+        public async void Save()
         {
             await db.SaveChangesAsync();
         }

@@ -8,16 +8,12 @@ namespace ServiceBooking.DAL.Entities
 {
     public class Status
     {
+        [Key]
         public int Id { get; set; }
 
         [Required]
         public string Value { get; set; }
 
-        public ICollection<Order> Orders { get; set; }
-
-        public Status()
-        {
-            Orders = new List<Order>();
-        }
+        public virtual ICollection<Order> Orders { get; set; }
     }
 }

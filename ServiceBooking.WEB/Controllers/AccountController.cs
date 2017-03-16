@@ -6,6 +6,7 @@ using Microsoft.AspNet.Identity.Owin;
 using System.Threading.Tasks;
 using ServiceBooking.BLL.DTO;
 using System.Security.Claims;
+using Microsoft.AspNet.Identity;
 using ServiceBooking.BLL.Interfaces;
 using ServiceBooking.BLL.Infrastructure;
 using ServiceBooking.WEB.Models;
@@ -37,13 +38,13 @@ namespace ServiceBooking.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Login(LoginModel model)
+        public async Task<ActionResult> Login(LoginViewModel model)
         {
             await SetInitialDataAsync();
             if (ModelState.IsValid)
             {
-                UserDto userDto = new UserDto { Email = model.Email, Password = model.Password };
-                ClaimsIdentity claim = await UserService.Authenticate(userDto);
+                UserViewModel userViewModel = new UserViewModel { Email = model.Email, Password = model.Password };
+                ClaimsIdentity claim = await UserService.Authenticate(userViewModel);
                 if (claim == null)
                 {
                     ModelState.AddModelError("", "Неверный логин или пароль.");
@@ -74,32 +75,100 @@ namespace ServiceBooking.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Register(RegisterModel model)
+        public async Task<ActionResult> Register(RegisterViewModel model)
         {
             await SetInitialDataAsync();
             if (ModelState.IsValid)
             {
-                UserDto userDto = new UserDto
+                UserViewModel userViewModel = new UserViewModel
                 {
                     Email = model.Email,
                     Password = model.Password,
                     EmailConfirmed = false,
                     UserName = model.Email,
                     Name = model.Name,
+                    Surname = model.Surname,
                     IsPerformer = false,
                     Role = "user"
                 };
-                OperationDetails operationDetails = await UserService.Create(userDto);
+
+                OperationDetails operationDetails = await UserService.Create(userViewModel);
                 if (operationDetails.Succedeed)
-                    return View("~/Views/Home/Index.cshtml");
+                {
+                    //string code = await UserManager.GenerateEmailConfirmationTokenAsync(userViewModel.Id);
+                    //var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = userViewModel.Id, EmailConfirmed = userViewModel.EmailConfirmed, code = code }, protocol: Request.Url.Scheme);
+                    //await UserManager.SendEmailAsync(userViewModel.Id, "Confirm your account", "Please confirm your account by clicking <a href=\"" + callbackUrl + "\">here</a>");
+
+                    return View("DisplayEmail");
+                }
                 else
                     ModelState.AddModelError(operationDetails.Property, operationDetails.Message);
             }
             return View(model);
         }
+
+        /*
+         * [HttpGet]
+        [ValidateAntiForgeryToken]
+        public ActionResult DeleteAccount()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> DeleteAccount(DeleteAccountViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                UserViewModel userViewModel = new UserViewModel
+                {
+                    Id = User.Identity.GetUserId(),
+                    Password = model.Password,
+                    Role = "user"
+                };
+
+                OperationDetails operationDetails = await UserService.Create(userViewModel);
+                if (operationDetails.Succedeed)
+                {
+                    //string code = await UserManager.GenerateEmailConfirmationTokenAsync(userViewModel.Id);
+                    //var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = userViewModel.Id, EmailConfirmed = userViewModel.EmailConfirmed, code = code }, protocol: Request.Url.Scheme);
+                    //await UserManager.SendEmailAsync(userViewModel.Id, "Confirm your account", "Please confirm your account by clicking <a href=\"" + callbackUrl + "\">here</a>");
+
+                    return View("~/Views/Home/Index.cshtml");
+                }
+                else
+                    ModelState.AddModelError(operationDetails.Property, operationDetails.Message);
+            }
+            return View(model);
+        }
+         */
+
+        [AllowAnonymous]
+        public async Task<ActionResult> ConfirmEmail(string userId, string code)
+        {
+            if (userId == null || code == null)
+            {
+                return View("Error");
+            }
+
+            //UserViewModel user = this.UserManager.FindById(userId);
+            //var result = await UserManager.ConfirmEmailAsync(userId, code);
+            //if (result.Succeeded)
+            //{
+            //    user.EmailConfirmed = true;
+            //    return View("ConfirmEmail");
+            //}
+            //else
+            {
+                return View("Error");
+            }
+            //return View(result.Succeeded ? "ConfirmEmail" : "Error");
+        }
+
         private async Task SetInitialDataAsync()
         {
-            await UserService.SetInitialData(new UserDto
+            await UserService.SetInitialData(new UserViewModel
             {
                 Email = "kruner.kruner@gmail.com",
                 UserName = "kruner.kruner@gmail.com",
@@ -109,6 +178,14 @@ namespace ServiceBooking.Controllers
                 IsPerformer = false,
                 Role = "admin",
             }, new List<string> { "user", "admin" });
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult LogOff()
+        {
+            AuthenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
+            return RedirectToAction("Index", "Home");
         }
     }
 }

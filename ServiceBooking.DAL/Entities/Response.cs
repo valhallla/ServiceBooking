@@ -8,6 +8,7 @@ namespace ServiceBooking.DAL.Entities
 {
     public class Response
     {
+        [Key]
         public int Id { get; set; }
 
         [Required]
@@ -15,5 +16,8 @@ namespace ServiceBooking.DAL.Entities
 
         public int? OrderId { get; set; }
         public Order Order { get; set; }
+
+        public int ClientId { get; set; }
+        public ClientUser ClientUser { get; set; }
     }
 }

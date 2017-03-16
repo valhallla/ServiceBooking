@@ -1,4 +1,6 @@
-﻿using ServiceBooking.BLL.Interfaces;
+﻿using Microsoft.AspNet.Identity.EntityFramework;
+using ServiceBooking.BLL.Interfaces;
+using ServiceBooking.DAL.Entities;
 using ServiceBooking.DAL.Repositories;
 
 namespace ServiceBooking.BLL.Services
@@ -7,7 +9,7 @@ namespace ServiceBooking.BLL.Services
     {
         public IUserService CreateUserService(string connection)
         {
-            return new UserService(new IdentityUnitOfWork(connection));
+            return new UserService(/*new UserStore<ApplicationUser>(),*/ new IdentityUnitOfWork(connection));
         }
     }
 }

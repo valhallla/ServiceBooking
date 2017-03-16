@@ -5,6 +5,7 @@ namespace ServiceBooking.DAL.Interfaces
 {
     public interface IClientManager : IDisposable
     {
-        void Create(ClientProfile item);
+        void Create(ClientUser item);
+        void Delete(ClientUser item);
     }
 }
