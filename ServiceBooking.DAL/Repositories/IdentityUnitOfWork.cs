@@ -3,45 +3,37 @@ using ServiceBooking.DAL.Entities;
 using ServiceBooking.DAL.Interfaces;
 using Microsoft.AspNet.Identity.EntityFramework;
 using System;
-using System.Threading.Tasks;
 using ServiceBooking.DAL.Identity;
+using Ninject;
 
 namespace ServiceBooking.DAL.Repositories
 {
     public class IdentityUnitOfWork : IUnitOfWork
     {
-        private ApplicationContext db;
+        private readonly ApplicationContext _db;
 
-        private ApplicationUserManager userManager;
-        private ApplicationRoleManager roleManager;
-        private IClientManager clientManager;
+        private readonly ApplicationUserManager _userManager;
+        private readonly ApplicationRoleManager _roleManager;
+        private readonly ClientManager _clientManager;
 
+        [Inject]
         public IdentityUnitOfWork(string connectionString)
         {
-            db = new ApplicationContext(connectionString);
-            userManager = new ApplicationUserManager(new UserStore<ApplicationUser>(db));
-            roleManager = new ApplicationRoleManager(new RoleStore<ApplicationRole>(db));
-            clientManager = new ClientManager(db);
+            _db = new ApplicationContext(connectionString);
+            _userManager = new ApplicationUserManager(new UserStore<ApplicationUser>(_db));
+            _roleManager = new ApplicationRoleManager(new RoleStore<ApplicationRole>(_db));
+            _clientManager = new ClientManager(_db);
         }
 
-        public ApplicationUserManager UserManager
-        {
-            get { return userManager; }
-        }
+        public ApplicationUserManager UserManager => _userManager;
 
-        public IClientManager ClientManager
-        {
-            get { return clientManager; }
-        }
+        public ClientManager ClientManager => _clientManager;
 
-        public ApplicationRoleManager RoleManager
-        {
-            get { return roleManager; }
-        }
+        public ApplicationRoleManager RoleManager => _roleManager;
 
         public async void Save()
         {
-            await db.SaveChangesAsync();
+            await _db.SaveChangesAsync();
         }
 
         public void Dispose()
@@ -49,19 +41,20 @@ namespace ServiceBooking.DAL.Repositories
             Dispose(true);
             GC.SuppressFinalize(this);
         }
-        private bool disposed = false;
+
+        private bool _disposed;
 
         public virtual void Dispose(bool disposing)
         {
-            if (!this.disposed)
+            if (!_disposed)
             {
                 if (disposing)
                 {
-                    userManager.Dispose();
-                    roleManager.Dispose();
-                    clientManager.Dispose();
+                    _userManager.Dispose();
+                    _roleManager.Dispose();
+                    _clientManager.Dispose();
                 }
-                this.disposed = true;
+                _disposed = true;
             }
         }
     }

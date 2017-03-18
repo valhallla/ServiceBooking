@@ -9,8 +9,8 @@ namespace ServiceBooking.BLL.Interfaces
 {
     public interface IUserService : IDisposable
     {
-        Task<OperationDetails> Create(UserViewModel userDto);
-        Task<ClaimsIdentity> Authenticate(UserViewModel userDto);
-        Task SetInitialData(UserViewModel adminDto, List<string> roles);
+        Task<OperationDetails> Create(ClientViewModel userDto);
+        Task<ClaimsIdentity> Authenticate(ClientViewModel userDto);
+        Task SetInitialData(ClientViewModel adminDto, List<string> roles);
     }
 }

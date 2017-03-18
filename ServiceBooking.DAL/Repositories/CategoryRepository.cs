@@ -12,43 +12,43 @@ namespace ServiceBooking.DAL.Repositories
 {
     public class CategoryRepository : IRepository<Category>
     {
-        private ApplicationContext db;
+        private readonly ApplicationContext _db;
 
         public CategoryRepository(ApplicationContext context)
         {
-            this.db = context;
+            this._db = context;
         }
 
         public IEnumerable<Category> GetAll()
         {
-            return db.Categories;
+            return _db.Categories;
         }
 
         public Category Get(int id)
         {
-            return db.Categories.Find(id);
+            return _db.Categories.Find(id);
         }
 
         public void Create(Category book)
         {
-            db.Categories.Add(book);
+            _db.Categories.Add(book);
         }
 
         public void Update(Category book)
         {
-            db.Entry(book).State = EntityState.Modified;
+            _db.Entry(book).State = EntityState.Modified;
         }
 
         public IEnumerable<Category> Find(Func<Category, bool> predicate)
         {
-            return db.Categories.Where(predicate).ToList();
+            return _db.Categories.Where(predicate).ToList();
         }
 
         public void Delete(int id)
         {
-            Category book = db.Categories.Find(id);
+            Category book = _db.Categories.Find(id);
             if (book != null)
-                db.Categories.Remove(book);
+                _db.Categories.Remove(book);
         }
     }
 }

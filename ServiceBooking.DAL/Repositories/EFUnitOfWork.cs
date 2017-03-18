@@ -95,7 +95,7 @@ namespace ServiceBooking.DAL.Repositories
         }
 
         public ApplicationUserManager UserManager { get; }
-        public IClientManager ClientManager { get; }
+        public ClientManager ClientManager { get; }
         public ApplicationRoleManager RoleManager { get; }
     }
 }

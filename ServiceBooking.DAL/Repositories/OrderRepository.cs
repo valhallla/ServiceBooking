@@ -10,7 +10,7 @@ using ServiceBooking.DAL.Interfaces;
 
 namespace ServiceBooking.DAL.Repositories
 {
-    class OrderRepository : IRepository<Order>
+    public class OrderRepository : IRepository<Order>
     {
         private ApplicationContext db;
 

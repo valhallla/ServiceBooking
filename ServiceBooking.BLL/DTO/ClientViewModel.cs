@@ -7,7 +7,7 @@ using ServiceBooking.DAL.Entities;
 
 namespace ServiceBooking.BLL.DTO
 {
-    public class UserViewModel
+    public class ClientViewModel
     {
         public string Id { get; set; }
 
@@ -28,7 +28,6 @@ namespace ServiceBooking.BLL.DTO
         public bool IsPerformer { get; set; }
 
         public int? CategoryId { get; set; }
-        public Category Category { get; set; }
 
         public string Info { get; set; }
 
@@ -40,7 +39,7 @@ namespace ServiceBooking.BLL.DTO
 
         public string Role { get; set; }
 
-        public UserViewModel()
+        public ClientViewModel()
         {
             Orders = new List<Order>();
             Comments = new List<Comment>();

@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServiceBooking.BLL", "Servi
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServiceBooking.DAL", "ServiceBooking.DAL\ServiceBooking.DAL.csproj", "{95702D8D-7747-44E1-BF24-AB7A5D383731}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServiceBooking.Util", "ServiceBooking.Util\ServiceBooking.Util.csproj", "{10102C2F-116E-4FB9-9F75-BE26F2A279AA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{95702D8D-7747-44E1-BF24-AB7A5D383731}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{95702D8D-7747-44E1-BF24-AB7A5D383731}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{95702D8D-7747-44E1-BF24-AB7A5D383731}.Release|Any CPU.Build.0 = Release|Any CPU
+		{10102C2F-116E-4FB9-9F75-BE26F2A279AA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{10102C2F-116E-4FB9-9F75-BE26F2A279AA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{10102C2F-116E-4FB9-9F75-BE26F2A279AA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{10102C2F-116E-4FB9-9F75-BE26F2A279AA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

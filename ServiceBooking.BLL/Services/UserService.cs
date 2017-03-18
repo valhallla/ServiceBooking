@@ -1,14 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using ServiceBooking.BLL.DTO;
 using ServiceBooking.BLL.Infrastructure;
 using ServiceBooking.DAL.Entities;
 using Microsoft.AspNet.Identity;
 using System.Security.Claims;
-using Microsoft.AspNet.Identity.EntityFramework;
+using Ninject;
 using ServiceBooking.BLL.Interfaces;
 using ServiceBooking.DAL.Interfaces;
 
@@ -24,13 +22,14 @@ namespace ServiceBooking.BLL.Services
         //    Database = uow;
         //}
 
+        [Inject]
         public UserService(IUnitOfWork uow)
         {
             Database = uow;
         }
 
 
-        public async Task<OperationDetails> Create(UserViewModel userDto)
+        public async Task<OperationDetails> Create(ClientViewModel userDto)
         {
             ApplicationUser user = await Database.UserManager.FindByEmailAsync(userDto.Email);
             if (user == null)
@@ -92,7 +91,7 @@ namespace ServiceBooking.BLL.Services
         }
          */
 
-        public async Task<ClaimsIdentity> Authenticate(UserViewModel userDto)
+        public async Task<ClaimsIdentity> Authenticate(ClientViewModel userDto)
         {
             ClaimsIdentity claim = null;
             // находим пользователя
@@ -105,7 +104,7 @@ namespace ServiceBooking.BLL.Services
         }
 
         // начальная инициализация бд
-        public async Task SetInitialData(UserViewModel adminViewModel, List<string> roles)
+        public async Task SetInitialData(ClientViewModel adminViewModel, List<string> roles)
         {
             foreach (string roleName in roles)
             {

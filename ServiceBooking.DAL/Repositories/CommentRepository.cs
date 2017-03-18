@@ -10,7 +10,7 @@ using ServiceBooking.DAL.Interfaces;
 
 namespace ServiceBooking.DAL.Repositories
 {
-    class CommentRepository : IRepository<Comment>
+    public class CommentRepository : IRepository<Comment>
     {
         private ApplicationContext db;
 

@@ -2,25 +2,40 @@
 using System.Web;
 using System.Web.Mvc;
 using Microsoft.Owin.Security;
-using Microsoft.AspNet.Identity.Owin;
 using System.Threading.Tasks;
-using ServiceBooking.BLL.DTO;
 using System.Security.Claims;
 using Microsoft.AspNet.Identity;
-using ServiceBooking.BLL.Interfaces;
+using Microsoft.AspNet.Identity.Owin;
+using ServiceBooking.BLL.DTO;
 using ServiceBooking.BLL.Infrastructure;
+using ServiceBooking.BLL.Interfaces;
 using ServiceBooking.WEB.Models;
+using ServiceBooking.Util;
+using Microsoft.Owin;
+using Microsoft.Owin.Host.SystemWeb;
 
-namespace ServiceBooking.Controllers
+namespace ServiceBooking.WEB.Controllers
 {
     public class AccountController : Controller
     {
-        private IUserService UserService
+        private readonly IUserService _userService;
+
+        public AccountController(IUserService service)
         {
-            get
-            {
-                return HttpContext.GetOwinContext().GetUserManager<IUserService>();
-            }
+            _userService = service;
+        }
+
+        //private IUserService UserService
+        //{
+        //    get
+        //    {
+        //        return HttpContext.GetOwinContext().GetUserManager<IUserService>();
+        //    }
+        //}
+
+        public AccountController(NinjectDependencyResolver resolver, IUserService userService)
+        {
+            _userService = userService;
         }
 
         private IAuthenticationManager AuthenticationManager
@@ -30,7 +45,6 @@ namespace ServiceBooking.Controllers
                 return HttpContext.GetOwinContext().Authentication;
             }
         }
-
         public ActionResult Login()
         {
             return View();
@@ -43,11 +57,11 @@ namespace ServiceBooking.Controllers
             await SetInitialDataAsync();
             if (ModelState.IsValid)
             {
-                UserViewModel userViewModel = new UserViewModel { Email = model.Email, Password = model.Password };
-                ClaimsIdentity claim = await UserService.Authenticate(userViewModel);
+                ClientViewModel userViewModel = new ClientViewModel { Email = model.Email, Password = model.Password };
+                ClaimsIdentity claim = await _userService.Authenticate(userViewModel);
                 if (claim == null)
                 {
-                    ModelState.AddModelError("", "Неверный логин или пароль.");
+                    ModelState.AddModelError("", "Wrong login or password");
                 }
                 else
                 {
@@ -80,7 +94,7 @@ namespace ServiceBooking.Controllers
             await SetInitialDataAsync();
             if (ModelState.IsValid)
             {
-                UserViewModel userViewModel = new UserViewModel
+                ClientViewModel userViewModel = new ClientViewModel
                 {
                     Email = model.Email,
                     Password = model.Password,
@@ -92,7 +106,7 @@ namespace ServiceBooking.Controllers
                     Role = "user"
                 };
 
-                OperationDetails operationDetails = await UserService.Create(userViewModel);
+                OperationDetails operationDetails = await _userService.Create(userViewModel);
                 if (operationDetails.Succedeed)
                 {
                     //string code = await UserManager.GenerateEmailConfirmationTokenAsync(userViewModel.Id);
@@ -168,7 +182,7 @@ namespace ServiceBooking.Controllers
 
         private async Task SetInitialDataAsync()
         {
-            await UserService.SetInitialData(new UserViewModel
+            await _userService.SetInitialData(new ClientViewModel
             {
                 Email = "kruner.kruner@gmail.com",
                 UserName = "kruner.kruner@gmail.com",
