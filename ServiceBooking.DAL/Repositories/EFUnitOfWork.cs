@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using ServiceBooking.DAL.EF;
 using ServiceBooking.DAL.Entities;
 using ServiceBooking.DAL.Identity;
@@ -15,6 +16,13 @@ namespace ServiceBooking.DAL.Repositories
         private CommentRepository _commentRepository;
         private StatusRepository _statusRepository;
         private CategoryRepository _categoryRepository;
+
+        public OrderRepository OrderRepository { get; set; }
+        public ResponseRepository ResponseRepository { get; set; }
+        public CommentRepository CommentRepository { get; set; }
+        public StatusRepository StatusRepository { get; set; }
+        public CategoryRepository CategoryRepository { get; set; }
+
 
         public EFUnitOfWork(string connectionString)
         {
@@ -94,8 +102,9 @@ namespace ServiceBooking.DAL.Repositories
             GC.SuppressFinalize(this);
         }
 
-        public ApplicationUserManager UserManager { get; }
-        public ClientManager ClientManager { get; }
-        public ApplicationRoleManager RoleManager { get; }
+        public Task SaveAsync()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

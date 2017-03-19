@@ -4,6 +4,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using ServiceBooking.BLL.DTO;
 using ServiceBooking.BLL.Infrastructure;
+using ServiceBooking.BLL;
 
 namespace ServiceBooking.BLL.Interfaces
 {

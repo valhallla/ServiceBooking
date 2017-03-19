@@ -3,18 +3,20 @@ using System.Linq;
 using System.Threading.Tasks;
 using ServiceBooking.BLL.DTO;
 using ServiceBooking.BLL.Infrastructure;
-using ServiceBooking.DAL.Entities;
 using Microsoft.AspNet.Identity;
 using System.Security.Claims;
 using Ninject;
 using ServiceBooking.BLL.Interfaces;
 using ServiceBooking.DAL.Interfaces;
+using ServiceBooking.DAL.Entities;
+using ServiceBooking.DAL.Repositories;
 
 namespace ServiceBooking.BLL.Services
 {
     public class UserService : /*UserManager<ApplicationUser>, */IUserService
     {
-        IUnitOfWork Database { get; }
+        //IUnitOfWork
+        IdentityUnitOfWork Database { get; }
 
         //public UserService(IUserStore<ApplicationUser> store, IUnitOfWork uow)
         //    : base(store)
@@ -23,7 +25,7 @@ namespace ServiceBooking.BLL.Services
         //}
 
         [Inject]
-        public UserService(IUnitOfWork uow)
+        public UserService(IdentityUnitOfWork uow)
         {
             Database = uow;
         }
@@ -53,8 +55,8 @@ namespace ServiceBooking.BLL.Services
                     Info = userDto.Info,
                     Rating = userDto.Rating,
                     AdminStatus = userDto.AdminStatus,
-                    Orders = userDto.Orders,
-                    Comments = userDto.Comments
+                    //Orders = userDto.Orders,
+                    //Comments = userDto.Comments
                 };
                 Database.ClientManager.Create(clientProfile);
                 Database.Save();//await Database.SaveAsync()

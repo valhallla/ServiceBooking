@@ -3,6 +3,7 @@ using ServiceBooking.DAL.Entities;
 using ServiceBooking.DAL.Interfaces;
 using Microsoft.AspNet.Identity.EntityFramework;
 using System;
+using System.Threading.Tasks;
 using ServiceBooking.DAL.Identity;
 using Ninject;
 
@@ -16,6 +17,10 @@ namespace ServiceBooking.DAL.Repositories
         private readonly ApplicationRoleManager _roleManager;
         private readonly ClientManager _clientManager;
 
+        public ApplicationUserManager UserManager => _userManager;
+        public ClientManager ClientManager => _clientManager;
+        public ApplicationRoleManager RoleManager => _roleManager;
+
         [Inject]
         public IdentityUnitOfWork(string connectionString)
         {
@@ -24,12 +29,6 @@ namespace ServiceBooking.DAL.Repositories
             _roleManager = new ApplicationRoleManager(new RoleStore<ApplicationRole>(_db));
             _clientManager = new ClientManager(_db);
         }
-
-        public ApplicationUserManager UserManager => _userManager;
-
-        public ClientManager ClientManager => _clientManager;
-
-        public ApplicationRoleManager RoleManager => _roleManager;
 
         public async void Save()
         {
@@ -56,6 +55,11 @@ namespace ServiceBooking.DAL.Repositories
                 }
                 _disposed = true;
             }
+        }
+
+        public Task SaveAsync()
+        {
+            throw new NotImplementedException();
         }
     }
 }

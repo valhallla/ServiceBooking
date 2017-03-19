@@ -5,7 +5,6 @@ using Microsoft.Owin.Security;
 using System.Threading.Tasks;
 using System.Security.Claims;
 using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.Owin;
 using ServiceBooking.BLL.DTO;
 using ServiceBooking.BLL.Infrastructure;
 using ServiceBooking.BLL.Interfaces;
@@ -18,20 +17,14 @@ namespace ServiceBooking.WEB.Controllers
 {
     public class AccountController : Controller
     {
-        private readonly IUserService _userService;
+        private static IUserService _userService;
 
-        public AccountController(IUserService service)
+        public AccountController() : this(_userService) { }
+
+        public AccountController(IUserService service) 
         {
             _userService = service;
         }
-
-        //private IUserService UserService
-        //{
-        //    get
-        //    {
-        //        return HttpContext.GetOwinContext().GetUserManager<IUserService>();
-        //    }
-        //}
 
         public AccountController(NinjectDependencyResolver resolver, IUserService userService)
         {

@@ -94,9 +94,17 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\ServiceBooking.BLL.Interfaces\ServiceBooking.BLL.Interfaces.csproj">
+      <Project>{f2625656-4e24-4a4c-b5d5-5cbf2deef162}</Project>
+      <Name>ServiceBooking.BLL.Interfaces</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ServiceBooking.BLL\ServiceBooking.BLL.csproj">
       <Project>{89d97cbd-c251-4a87-b3b0-5ee6580a252a}</Project>
       <Name>ServiceBooking.BLL</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ServiceBooking.DAL.Interfaces\ServiceBooking.DAL.Interfaces.csproj">
+      <Project>{5cb63b6f-435c-4067-89f9-05271411079e}</Project>
+      <Name>ServiceBooking.DAL.Interfaces</Name>
     </ProjectReference>
     <ProjectReference Include="..\ServiceBooking.DAL\ServiceBooking.DAL.csproj">
       <Project>{95702d8d-7747-44e1-bf24-ab7a5d383731}</Project>

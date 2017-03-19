@@ -2,10 +2,6 @@
 using Microsoft.Owin;
 using Microsoft.Owin.Security.Cookies;
 using Owin;
-using ServiceBooking.BLL.Interfaces;
-using ServiceBooking.BLL.Services;
-using ServiceBooking.Util;
-using ServiceBooking.Util.App_Start;
 
 [assembly: OwinStartup(typeof(ServiceBooking.WEB.Startup))]
 

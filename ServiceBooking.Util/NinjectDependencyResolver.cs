@@ -32,7 +32,7 @@ namespace ServiceBooking.Util
         {
             var connectionName = "DefaultConnection";
 
-            _kernel.Bind<IUnitOfWork>().ToConstructor(_ => new IdentityUnitOfWork(connectionName));
+            _kernel.Bind<IdentityUnitOfWork>().ToConstructor(_ => new IdentityUnitOfWork(connectionName));
             _kernel.Bind<IUserService>().To<UserService>();
             //_kernel.Bind<UserService>().ToConstructor(_ => new UserService(new IdentityUnitOfWork(connectionName)));
         }

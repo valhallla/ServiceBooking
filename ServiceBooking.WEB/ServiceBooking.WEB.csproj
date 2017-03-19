@@ -280,9 +280,13 @@
     <Content Include="Scripts\jquery-1.10.2.min.map" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\ServiceBooking.BLL\ServiceBooking.BLL.csproj">
-      <Project>{89d97cbd-c251-4a87-b3b0-5ee6580a252a}</Project>
-      <Name>ServiceBooking.BLL</Name>
+    <ProjectReference Include="..\ServiceBooking.BLL.Interfaces\ServiceBooking.BLL.Interfaces.csproj">
+      <Project>{f2625656-4e24-4a4c-b5d5-5cbf2deef162}</Project>
+      <Name>ServiceBooking.BLL.Interfaces</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ServiceBooking.DAL.UnitOfWork\ServiceBooking.BLL.Data.csproj">
+      <Project>{a531aad7-a50a-47c9-9b86-5ada19068280}</Project>
+      <Name>ServiceBooking.BLL.Data</Name>
     </ProjectReference>
     <ProjectReference Include="..\ServiceBooking.Util\ServiceBooking.Util.csproj">
       <Project>{a70e541d-f249-4821-8286-4d1020c1ad87}</Project>
