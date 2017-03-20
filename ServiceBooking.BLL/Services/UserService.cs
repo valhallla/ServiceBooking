@@ -5,6 +5,7 @@ using ServiceBooking.BLL.DTO;
 using ServiceBooking.BLL.Infrastructure;
 using Microsoft.AspNet.Identity;
 using System.Security.Claims;
+using Microsoft.AspNet.Identity.EntityFramework;
 using Ninject;
 using ServiceBooking.BLL.Interfaces;
 using ServiceBooking.DAL.Interfaces;
@@ -36,20 +37,28 @@ namespace ServiceBooking.BLL.Services
             ApplicationUser user = await Database.UserManager.FindByEmailAsync(userDto.Email);
             if (user == null)
             {
-                user = new ApplicationUser { Email = userDto.Email, UserName = userDto.Email };
+                user = new ApplicationUser
+                {
+                    Email = userDto.Email,
+                    UserName = userDto.Email,
+                    Name = userDto.Name,
+                    Surname = userDto.Surname
+                };
                 var result = await Database.UserManager.CreateAsync(user, userDto.Password);
                 if (result.Errors.Any())
                     return new OperationDetails(false, result.Errors.FirstOrDefault(), "");
                 // добавляем роль
                 await Database.UserManager.AddToRoleAsync(user.Id, userDto.Role);
                 // создаем профиль клиента
-                ClientUser clientProfile = new ClientUser
+
+                ClientUser clientUser = new ClientUser
                 {
-                    ApplicationUser = new ApplicationUser()
-                    {
-                        Name = userDto.Name,
-                        Surname = userDto.Surname,
-                    },
+                    ApplicationUserId = user.Id,
+                    //ApplicationUser = new ApplicationUser()
+                    //{
+                    //    Name = userDto.Name,
+                    //    Surname = userDto.Surname,
+                    //},
                     IsPerformer = userDto.IsPerformer,
                     CategoryId = userDto.CategoryId,
                     Info = userDto.Info,
@@ -58,8 +67,10 @@ namespace ServiceBooking.BLL.Services
                     //Orders = userDto.Orders,
                     //Comments = userDto.Comments
                 };
-                Database.ClientManager.Create(clientProfile);
-                Database.Save();//await Database.SaveAsync()
+
+                Database.ClientManager.Create(clientUser);
+                //Database.Save(); 
+                //await Database.SaveAsync();
                 return new OperationDetails(true, "Registration succeeded", "");
             }
 

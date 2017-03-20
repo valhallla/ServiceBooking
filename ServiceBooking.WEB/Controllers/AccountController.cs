@@ -181,10 +181,11 @@ namespace ServiceBooking.WEB.Controllers
                 UserName = "kruner.kruner@gmail.com",
                 Password = "Kruner_13",
                 EmailConfirmed = true,
-                Name = "Veronika Navros",
+                Name = "Veronika",
+                Surname = "Navros",
                 IsPerformer = false,
                 Role = "admin",
-            }, new List<string> { "user", "admin" });
+            }, new List<string> { "admin", "user" });
         }
 
         [HttpPost]

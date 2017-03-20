@@ -10,6 +10,9 @@ namespace ServiceBooking.DAL.Entities
 {
     public class ClientUser : ApplicationUser
     {
+        [Key]
+        [ForeignKey("ApplicationUser")]
+        public string ApplicationUserId { get; set; }
         public virtual ApplicationUser ApplicationUser { get; set; }
 
         public virtual ICollection<Order> Orders { get; set; }
@@ -21,7 +24,7 @@ namespace ServiceBooking.DAL.Entities
 
         public string Info { get; set; }
 
-        public int Rating { get; set; }
+        public int? Rating { get; set; }
 
         public string AdminStatus { get; set; }
 
