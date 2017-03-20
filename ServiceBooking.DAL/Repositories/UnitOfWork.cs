@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Microsoft.AspNet.Identity.EntityFramework;
+using Ninject;
 using ServiceBooking.DAL.EF;
 using ServiceBooking.DAL.Entities;
 using ServiceBooking.DAL.Identity;
@@ -7,7 +9,7 @@ using ServiceBooking.DAL.Interfaces;
 
 namespace ServiceBooking.DAL.Repositories
 {
-    public class EFUnitOfWork : IUnitOfWork
+    public class UnitOfWork : IUnitOfWork
     {
         private bool _disposed;
         private readonly ApplicationContext _db;
@@ -23,10 +25,21 @@ namespace ServiceBooking.DAL.Repositories
         public StatusRepository StatusRepository { get; set; }
         public CategoryRepository CategoryRepository { get; set; }
 
+        private readonly ApplicationUserManager _userManager;
+        private readonly ApplicationRoleManager _roleManager;
+        private readonly ClientRepository _clientManager;
 
-        public EFUnitOfWork(string connectionString)
+        public ApplicationUserManager UserManager => _userManager;
+        public ClientRepository ClientManager => _clientManager;
+        public ApplicationRoleManager RoleManager => _roleManager;
+
+        [Inject]
+        public UnitOfWork(string connectionString)
         {
             _db = new ApplicationContext(connectionString);
+            _userManager = new ApplicationUserManager(new UserStore<ApplicationUser>(_db));
+            _roleManager = new ApplicationRoleManager(new RoleStore<ApplicationRole>(_db));
+            _clientManager = new ClientRepository(_db);
         }
 
         public IRepository<Category> Categories
@@ -79,9 +92,9 @@ namespace ServiceBooking.DAL.Repositories
             }
         }
 
-        public void Save()
+        public async void Save()
         {
-            _db.SaveChanges();
+            await _db.SaveChangesAsync();
         }
 
         public virtual void Dispose(bool disposing)
@@ -100,11 +113,6 @@ namespace ServiceBooking.DAL.Repositories
         {
             Dispose(true);
             GC.SuppressFinalize(this);
-        }
-
-        public Task SaveAsync()
-        {
-            throw new NotImplementedException();
         }
     }
 }

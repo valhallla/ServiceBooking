@@ -15,7 +15,7 @@ namespace ServiceBooking.BLL.Services
     public class UserService : /*UserManager<ApplicationUser>, */IUserService
     {
         //IUnitOfWork
-        IdentityUnitOfWork Database { get; }
+        UnitOfWork Database { get; }
 
         //public UserService(IUserStore<ApplicationUser> store, IUnitOfWork uow)
         //    : base(store)
@@ -24,7 +24,7 @@ namespace ServiceBooking.BLL.Services
         //}
 
         [Inject]
-        public UserService(IdentityUnitOfWork uow)
+        public UserService(UnitOfWork uow)
         {
             Database = uow;
         }

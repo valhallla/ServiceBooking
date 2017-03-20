@@ -8,11 +8,11 @@ using ServiceBooking.DAL.Interfaces;
 
 namespace ServiceBooking.DAL.Repositories
 {
-    public class ClientManager : IRepository<ClientUser>
+    public class ClientRepository : IRepository<ClientUser>
     {
         public ApplicationContext Db { get; set; }
 
-        public ClientManager(ApplicationContext db)
+        public ClientRepository(ApplicationContext db)
         {
             Db = db;
         }

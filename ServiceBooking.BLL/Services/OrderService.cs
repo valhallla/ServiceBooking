@@ -13,9 +13,9 @@
 //{
 //    class OrderService : IOrderService
 //    {
-//        IEntityUnitOfWork Database { get; set; }
+//        IUnitOfWork Database { get; set; }
 
-//        public OrderService(IEntityUnitOfWork uow)
+//        public OrderService(IUnitOfWork uow)
 //        {
 //            Database = uow;
 //        }
@@ -64,28 +64,28 @@
 //        }
 //    }
 
-//        public CategoryViewModel Category(int? id)
-//        {
-//            throw new NotImplementedException();
-//        }
-
-//        public StatusViewModel Status(int? id)
-//        {
-//            throw new NotImplementedException();
-//        }
-
-//        public ClientViewModel Client(int? id)
-//        {
-//            throw new NotImplementedException();
-//        }
-
-//        public IEnumerable<ResponseViewModel> GetResponses()
-//        {
-//            throw new NotImplementedException();
-//        }
-
-//        public void Dispose()
-//        {
-//            throw new NotImplementedException();
-//        }
+//    public CategoryViewModel Category(int? id)
+//    {
+//        throw new NotImplementedException();
 //    }
+
+//    public StatusViewModel Status(int? id)
+//    {
+//        throw new NotImplementedException();
+//    }
+
+//    public ClientViewModel Client(int? id)
+//    {
+//        throw new NotImplementedException();
+//    }
+
+//    public IEnumerable<ResponseViewModel> GetResponses()
+//    {
+//        throw new NotImplementedException();
+//    }
+
+//    public void Dispose()
+//    {
+//        throw new NotImplementedException();
+//    }
+//}

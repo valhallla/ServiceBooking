@@ -19,6 +19,7 @@ namespace ServiceBooking.WEB.Controllers
     {
         private static IUserService _userService;
 
+
         public AccountController() : this(_userService) { }
 
         public AccountController(IUserService service) 
@@ -159,7 +160,7 @@ namespace ServiceBooking.WEB.Controllers
                 return View("Error");
             }
 
-            //UserViewModel user = this.UserManager.FindById(userId);
+            //ClientViewModel user = _userService.Find(userId);
             //var result = await UserManager.ConfirmEmailAsync(userId, code);
             //if (result.Succeeded)
             //{

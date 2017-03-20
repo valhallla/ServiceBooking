@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Ninject;
 using System.Web.Mvc;
+using Ninject.Web.Common;
 using ServiceBooking.BLL.Interfaces;
 using ServiceBooking.BLL.Services;
 using ServiceBooking.DAL.Interfaces;
@@ -18,8 +19,6 @@ namespace ServiceBooking.Util
             AddBindings();
         }
 
-        //public static string ConnectionName { get; set; }
-
         public object GetService(Type serviceType)
         {
             return _kernel.TryGet(serviceType);
@@ -32,7 +31,7 @@ namespace ServiceBooking.Util
         {
             var connectionName = "DefaultConnection";
 
-            _kernel.Bind<IdentityUnitOfWork>().ToConstructor(_ => new IdentityUnitOfWork(connectionName));
+            _kernel.Bind<UnitOfWork>().ToConstructor(_ => new UnitOfWork(connectionName)).InRequestScope();
             _kernel.Bind<IUserService>().To<UserService>();
             //_kernel.Bind<UserService>().ToConstructor(_ => new UserService(new IdentityUnitOfWork(connectionName)));
         }
