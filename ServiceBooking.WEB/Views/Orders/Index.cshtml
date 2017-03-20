@@ -1,0 +1,101 @@
+﻿@using Microsoft.AspNet.Identity
+@using ServiceBooking.Models
+@model IEnumerable<Order>
+
+@{
+    string newOrders = " ";
+    if (Request.IsAuthenticated && User.IsInRole("admin"))
+    {
+        IEnumerable<Order> orders = (new ApplicationDbContext()).Orders;
+        orders = orders.Where(model => !model.AdminStatus);
+        newOrders += " + " + orders.Count();
+    }
+
+    ViewBag.Title = "Orders";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Orders @Html.ActionLink(@newOrders, "Index", new { newApplications = true })</h2>
+
+@if (Request.IsAuthenticated && !User.IsInRole("admin"))
+{
+    <h4>
+
+        @Html.ActionLink("Place an order", "Create") |
+        @if (ViewBag.IsMyOrdersPage)
+        {
+            @Html.ActionLink("All orders", "Index")
+        }
+        else
+        {
+            @Html.ActionLink("My orders", "Index", new {myOrders = true})
+        }
+    </h4>
+}
+else if (Request.IsAuthenticated && User.IsInRole("admin") && ViewBag.IsNewOrdersPage)
+{
+    <h4>
+        @Html.ActionLink("Back to confirmed orders", "Index")
+    </h4>
+}
+
+@if (ViewBag.Message != null)
+{
+    <hr/>
+    <h3>@ViewBag.Message</h3>
+}
+else
+{
+    foreach (var item in Model)
+     {
+         <hr/>
+         <div class="row">
+             <div class="col-sm-8">
+                 <b style="font-size: 20pt">
+                     @Html.ActionLink(item.Name, "Details", new {id = item.Id})
+                 </b> &emsp;
+                 Published @Html.DisplayFor(modelItem => item.UploadDate)
+                 <br/>
+                 <h4>
+                     @Html.DisplayFor(modelItem => item.Description)
+                 </h4>
+
+                 <h5>
+                     To finish by @Html.DisplayFor(modelItem => item.CompletionDate) &emsp;
+                     <b>@Html.DisplayFor(modelItem => item.Category.Name)</b>
+                 </h5>
+                 @if (Request.IsAuthenticated && !User.IsInRole("admin") && item.UserId == User.Identity.GetUserId())
+                 {
+                    <h5>
+                        @Html.ActionLink("Edit", "Edit", new {id = item.Id}) |
+                        @Html.ActionLink("Delete", "Delete", new {id = item.Id})
+                    </h5>
+                 }
+             </div>
+             <div class="col-sm-4">
+                 <h4>
+                     @Html.DisplayFor(modelItem => item.Price) $
+                 </h4>
+                 <h4>
+                     @Html.DisplayFor(modelItem => item.Status.Value)
+                 </h4>
+                 @if (Request.IsAuthenticated && User.IsInRole("admin"))
+                 {
+                     if(ViewBag.IsNewOrdersPage)
+                     {
+                         <p>
+                             @Html.ActionLink("Confirm", "Confirm", "Orders", null, new {@class = "btn btn-primary btn-lg"})
+                             @Html.ActionLink("Reject", "Index", "Orders", null, new {@class = "btn btn-primary btn-lg"})
+                         </p>
+                     }
+                     else
+                     {
+                         <p>
+                             @Html.ActionLink("Delete", "Delete", "Orders", null, new { @class = "btn btn-primary btn-lg" })
+                         </p>
+                     }
+                 }
+             </div>
+         </div>
+     }
+}

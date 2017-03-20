@@ -15,7 +15,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServiceBooking.DAL.Interfac
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServiceBooking.BLL.Interfaces", "ServiceBooking.BLL.Interfaces\ServiceBooking.BLL.Interfaces.csproj", "{F2625656-4E24-4A4C-B5D5-5CBF2DEEF162}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServiceBooking.BLL.Data", "ServiceBooking.DAL.UnitOfWork\ServiceBooking.BLL.Data.csproj", "{A531AAD7-A50A-47C9-9B86-5ADA19068280}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServiceBooking.BLL.Data", "ServiceBooking.BLL.Data\ServiceBooking.BLL.Data.csproj", "{A531AAD7-A50A-47C9-9B86-5ADA19068280}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

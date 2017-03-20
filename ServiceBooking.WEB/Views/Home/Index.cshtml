@@ -1,31 +1,77 @@
 ﻿@{
-    ViewBag.Title = "Home Page";
+    ViewBag.Title = "Home";
 }
 
 <div class="jumbotron">
-    <h1>ASP.NET</h1>
-    <p class="lead">ASP.NET is a free web framework for building great Web sites and Web applications using HTML, CSS and JavaScript.</p>
-    <p><a href="http://asp.net" class="btn btn-primary btn-lg">Learn more &raquo;</a></p>
+    <h1>Service Booking</h1>
+    <p class="lead">A convenient way to find a performer for your order.</p>
+    @if (Request.IsAuthenticated && User.IsInRole("admin"))
+    {
+        <p>
+            @Html.ActionLink("New orders", "Index", "Orders", new { newApplications = true }, new { @class = "btn btn-primary btn-lg" })
+            @Html.ActionLink("New performers", "Index", "Performers", new { newApplications = true }, new { @class = "btn btn-primary btn-lg" })
+        </p>
+    }
+    else
+    {
+        <p>
+            <a href="~/Orders/Create" class="btn btn-primary btn-lg">Place an order</a>
+            <a href="~/Home/Index" class="btn btn-primary btn-lg">Become a performer</a>
+        </p>
+    }
 </div>
 
+<h1>How does it work?</h1>
+<h3>Simple, profitable, reliable. Just 3 steps - and you will find the perfect performer for your order.</h3>
 <div class="row">
-    <div class="col-md-4">
-        <h2>Getting started</h2>
-        <p>
-            ASP.NET MVC gives you a powerful, patterns-based way to build dynamic websites that
-            enables a clean separation of concerns and gives you full control over markup
-            for enjoyable, agile development.
-        </p>
-        <p><a class="btn btn-default" href="http://go.microsoft.com/fwlink/?LinkId=301865">Learn more &raquo;</a></p>
+    <div class="col-md-6">
+        <h2>1. Place an order</h2>
+        <h3>
+            Describe in details your order and specify conditions - price and terms.
+        </h3>
     </div>
-    <div class="col-md-4">
-        <h2>Get more libraries</h2>
-        <p>NuGet is a free Visual Studio extension that makes it easy to add, remove, and update libraries and tools in Visual Studio projects.</p>
-        <p><a class="btn btn-default" href="http://go.microsoft.com/fwlink/?LinkId=301866">Learn more &raquo;</a></p>
+    <div class="col-md-6">
+        <img style="height: 300px; float: right; margin-left: 20px" src="@Url.Content(@"~/Content/Размещение-заказа.jpg")" alt="" />
     </div>
-    <div class="col-md-4">
-        <h2>Web Hosting</h2>
-        <p>You can easily find a web hosting company that offers the right mix of features and price for your applications.</p>
-        <p><a class="btn btn-default" href="http://go.microsoft.com/fwlink/?LinkId=301867">Learn more &raquo;</a></p>
+</div>
+<div class="row">
+    <div class="col-md-6">
+        <img style="height: 300px; float: left; margin-right: 20px" src="@Url.Content(@"~/Content/feedback.png")" alt="" />
+    </div>
+    <div class="col-md-6">
+        <h2>2. Learn the feedback</h2>
+        <h3>
+            Wait for responses from the performers and compare them.
+            All information is at hand: price, comments and rating of the performer.
+        </h3>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-6">
+        <h2>3. Choose the performer</h2>
+        <h3>
+            Choose the performer that suits you and contact him to coordinate the execution of the order.
+            After completing the order - leave a review.
+        </h3>
+    </div>
+    <div class="col-md-6">
+        <img style="height: 300px; float: right; margin-left: 20px" src="@Url.Content(@"~/Content/153.jpg")" alt="" />
+    </div>
+</div>
+<br />
+<hr />
+<br />
+<div class="row">
+    <div class="col-md-6">
+        <h1>How to become a performer</h1>
+        <h3>
+            Everything is very simple. Fill out the application
+            and wait until the moderator checks the application.
+            Now you can respond to orders!
+        </h3>
+        <p><a href="/Home/Index" class="btn btn-primary btn-lg">Become a performer</a></p>
+    </div>
+    <div class="col-md-6">
+        <img style="height: 300px; float: right; margin-left: 20px" src="@Url.Content(@"~/Content/images.jpg")" alt="" />
     </div>
 </div>

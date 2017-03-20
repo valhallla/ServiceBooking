@@ -5,10 +5,8 @@ using ServiceBooking.BLL.DTO;
 using ServiceBooking.BLL.Infrastructure;
 using Microsoft.AspNet.Identity;
 using System.Security.Claims;
-using Microsoft.AspNet.Identity.EntityFramework;
 using Ninject;
 using ServiceBooking.BLL.Interfaces;
-using ServiceBooking.DAL.Interfaces;
 using ServiceBooking.DAL.Entities;
 using ServiceBooking.DAL.Repositories;
 
