@@ -1,0 +1,72 @@
+C:\ServiceBooking — копия\ServiceBooking.Util\bin\Debug\ServiceBooking.Util.dll.config
+C:\ServiceBooking — копия\ServiceBooking.Util\bin\Debug\ServiceBooking.Util.dll
+C:\ServiceBooking — копия\ServiceBooking.Util\bin\Debug\ServiceBooking.Util.pdb
+C:\ServiceBooking — копия\ServiceBooking.Util\bin\Debug\Microsoft.AspNet.Identity.Core.dll
+C:\ServiceBooking — копия\ServiceBooking.Util\bin\Debug\Microsoft.AspNet.Identity.EntityFramework.dll
+C:\ServiceBooking — копия\ServiceBooking.Util\bin\Debug\Microsoft.Web.Infrastructure.dll
+C:\ServiceBooking — копия\ServiceBooking.Util\bin\Debug\Ninject.dll
+C:\ServiceBooking — копия\ServiceBooking.Util\bin\Debug\Ninject.Web.Common.dll
+C:\ServiceBooking — копия\ServiceBooking.Util\bin\Debug\Ninject.Web.Mvc.dll
+C:\ServiceBooking — копия\ServiceBooking.Util\bin\Debug\ServiceBooking.BLL.dll
+C:\ServiceBooking — копия\ServiceBooking.Util\bin\Debug\ServiceBooking.DAL.dll
+C:\ServiceBooking — копия\ServiceBooking.Util\bin\Debug\System.Web.Mvc.dll
+C:\ServiceBooking — копия\ServiceBooking.Util\bin\Debug\WebActivatorEx.dll
+C:\ServiceBooking — копия\ServiceBooking.Util\bin\Debug\System.Web.Razor.dll
+C:\ServiceBooking — копия\ServiceBooking.Util\bin\Debug\System.Web.WebPages.Razor.dll
+C:\ServiceBooking — копия\ServiceBooking.Util\bin\Debug\System.Web.WebPages.dll
+C:\ServiceBooking — копия\ServiceBooking.Util\bin\Debug\System.Web.WebPages.Deployment.dll
+C:\ServiceBooking — копия\ServiceBooking.Util\bin\Debug\ServiceBooking.BLL.pdb
+C:\ServiceBooking — копия\ServiceBooking.Util\bin\Debug\ServiceBooking.DAL.pdb
+C:\ServiceBooking — копия\ServiceBooking.Util\bin\Debug\EntityFramework.xml
+C:\ServiceBooking — копия\ServiceBooking.Util\bin\Debug\Microsoft.AspNet.Identity.Core.xml
+C:\ServiceBooking — копия\ServiceBooking.Util\bin\Debug\Microsoft.AspNet.Identity.EntityFramework.xml
+C:\ServiceBooking — копия\ServiceBooking.Util\bin\Debug\Ninject.xml
+C:\ServiceBooking — копия\ServiceBooking.Util\bin\Debug\Ninject.Web.Common.xml
+C:\ServiceBooking — копия\ServiceBooking.Util\bin\Debug\Ninject.Web.Mvc.xml
+C:\ServiceBooking — копия\ServiceBooking.Util\bin\Debug\System.Web.Mvc.xml
+C:\ServiceBooking — копия\ServiceBooking.Util\bin\Debug\System.Web.Razor.xml
+C:\ServiceBooking — копия\ServiceBooking.Util\bin\Debug\System.Web.WebPages.Razor.xml
+C:\ServiceBooking — копия\ServiceBooking.Util\bin\Debug\System.Web.WebPages.xml
+C:\ServiceBooking — копия\ServiceBooking.Util\bin\Debug\System.Web.WebPages.Deployment.xml
+C:\ServiceBooking — копия\ServiceBooking.Util\obj\Debug\ServiceBooking.Util.csprojResolveAssemblyReference.cache
+C:\ServiceBooking — копия\ServiceBooking.Util\obj\Debug\ServiceBooking.Util.dll
+C:\ServiceBooking — копия\ServiceBooking.Util\obj\Debug\ServiceBooking.Util.pdb
+C:\ServiceBooking\ServiceBooking.Util\bin\Debug\ServiceBooking.Util.dll.config
+C:\ServiceBooking\ServiceBooking.Util\bin\Debug\ServiceBooking.Util.dll
+C:\ServiceBooking\ServiceBooking.Util\bin\Debug\ServiceBooking.Util.pdb
+C:\ServiceBooking\ServiceBooking.Util\bin\Debug\Microsoft.AspNet.Identity.Core.dll
+C:\ServiceBooking\ServiceBooking.Util\bin\Debug\Microsoft.AspNet.Identity.EntityFramework.dll
+C:\ServiceBooking\ServiceBooking.Util\bin\Debug\Microsoft.Web.Infrastructure.dll
+C:\ServiceBooking\ServiceBooking.Util\bin\Debug\Ninject.dll
+C:\ServiceBooking\ServiceBooking.Util\bin\Debug\Ninject.Web.Common.dll
+C:\ServiceBooking\ServiceBooking.Util\bin\Debug\Ninject.Web.Mvc.dll
+C:\ServiceBooking\ServiceBooking.Util\bin\Debug\ServiceBooking.BLL.dll
+C:\ServiceBooking\ServiceBooking.Util\bin\Debug\ServiceBooking.DAL.dll
+C:\ServiceBooking\ServiceBooking.Util\bin\Debug\System.Web.Mvc.dll
+C:\ServiceBooking\ServiceBooking.Util\bin\Debug\WebActivatorEx.dll
+C:\ServiceBooking\ServiceBooking.Util\bin\Debug\System.Web.Razor.dll
+C:\ServiceBooking\ServiceBooking.Util\bin\Debug\System.Web.WebPages.Razor.dll
+C:\ServiceBooking\ServiceBooking.Util\bin\Debug\System.Web.WebPages.dll
+C:\ServiceBooking\ServiceBooking.Util\bin\Debug\System.Web.WebPages.Deployment.dll
+C:\ServiceBooking\ServiceBooking.Util\bin\Debug\ServiceBooking.BLL.pdb
+C:\ServiceBooking\ServiceBooking.Util\bin\Debug\ServiceBooking.DAL.pdb
+C:\ServiceBooking\ServiceBooking.Util\bin\Debug\EntityFramework.xml
+C:\ServiceBooking\ServiceBooking.Util\bin\Debug\Microsoft.AspNet.Identity.Core.xml
+C:\ServiceBooking\ServiceBooking.Util\bin\Debug\Microsoft.AspNet.Identity.EntityFramework.xml
+C:\ServiceBooking\ServiceBooking.Util\bin\Debug\Ninject.xml
+C:\ServiceBooking\ServiceBooking.Util\bin\Debug\Ninject.Web.Common.xml
+C:\ServiceBooking\ServiceBooking.Util\bin\Debug\Ninject.Web.Mvc.xml
+C:\ServiceBooking\ServiceBooking.Util\bin\Debug\System.Web.Mvc.xml
+C:\ServiceBooking\ServiceBooking.Util\bin\Debug\System.Web.Razor.xml
+C:\ServiceBooking\ServiceBooking.Util\bin\Debug\System.Web.WebPages.Razor.xml
+C:\ServiceBooking\ServiceBooking.Util\bin\Debug\System.Web.WebPages.xml
+C:\ServiceBooking\ServiceBooking.Util\bin\Debug\System.Web.WebPages.Deployment.xml
+C:\ServiceBooking\ServiceBooking.Util\obj\Debug\ServiceBooking.Util.csprojResolveAssemblyReference.cache
+C:\ServiceBooking\ServiceBooking.Util\obj\Debug\ServiceBooking.Util.dll
+C:\ServiceBooking\ServiceBooking.Util\obj\Debug\ServiceBooking.Util.pdb
+C:\ServiceBooking\ServiceBooking.Util\bin\Debug\ServiceBooking.BLL.Interfaces.dll
+C:\ServiceBooking\ServiceBooking.Util\bin\Debug\ServiceBooking.DAL.Interfaces.dll
+C:\ServiceBooking\ServiceBooking.Util\bin\Debug\ServiceBooking.DAL.UnitOfWork.dll
+C:\ServiceBooking\ServiceBooking.Util\bin\Debug\ServiceBooking.BLL.Interfaces.pdb
+C:\ServiceBooking\ServiceBooking.Util\bin\Debug\ServiceBooking.DAL.Interfaces.pdb
+C:\ServiceBooking\ServiceBooking.Util\bin\Debug\ServiceBooking.DAL.UnitOfWork.pdb

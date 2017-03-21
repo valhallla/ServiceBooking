@@ -1,0 +1,38 @@
+C:\ServiceBooking\ServiceBooking.BLL\obj\Debug\ServiceBooking.BLL.csprojResolveAssemblyReference.cache
+C:\ServiceBooking\ServiceBooking.BLL\bin\Debug\ServiceBooking.BLL.dll.config
+C:\ServiceBooking\ServiceBooking.BLL\bin\Debug\ServiceBooking.BLL.dll
+C:\ServiceBooking\ServiceBooking.BLL\bin\Debug\ServiceBooking.BLL.pdb
+C:\ServiceBooking\ServiceBooking.BLL\bin\Debug\Microsoft.AspNet.Identity.Core.dll
+C:\ServiceBooking\ServiceBooking.BLL\bin\Debug\Microsoft.AspNet.Identity.EntityFramework.dll
+C:\ServiceBooking\ServiceBooking.BLL\bin\Debug\ServiceBooking.DAL.dll
+C:\ServiceBooking\ServiceBooking.BLL\bin\Debug\ServiceBooking.DAL.pdb
+C:\ServiceBooking\ServiceBooking.BLL\bin\Debug\EntityFramework.xml
+C:\ServiceBooking\ServiceBooking.BLL\bin\Debug\EntityFramework.SqlServer.xml
+C:\ServiceBooking\ServiceBooking.BLL\bin\Debug\Microsoft.AspNet.Identity.Core.xml
+C:\ServiceBooking\ServiceBooking.BLL\bin\Debug\Microsoft.AspNet.Identity.EntityFramework.xml
+C:\ServiceBooking\ServiceBooking.BLL\obj\Debug\ServiceBooking.BLL.dll
+C:\ServiceBooking\ServiceBooking.BLL\obj\Debug\ServiceBooking.BLL.pdb
+C:\ServiceBooking — копия\ServiceBooking.BLL\obj\Debug\ServiceBooking.BLL.csprojResolveAssemblyReference.cache
+C:\ServiceBooking — копия\ServiceBooking.BLL\obj\Debug\ServiceBooking.BLL.dll
+C:\ServiceBooking — копия\ServiceBooking.BLL\obj\Debug\ServiceBooking.BLL.pdb
+C:\ServiceBooking — копия\ServiceBooking.BLL\bin\Debug\ServiceBooking.BLL.dll.config
+C:\ServiceBooking — копия\ServiceBooking.BLL\bin\Debug\ServiceBooking.BLL.dll
+C:\ServiceBooking — копия\ServiceBooking.BLL\bin\Debug\ServiceBooking.BLL.pdb
+C:\ServiceBooking — копия\ServiceBooking.BLL\bin\Debug\Microsoft.AspNet.Identity.Core.dll
+C:\ServiceBooking — копия\ServiceBooking.BLL\bin\Debug\Microsoft.AspNet.Identity.EntityFramework.dll
+C:\ServiceBooking — копия\ServiceBooking.BLL\bin\Debug\ServiceBooking.DAL.dll
+C:\ServiceBooking — копия\ServiceBooking.BLL\bin\Debug\ServiceBooking.DAL.pdb
+C:\ServiceBooking — копия\ServiceBooking.BLL\bin\Debug\EntityFramework.xml
+C:\ServiceBooking — копия\ServiceBooking.BLL\bin\Debug\EntityFramework.SqlServer.xml
+C:\ServiceBooking — копия\ServiceBooking.BLL\bin\Debug\Microsoft.AspNet.Identity.Core.xml
+C:\ServiceBooking — копия\ServiceBooking.BLL\bin\Debug\Microsoft.AspNet.Identity.EntityFramework.xml
+C:\ServiceBooking — копия\ServiceBooking.BLL\bin\Debug\Ninject.dll
+C:\ServiceBooking — копия\ServiceBooking.BLL\bin\Debug\Ninject.xml
+C:\ServiceBooking\ServiceBooking.BLL\bin\Debug\Ninject.dll
+C:\ServiceBooking\ServiceBooking.BLL\bin\Debug\Ninject.xml
+C:\ServiceBooking\ServiceBooking.BLL\bin\Debug\ServiceBooking.BLL.Interfaces.dll
+C:\ServiceBooking\ServiceBooking.BLL\bin\Debug\ServiceBooking.DAL.Interfaces.dll
+C:\ServiceBooking\ServiceBooking.BLL\bin\Debug\ServiceBooking.DAL.UnitOfWork.dll
+C:\ServiceBooking\ServiceBooking.BLL\bin\Debug\ServiceBooking.BLL.Interfaces.pdb
+C:\ServiceBooking\ServiceBooking.BLL\bin\Debug\ServiceBooking.DAL.Interfaces.pdb
+C:\ServiceBooking\ServiceBooking.BLL\bin\Debug\ServiceBooking.DAL.UnitOfWork.pdb

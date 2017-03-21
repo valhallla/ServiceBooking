@@ -1,38 +1,42 @@
 ﻿using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
 using ServiceBooking.BLL.DTO;
 using ServiceBooking.BLL.Infrastructure;
 using Microsoft.AspNet.Identity;
 using System.Security.Claims;
+using Microsoft.AspNet.Identity.EntityFramework;
 using Ninject;
 using ServiceBooking.BLL.Interfaces;
+using ServiceBooking.DAL.EF;
 using ServiceBooking.DAL.Entities;
+using ServiceBooking.DAL.Identity;
+using ServiceBooking.DAL.Interfaces;
 using ServiceBooking.DAL.Repositories;
 
 namespace ServiceBooking.BLL.Services
 {
-    public class UserService : /*UserManager<ApplicationUser>, */IUserService
+    public class UserService : IUserService
     {
-        //IUnitOfWork
-        UnitOfWork Database { get; }
-
-        //public UserService(IUserStore<ApplicationUser> store, IUnitOfWork uow)
-        //    : base(store)
-        //{
-        //    Database = uow;
-        //}
+        private readonly ApplicationContext _db;
+        private readonly IRepository<ClientUser> _client;
+        public ApplicationUserManager UserManager { get; }
+        public ApplicationRoleManager RoleManager { get; }
 
         [Inject]
-        public UserService(UnitOfWork uow)
+        public UserService(IRepository<ClientUser> client)
         {
-            Database = uow;
+            _client = client;
+            _db = new ApplicationContext("DefaultConnection");
+            UserManager = new ApplicationUserManager(new UserStore<ApplicationUser>(_db));
+            RoleManager = new ApplicationRoleManager(new RoleStore<ApplicationRole>(_db));
         }
 
 
         public async Task<OperationDetails> Create(ClientViewModel userDto)
         {
-            ApplicationUser user = await Database.UserManager.FindByEmailAsync(userDto.Email);
+            ApplicationUser user = await UserManager.FindByEmailAsync(userDto.Email);
             if (user == null)
             {
                 user = new ApplicationUser
@@ -42,11 +46,11 @@ namespace ServiceBooking.BLL.Services
                     Name = userDto.Name,
                     Surname = userDto.Surname
                 };
-                var result = await Database.UserManager.CreateAsync(user, userDto.Password);
+                var result = await UserManager.CreateAsync(user, userDto.Password);
                 if (result.Errors.Any())
                     return new OperationDetails(false, result.Errors.FirstOrDefault(), "");
                 // добавляем роль
-                await Database.UserManager.AddToRoleAsync(user.Id, userDto.Role);
+                await UserManager.AddToRoleAsync(user.Id, userDto.Role);
                 // создаем профиль клиента
 
                 ClientUser clientUser = new ClientUser
@@ -66,7 +70,7 @@ namespace ServiceBooking.BLL.Services
                     //Comments = userDto.Comments
                 };
 
-                Database.ClientManager.Create(clientUser);
+                _client.Create(clientUser);
                 //Database.Save(); 
                 //await Database.SaveAsync();
                 return new OperationDetails(true, "Registration succeeded", "");
@@ -105,25 +109,25 @@ namespace ServiceBooking.BLL.Services
         public async Task<ClaimsIdentity> Authenticate(ClientViewModel userDto)
         {
             ClaimsIdentity claim = null;
-            // находим пользователя
-            ApplicationUser user = await Database.UserManager.FindAsync(userDto.Email, userDto.Password);
-            // авторизуем его и возвращаем объект ClaimsIdentity
+            ApplicationUser user = await UserManager.FindAsync(userDto.Email, userDto.Password);
+
             if (user != null)
-                claim = await Database.UserManager.CreateIdentityAsync(user,
-                                            DefaultAuthenticationTypes.ApplicationCookie);
+            {
+                claim = await UserManager.CreateIdentityAsync(user,
+                    DefaultAuthenticationTypes.ApplicationCookie);
+            }
             return claim;
         }
 
-        // начальная инициализация бд
         public async Task SetInitialData(ClientViewModel adminViewModel, List<string> roles)
         {
             foreach (string roleName in roles)
             {
-                var role = await Database.RoleManager.FindByNameAsync(roleName);
+                var role = await RoleManager.FindByNameAsync(roleName);
                 if (role == null)
                 {
                     role = new ApplicationRole { Name = roleName };
-                    await Database.RoleManager.CreateAsync(role);
+                    await RoleManager.CreateAsync(role);
                 }
             }
             await Create(adminViewModel);
@@ -131,7 +135,7 @@ namespace ServiceBooking.BLL.Services
 
         public void Dispose()
         {
-            Database.Dispose();
+            _db.Dispose();
         }
     }
 }

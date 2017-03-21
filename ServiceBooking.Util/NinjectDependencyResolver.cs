@@ -5,6 +5,8 @@ using System.Web.Mvc;
 using Ninject.Web.Common;
 using ServiceBooking.BLL.Interfaces;
 using ServiceBooking.BLL.Services;
+using ServiceBooking.DAL.EF;
+using ServiceBooking.DAL.Entities;
 using ServiceBooking.DAL.Interfaces;
 using ServiceBooking.DAL.Repositories;
 
@@ -30,10 +32,23 @@ namespace ServiceBooking.Util
         private void AddBindings()
         {
             var connectionName = "DefaultConnection";
+            var context = new ApplicationContext(connectionName);
 
-            _kernel.Bind<UnitOfWork>().ToConstructor(_ => new UnitOfWork(connectionName)).InRequestScope();
+            _kernel.Bind<IUnitOfWork>().To<UnitOfWork>().InRequestScope().WithConstructorArgument(connectionName);
+
+            _kernel.Bind<ApplicationContext>().ToConstructor(_ => new ApplicationContext(connectionName)).InRequestScope();
+            _kernel.Bind<IRepository<ClientUser>>().To<ClientRepository>();
+            _kernel.Bind<IRepository<Order>>().To<OrderRepository>();
+            _kernel.Bind<IRepository<Response>>().To<ResponseRepository>();
+            _kernel.Bind<IRepository<Comment>>().To<CommentRepository>();
+            _kernel.Bind<IRepository<Category>>().To<CategoryRepository>();
+            _kernel.Bind<IRepository<Status>>().To<StatusRepository>();
+
+            _kernel.Bind<ClientRepository>().ToConstructor(_ => new ClientRepository(context)).InRequestScope();
             _kernel.Bind<IUserService>().To<UserService>();
-            //_kernel.Bind<UserService>().ToConstructor(_ => new UserService(new IdentityUnitOfWork(connectionName)));
+
+            _kernel.Bind<OrderRepository>().ToConstructor(_ => new OrderRepository(context)).InRequestScope();
+            _kernel.Bind<IOrderService>().To<IOrderService>();
         }
     }
 }

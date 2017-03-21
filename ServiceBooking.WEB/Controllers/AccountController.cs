@@ -12,24 +12,28 @@ using ServiceBooking.WEB.Models;
 using ServiceBooking.Util;
 using Microsoft.Owin;
 using Microsoft.Owin.Host.SystemWeb;
+using Ninject;
+using ServiceBooking.DAL.Interfaces;
 
 namespace ServiceBooking.WEB.Controllers
 {
     public class AccountController : Controller
     {
         private static IUserService _userService;
+        private static IUnitOfWork _unitOfWork;
 
+        public AccountController() : this(_userService, _unitOfWork) { }
 
-        public AccountController() : this(_userService) { }
-
-        public AccountController(IUserService service) 
+        public AccountController(IUserService service, IUnitOfWork unitOfWork) 
         {
             _userService = service;
+            _unitOfWork = unitOfWork;
         }
 
-        public AccountController(NinjectDependencyResolver resolver, IUserService userService)
+        public AccountController(NinjectDependencyResolver resolver, IUserService userService, IUnitOfWork unitOfWork)
         {
             _userService = userService;
+            _unitOfWork = unitOfWork;
         }
 
         private IAuthenticationManager AuthenticationManager
