@@ -48,19 +48,15 @@ namespace ServiceBooking.BLL.Services
                 };
                 var result = await UserManager.CreateAsync(user, userDto.Password);
                 if (result.Errors.Any())
+                {
                     return new OperationDetails(false, result.Errors.FirstOrDefault(), "");
-                // добавляем роль
+                }
+
                 await UserManager.AddToRoleAsync(user.Id, userDto.Role);
-                // создаем профиль клиента
 
                 ClientUser clientUser = new ClientUser
                 {
                     ApplicationUserId = user.Id,
-                    //ApplicationUser = new ApplicationUser()
-                    //{
-                    //    Name = userDto.Name,
-                    //    Surname = userDto.Surname,
-                    //},
                     IsPerformer = userDto.IsPerformer,
                     CategoryId = userDto.CategoryId,
                     Info = userDto.Info,
@@ -136,6 +132,23 @@ namespace ServiceBooking.BLL.Services
         public void Dispose()
         {
             _db.Dispose();
+        }
+
+        public async Task<IdentityResult> ChangePassword(ClientViewModel userDto)
+        {
+            return await UserManager.ChangePasswordAsync(userDto.Id, userDto.UserName, userDto.Password);
+        }
+
+        public async Task<ClientViewModel> FindById(string id)
+        {
+            ApplicationUser user = await UserManager.FindByIdAsync(id);
+            if (user != null)
+            {
+                _db.Entry(UserManager).State = EntityState.Modified;
+                return new ClientViewModel {Name = user.Name, Surname = user.Surname, Email = user.Email};
+            }
+
+            return null;
         }
     }
 }

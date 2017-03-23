@@ -10,10 +10,10 @@
 <div>
     <h4>Change your account settings</h4>
     <hr />
-    <a href="~/Views/Manage/ChangePassword.cshtml" class="btn btn-primary btn-lg">Change your password</a>
+    @Html.ActionLink("Change password", "ChangePassword", "Manage", new { newApplications = true }, new { @class = "btn btn-primary btn-lg" })
     @if (Request.IsAuthenticated && User.IsInRole("user"))
     {
-        <a href="~/Views/Account/DeleteAccount.cshtml" class="btn btn-primary btn-lg">Delete your account</a>
+        @Html.ActionLink("Delete account", "DeleteAccount", "Manage", new { newApplications = true }, new { @class = "btn btn-primary btn-lg" })
     }
         @*<dt>External Logins:</dt>
             <dd>

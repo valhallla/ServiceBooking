@@ -273,6 +273,8 @@
     <Content Include="Views\Orders\Details.cshtml" />
     <Content Include="Views\Orders\Edit.cshtml" />
     <Content Include="Views\Orders\Index.cshtml" />
+    <Content Include="Views\Account\RegistrationSucceeded.cshtml" />
+    <Content Include="Views\Manage\DeleteAccount.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Scripts\Manage\" />
@@ -297,6 +299,10 @@
     <ProjectReference Include="..\ServiceBooking.DAL.Interfaces\ServiceBooking.DAL.Interfaces.csproj">
       <Project>{5cb63b6f-435c-4067-89f9-05271411079e}</Project>
       <Name>ServiceBooking.DAL.Interfaces</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ServiceBooking.DAL\ServiceBooking.DAL.csproj">
+      <Project>{95702D8D-7747-44E1-BF24-AB7A5D383731}</Project>
+      <Name>ServiceBooking.DAL</Name>
     </ProjectReference>
     <ProjectReference Include="..\ServiceBooking.Util\ServiceBooking.Util.csproj">
       <Project>{a70e541d-f249-4821-8286-4d1020c1ad87}</Project>

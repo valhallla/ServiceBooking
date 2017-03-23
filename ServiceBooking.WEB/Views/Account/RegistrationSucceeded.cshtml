@@ -1,0 +1,9 @@
+﻿@model ServiceBooking.WEB.Models.RegisterViewModel
+@{
+    ViewBag.Title = "Registration Succeeded";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>@ViewBag.Title</h2>
+
+<p>You've successfully registered on the site! @Html.ActionLink("Click here", "Login") to sign in</p>

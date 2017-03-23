@@ -17,3 +17,16 @@ C:\ServiceBooking\ServiceBooking.BLL.Interfaces\obj\Debug\ServiceBooking.BLL.Int
 C:\ServiceBooking\ServiceBooking.BLL.Interfaces\obj\Debug\ServiceBooking.BLL.Interfaces.pdb
 C:\ServiceBooking\ServiceBooking.BLL.Interfaces\bin\Debug\ServiceBooking.DAL.UnitOfWork.dll
 C:\ServiceBooking\ServiceBooking.BLL.Interfaces\bin\Debug\ServiceBooking.DAL.UnitOfWork.pdb
+C:\ServiceBooking\ServiceBooking.BLL.Interfaces\bin\Debug\Microsoft.AspNet.Identity.Owin.dll
+C:\ServiceBooking\ServiceBooking.BLL.Interfaces\bin\Debug\Microsoft.Owin.dll
+C:\ServiceBooking\ServiceBooking.BLL.Interfaces\bin\Debug\Microsoft.Owin.Security.Cookies.dll
+C:\ServiceBooking\ServiceBooking.BLL.Interfaces\bin\Debug\Microsoft.Owin.Security.dll
+C:\ServiceBooking\ServiceBooking.BLL.Interfaces\bin\Debug\Microsoft.Owin.Security.OAuth.dll
+C:\ServiceBooking\ServiceBooking.BLL.Interfaces\bin\Debug\Newtonsoft.Json.dll
+C:\ServiceBooking\ServiceBooking.BLL.Interfaces\bin\Debug\Owin.dll
+C:\ServiceBooking\ServiceBooking.BLL.Interfaces\bin\Debug\Microsoft.AspNet.Identity.Owin.xml
+C:\ServiceBooking\ServiceBooking.BLL.Interfaces\bin\Debug\Microsoft.Owin.xml
+C:\ServiceBooking\ServiceBooking.BLL.Interfaces\bin\Debug\Microsoft.Owin.Security.xml
+C:\ServiceBooking\ServiceBooking.BLL.Interfaces\bin\Debug\Microsoft.Owin.Security.Cookies.xml
+C:\ServiceBooking\ServiceBooking.BLL.Interfaces\bin\Debug\Microsoft.Owin.Security.OAuth.xml
+C:\ServiceBooking\ServiceBooking.BLL.Interfaces\bin\Debug\Newtonsoft.Json.xml

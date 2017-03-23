@@ -28,7 +28,6 @@ C:\ServiceBooking\ServiceBooking.WEB\bin\Microsoft.Owin.Security.Cookies.dll
 C:\ServiceBooking\ServiceBooking.WEB\bin\Microsoft.Owin.Security.dll
 C:\ServiceBooking\ServiceBooking.WEB\bin\Microsoft.Owin.Security.OAuth.dll
 C:\ServiceBooking\ServiceBooking.WEB\bin\Microsoft.Web.Infrastructure.dll
-C:\ServiceBooking\ServiceBooking.WEB\bin\Newtonsoft.Json.dll
 C:\ServiceBooking\ServiceBooking.WEB\bin\Owin.dll
 C:\ServiceBooking\ServiceBooking.WEB\bin\ServiceBooking.BLL.dll
 C:\ServiceBooking\ServiceBooking.WEB\bin\System.Web.Helpers.dll
@@ -63,7 +62,6 @@ C:\ServiceBooking\ServiceBooking.WEB\bin\System.Web.WebPages.xml
 C:\ServiceBooking\ServiceBooking.WEB\bin\System.Web.WebPages.Deployment.xml
 C:\ServiceBooking\ServiceBooking.WEB\bin\System.Web.WebPages.Razor.xml
 C:\ServiceBooking\ServiceBooking.WEB\bin\Antlr3.Runtime.pdb
-C:\ServiceBooking\ServiceBooking.WEB\bin\Newtonsoft.Json.xml
 C:\ServiceBooking\ServiceBooking.WEB\bin\ServiceBooking.DAL.pdb
 C:\ServiceBooking\ServiceBooking.WEB\bin\Microsoft.AspNet.Identity.EntityFramework.xml
 C:\ServiceBooking\ServiceBooking.WEB\bin\EntityFramework.xml

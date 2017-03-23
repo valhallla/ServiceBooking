@@ -107,11 +107,13 @@ namespace ServiceBooking.WEB.Controllers
                 OperationDetails operationDetails = await _userService.Create(userViewModel);
                 if (operationDetails.Succedeed)
                 {
+                    //HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>(
                     //string code = await UserManager.GenerateEmailConfirmationTokenAsync(userViewModel.Id);
                     //var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = userViewModel.Id, EmailConfirmed = userViewModel.EmailConfirmed, code = code }, protocol: Request.Url.Scheme);
                     //await UserManager.SendEmailAsync(userViewModel.Id, "Confirm your account", "Please confirm your account by clicking <a href=\"" + callbackUrl + "\">here</a>");
 
-                    return View("DisplayEmail");
+                    //return View("DisplayEmail");
+                    return View("RegistrationSucceeded");
                 }
                 else
                     ModelState.AddModelError(operationDetails.Property, operationDetails.Message);
