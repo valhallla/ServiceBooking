@@ -17,7 +17,7 @@ namespace ServiceBooking.DAL.Entities
         public int? OrderId { get; set; }
         public Order Order { get; set; }
 
-        public int ClientId { get; set; }
+        public int ClientUserId { get; set; }
         public ClientUser ClientUser { get; set; }
     }
 }

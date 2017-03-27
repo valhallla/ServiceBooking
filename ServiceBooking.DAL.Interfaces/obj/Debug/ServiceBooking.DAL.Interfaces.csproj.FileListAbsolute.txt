@@ -1,5 +1,7 @@
-C:\ServiceBooking\ServiceBooking.DAL.Interfaces\obj\Debug\ServiceBooking.DAL.Interfaces.csprojResolveAssemblyReference.cache
 C:\ServiceBooking\ServiceBooking.DAL.Interfaces\bin\Debug\ServiceBooking.DAL.Interfaces.dll
 C:\ServiceBooking\ServiceBooking.DAL.Interfaces\bin\Debug\ServiceBooking.DAL.Interfaces.pdb
 C:\ServiceBooking\ServiceBooking.DAL.Interfaces\obj\Debug\ServiceBooking.DAL.Interfaces.dll
 C:\ServiceBooking\ServiceBooking.DAL.Interfaces\obj\Debug\ServiceBooking.DAL.Interfaces.pdb
+C:\ServiceBooking\ServiceBooking.DAL.Interfaces\bin\Debug\Microsoft.AspNet.Identity.Core.dll
+C:\ServiceBooking\ServiceBooking.DAL.Interfaces\bin\Debug\Microsoft.AspNet.Identity.Core.xml
+C:\ServiceBooking\ServiceBooking.DAL.Interfaces\obj\Debug\ServiceBooking.DAL.Interfaces.csprojResolveAssemblyReference.cache

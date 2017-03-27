@@ -12,10 +12,17 @@
             @Html.ActionLink("New performers", "Index", "Performers", new { newApplications = true }, new { @class = "btn btn-primary btn-lg" })
         </p>
     }
-    else
+    else if(Request.IsAuthenticated)
     {
         <p>
             <a href="~/Orders/Create" class="btn btn-primary btn-lg">Place an order</a>
+            <a href="~/Home/Index" class="btn btn-primary btn-lg">Become a performer</a>
+        </p>
+    }
+    else
+    {
+        <p>
+            <a href="~/Account/Login" class="btn btn-primary btn-lg">Place an order</a>
             <a href="~/Home/Index" class="btn btn-primary btn-lg">Become a performer</a>
         </p>
     }

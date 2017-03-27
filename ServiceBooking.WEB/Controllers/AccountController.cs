@@ -52,7 +52,6 @@ namespace ServiceBooking.WEB.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Login(LoginViewModel model)
         {
-            await SetInitialDataAsync();
             if (ModelState.IsValid)
             {
                 ClientViewModel userViewModel = new ClientViewModel { Email = model.Email, Password = model.Password };
@@ -89,7 +88,6 @@ namespace ServiceBooking.WEB.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Register(RegisterViewModel model)
         {
-            await SetInitialDataAsync();
             if (ModelState.IsValid)
             {
                 ClientViewModel userViewModel = new ClientViewModel
@@ -121,43 +119,6 @@ namespace ServiceBooking.WEB.Controllers
             return View(model);
         }
 
-        /*
-         * [HttpGet]
-        [ValidateAntiForgeryToken]
-        public ActionResult DeleteAccount()
-        {
-            return View();
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> DeleteAccount(DeleteAccountViewModel model)
-        {
-            if (ModelState.IsValid)
-            {
-                UserViewModel userViewModel = new UserViewModel
-                {
-                    Id = User.Identity.GetUserId(),
-                    Password = model.Password,
-                    Role = "user"
-                };
-
-                OperationDetails operationDetails = await UserService.Create(userViewModel);
-                if (operationDetails.Succedeed)
-                {
-                    //string code = await UserManager.GenerateEmailConfirmationTokenAsync(userViewModel.Id);
-                    //var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = userViewModel.Id, EmailConfirmed = userViewModel.EmailConfirmed, code = code }, protocol: Request.Url.Scheme);
-                    //await UserManager.SendEmailAsync(userViewModel.Id, "Confirm your account", "Please confirm your account by clicking <a href=\"" + callbackUrl + "\">here</a>");
-
-                    return View("~/Views/Home/Index.cshtml");
-                }
-                else
-                    ModelState.AddModelError(operationDetails.Property, operationDetails.Message);
-            }
-            return View(model);
-        }
-         */
-
         [AllowAnonymous]
         public async Task<ActionResult> ConfirmEmail(string userId, string code)
         {
@@ -178,21 +139,6 @@ namespace ServiceBooking.WEB.Controllers
                 return View("Error");
             }
             //return View(result.Succeeded ? "ConfirmEmail" : "Error");
-        }
-
-        private async Task SetInitialDataAsync()
-        {
-            await _userService.SetInitialData(new ClientViewModel
-            {
-                Email = "kruner.kruner@gmail.com",
-                UserName = "kruner.kruner@gmail.com",
-                Password = "Kruner_13",
-                EmailConfirmed = true,
-                Name = "Veronika",
-                Surname = "Navros",
-                IsPerformer = false,
-                Role = "admin",
-            }, new List<string> { "admin", "user" });
         }
 
         [HttpPost]

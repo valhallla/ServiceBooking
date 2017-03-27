@@ -30,3 +30,6 @@ C:\ServiceBooking\ServiceBooking.BLL.Interfaces\bin\Debug\Microsoft.Owin.Securit
 C:\ServiceBooking\ServiceBooking.BLL.Interfaces\bin\Debug\Microsoft.Owin.Security.Cookies.xml
 C:\ServiceBooking\ServiceBooking.BLL.Interfaces\bin\Debug\Microsoft.Owin.Security.OAuth.xml
 C:\ServiceBooking\ServiceBooking.BLL.Interfaces\bin\Debug\Newtonsoft.Json.xml
+C:\ServiceBooking\ServiceBooking.BLL.Interfaces\bin\Debug\ServiceBooking.BLL.Interfaces.dll.config
+C:\ServiceBooking\ServiceBooking.BLL.Interfaces\bin\Debug\EntityFramework.SqlServer.dll
+C:\ServiceBooking\ServiceBooking.BLL.Interfaces\bin\Debug\EntityFramework.SqlServer.xml

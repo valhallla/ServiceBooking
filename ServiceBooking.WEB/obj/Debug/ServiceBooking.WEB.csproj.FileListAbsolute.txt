@@ -11,7 +11,6 @@ C:\ServiceBooking\ServiceBooking.WEB\bin\roslyn\System.Reflection.Metadata.dll
 C:\ServiceBooking\ServiceBooking.WEB\bin\roslyn\vbc.exe
 C:\ServiceBooking\ServiceBooking.WEB\bin\roslyn\VBCSCompiler.exe
 C:\ServiceBooking\ServiceBooking.WEB\bin\roslyn\VBCSCompiler.exe.config
-C:\ServiceBooking\ServiceBooking.WEB\bin\ServiceBooking.WEB.dll.config
 C:\ServiceBooking\ServiceBooking.WEB\bin\ServiceBooking.WEB.dll
 C:\ServiceBooking\ServiceBooking.WEB\bin\ServiceBooking.WEB.pdb
 C:\ServiceBooking\ServiceBooking.WEB\bin\Microsoft.AI.DependencyCollector.dll
@@ -61,7 +60,6 @@ C:\ServiceBooking\ServiceBooking.WEB\bin\System.Web.Razor.xml
 C:\ServiceBooking\ServiceBooking.WEB\bin\System.Web.WebPages.xml
 C:\ServiceBooking\ServiceBooking.WEB\bin\System.Web.WebPages.Deployment.xml
 C:\ServiceBooking\ServiceBooking.WEB\bin\System.Web.WebPages.Razor.xml
-C:\ServiceBooking\ServiceBooking.WEB\bin\Antlr3.Runtime.pdb
 C:\ServiceBooking\ServiceBooking.WEB\bin\ServiceBooking.DAL.pdb
 C:\ServiceBooking\ServiceBooking.WEB\bin\Microsoft.AspNet.Identity.EntityFramework.xml
 C:\ServiceBooking\ServiceBooking.WEB\bin\EntityFramework.xml
@@ -160,13 +158,11 @@ C:\ServiceBooking — копия\ServiceBooking.WEB\bin\ServiceBooking.DAL.pdb
 C:\ServiceBooking — копия\ServiceBooking.WEB\bin\Ninject.xml
 C:\ServiceBooking — копия\ServiceBooking.WEB\bin\Ninject.Web.Common.xml
 C:\ServiceBooking — копия\ServiceBooking.WEB\bin\Newtonsoft.Json.xml
-C:\ServiceBooking\ServiceBooking.WEB\bin\EntityFramework.SqlServer.dll
 C:\ServiceBooking\ServiceBooking.WEB\bin\ServiceBooking.Util.dll
 C:\ServiceBooking\ServiceBooking.WEB\bin\System.Net.Http.Formatting.dll
 C:\ServiceBooking\ServiceBooking.WEB\bin\System.Web.Http.dll
 C:\ServiceBooking\ServiceBooking.WEB\bin\System.Web.Http.Owin.dll
 C:\ServiceBooking\ServiceBooking.WEB\bin\ServiceBooking.Util.pdb
-C:\ServiceBooking\ServiceBooking.WEB\bin\EntityFramework.SqlServer.xml
 C:\ServiceBooking\ServiceBooking.WEB\bin\System.Net.Http.Formatting.xml
 C:\ServiceBooking\ServiceBooking.WEB\bin\System.Web.Http.xml
 C:\ServiceBooking\ServiceBooking.WEB\bin\System.Web.Http.Owin.xml
@@ -176,3 +172,8 @@ C:\ServiceBooking\ServiceBooking.WEB\bin\ServiceBooking.DAL.Interfaces.dll
 C:\ServiceBooking\ServiceBooking.WEB\bin\ServiceBooking.BLL.Interfaces.pdb
 C:\ServiceBooking\ServiceBooking.WEB\bin\ServiceBooking.DAL.UnitOfWork.pdb
 C:\ServiceBooking\ServiceBooking.WEB\bin\ServiceBooking.DAL.Interfaces.pdb
+C:\ServiceBooking\ServiceBooking.WEB\bin\EntityFramework.SqlServer.dll
+C:\ServiceBooking\ServiceBooking.WEB\bin\EntityFramework.SqlServer.xml
+C:\ServiceBooking\ServiceBooking.WEB\bin\ServiceBooking.WEB.dll.config
+C:\ServiceBooking\ServiceBooking.WEB\bin\Microsoft.Owin.dll
+C:\ServiceBooking\ServiceBooking.WEB\bin\WebGrease.dll

@@ -17,7 +17,7 @@ namespace ServiceBooking.DAL.Entities
         [Required]
         public int Rating { get; set; }
 
-        public int ClientId { get; set; }
+        public int ClientUserId { get; set; }
         public ClientUser ClientUser { get; set; }
     }
 }

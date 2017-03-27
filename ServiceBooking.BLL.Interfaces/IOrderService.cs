@@ -7,13 +7,13 @@ using ServiceBooking.BLL.DTO;
 
 namespace ServiceBooking.BLL.Interfaces
 {
-    public interface IOrderService
+    public interface IOrderService : IDisposable
     {
-        void MakeOrder(OrderViewModel order);
-        CategoryViewModel Category(int? id);
-        StatusViewModel Status(int? id);
-        ClientViewModel Client(int? id);
-        IEnumerable<ResponseViewModel> GetResponses();
-        void Dispose();
+        //void MakeOrder(OrderViewModel order);
+        //CategoryViewModel Category(int? id);
+        //StatusViewModel Status(int? id);
+        //ClientViewModel Client(int? id);
+        //IEnumerable<ResponseViewModel> Responses();
+        IEnumerable<OrderViewModel> GetAll();
     }
 }

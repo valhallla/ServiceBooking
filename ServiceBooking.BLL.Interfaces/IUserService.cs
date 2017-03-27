@@ -8,12 +8,11 @@ using ServiceBooking.BLL.Infrastructure;
 
 namespace ServiceBooking.BLL.Interfaces
 {
-    public interface IUserService : IDisposable
+    public interface IUserService
     {
         Task<OperationDetails> Create(ClientViewModel userDto);
         Task<ClaimsIdentity> Authenticate(ClientViewModel userDto);
-        Task SetInitialData(ClientViewModel adminDto, List<string> roles);
         Task<IdentityResult> ChangePassword(ClientViewModel userDto);
-        Task<ClientViewModel> FindById(string id);
+        //Task<ClientViewModel> FindById(int id);
     }
 }

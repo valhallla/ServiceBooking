@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Ninject;
 using System.Web.Mvc;
 using Ninject.Web.Common;
+using ServiceBooking.BLL;
 using ServiceBooking.BLL.Interfaces;
 using ServiceBooking.BLL.Services;
 using ServiceBooking.DAL.EF;
@@ -48,7 +49,16 @@ namespace ServiceBooking.Util
             _kernel.Bind<IUserService>().To<UserService>();
 
             _kernel.Bind<OrderRepository>().ToConstructor(_ => new OrderRepository(context)).InRequestScope();
-            _kernel.Bind<IOrderService>().To<IOrderService>();
+            _kernel.Bind<IOrderService>().To<OrderService>();
+
+            _kernel.Bind<CategoryRepository>().ToConstructor(_ => new CategoryRepository(context)).InRequestScope();
+            _kernel.Bind<ICategoryService>().To<CategoryService>();
+
+            _kernel.Bind<CommentRepository>().ToConstructor(_ => new CommentRepository(context)).InRequestScope();
+            _kernel.Bind<ICommentService>().To<CommentService>();
+
+            _kernel.Bind<ResponseRepository>().ToConstructor(_ => new ResponseRepository(context)).InRequestScope();
+            _kernel.Bind<IResponseService>().To<ResponseService>();
         }
     }
 }

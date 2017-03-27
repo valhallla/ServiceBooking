@@ -1,24 +1,30 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Data.Entity;
-using System.IO.Pipes;
-using System.Security.Cryptography;
-using Microsoft.AspNet.Identity;
+﻿using System.Data.Entity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using ServiceBooking.DAL.Entities;
 using ServiceBooking.DAL.Identity;
+using ServiceBooking.DAL.Migrations;
 
 namespace ServiceBooking.DAL.EF
 {
-    public class ApplicationContext : IdentityDbContext<ApplicationUser>
+    public class ApplicationContext : IdentityDbContext<ApplicationUser, CustomRole, int, CustomUserLogin, CustomUserRole, CustomUserClaim>
     {
         static ApplicationContext()
         {
             Database.SetInitializer<ApplicationContext>(new AppDbInitializer());
+            Database.SetInitializer(new MigrateDatabaseToLatestVersion<ApplicationContext, Configuration>());
         }
+
+        public void FixEfProviderServicesProblem()
+        {
+            //The Entity Framework provider type 'System.Data.Entity.SqlServer.SqlProviderServices, EntityFramework.SqlServer'
+            //for the 'System.Data.SqlClient' ADO.NET provider could not be loaded.
+            //Make sure the provider assembly is available to the running application.
+            //See http://go.microsoft.com/fwlink/?LinkId=260882 for more information.
+
+            var instance = System.Data.Entity.SqlServer.SqlProviderServices.Instance;
+        }
+
+        public ApplicationContext() { }
 
         public ApplicationContext(string conectionString) : base(conectionString) { }
 
@@ -30,27 +36,24 @@ namespace ServiceBooking.DAL.EF
         public DbSet<Status> Status { get; set; }
     }
 
-    public class AppDbInitializer : DropCreateDatabaseIfModelChanges<ApplicationContext>
+    public class AppDbInitializer : DropCreateDatabaseAlways<ApplicationContext>
     {
         protected override void Seed(ApplicationContext db)
         {
-            //var userManager = new ApplicationUserManager(new UserStore<ApplicationUser>(db));
+            //var userManager = new ApplicationUserRepository(new CustomUserStore<ApplicationUser>(db));
+
             //var roleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(db));
 
+            //// создаем две роли
             //var role1 = new IdentityRole { Name = "admin" };
             //var role2 = new IdentityRole { Name = "user" };
 
+            //// добавляем роли в бд
             //roleManager.Create(role1);
             //roleManager.Create(role2);
 
-            //var admin = new ApplicationUser
-            //{
-            //    Name = "Veron",
-            //    Surname = "Navros",
-            //    Email = "kruner.kruner@gmail.com",
-            //    UserName = "kruner.kruner@gmail.com",
-            //    EmailConfirmed = true
-            //};
+            //// создаем пользователей
+            //var admin = new ApplicationUser { Name = "Veron", Surname = "Navros", Email = "kruner.kruner@gmail.com", UserName = "kruner.kruner@gmail.com", EmailConfirmed = true };
             //string password = "Kruner_13";
             //var result = userManager.Create(admin, password);
 
@@ -59,29 +62,10 @@ namespace ServiceBooking.DAL.EF
             //{
             //    // добавляем для пользователя роль
             //    userManager.AddToRole(admin.Id, role1.Name);
+            //    userManager.AddToRole(admin.Id, role2.Name);
             //}
 
-            //var user = new ApplicationUser
-            //{
-            //    Name = "Veron",
-            //    Surname = "Navros",
-            //    Email = "veronika.navros@gmail.com",
-            //    UserName = "veronika.navros@gmail.com",
-            //    EmailConfirmed = true,
-            //};
-            //password = "Kruner_13";
-            //result = userManager.Create(user, password);
-
-            //if (result.Succeeded)
-            //{
-            //    userManager.AddToRole(user.Id, role2.Name);
-            //}
-
-            //db.Clients.Add(new ClientUser
-            //{
-            //    ApplicationUser = user,
-            //    IsPerformer = false
-            //});
+           // ----------------------------------------------------------------------------------------------------------------------------------------
 
             db.Categories.Add(new Category
             {

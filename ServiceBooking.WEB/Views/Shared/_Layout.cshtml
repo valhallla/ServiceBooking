@@ -23,18 +23,19 @@
                 <ul class="nav navbar-nav">
                     @{
                         string ordersTitle = "Orders";
-                        //if (Request.IsAuthenticated && this.User.IsInRole("admin"))
-                        //{
-                        //    IEnumerable<ServiceBooking.Models.Order> orders = (new ServiceBooking.Models.ApplicationDbContext()).Orders;
-                        //    orders = orders.Where(model => !model.AdminStatus);
-                        //    if (orders != null)
-                        //    {
-                        //        ordersTitle += " + " + orders.Count().ToString();
-                        //    }
-                        //}
+                        @*if (Request.IsAuthenticated && this.User.IsInRole("admin"))
+                        {
+                            IEnumerable<ServiceBooking.BLL.DTO.OrderViewModel> orders = (new ServiceBooking.BLL.DTO.OrderViewModel().Orders;
+                            orders = orders.Where(model => !model.AdminStatus);
+                            if (orders != null)
+                            {
+                                ordersTitle += " + " + orders.Count().ToString();
+                            }
+                        }*@
                     }
                     <li>@Html.ActionLink(ordersTitle, "Index", "Orders")</li>
                     <li>@Html.ActionLink("Performers", "Index", "Performers")</li>
+                    <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
                 </ul>
                 @Html.Partial("_LoginPartial")
             </div>

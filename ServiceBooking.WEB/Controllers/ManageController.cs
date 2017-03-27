@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Security.Claims;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
@@ -11,6 +6,7 @@ using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using ServiceBooking.BLL.DTO;
 using ServiceBooking.BLL.Interfaces;
+using ServiceBooking.DAL.Interfaces;
 using ServiceBooking.WEB.Models;
 
 namespace ServiceBooking.WEB.Controllers
@@ -18,17 +14,22 @@ namespace ServiceBooking.WEB.Controllers
     [Authorize]
     public class ManageController : Controller
     {
-        private IUserService _userService;
+        private  static IUserService _userService;
+        private static IUnitOfWork _unitOfWork;
+
+        public ManageController() : this(_userService, _unitOfWork) { }
+
+        public ManageController(IUserService service, IUnitOfWork unitOfWork)
+        {
+            _userService = service;
+            _unitOfWork = unitOfWork;
+        }
 
         public IUserService UserService
         {
             get
             {
                 return _userService ?? HttpContext.GetOwinContext().GetUserManager<IUserService>();
-            }
-            private set
-            {
-                _userService = value;
             }
         }
 
@@ -45,7 +46,7 @@ namespace ServiceBooking.WEB.Controllers
                : "";
 
             var userId = User.Identity.GetUserId();
-            var model = new IndexViewModel
+            var model = new IndexManagerViewModel
             {
                 BrowserRemembered = await AuthenticationManager.TwoFactorBrowserRememberedAsync(userId)
             };
@@ -72,88 +73,19 @@ namespace ServiceBooking.WEB.Controllers
 
             ClientViewModel client = new ClientViewModel
             {
-                Id = User.Identity.GetUserId(),
+                Id = User.Identity.GetUserId<int>(),
                 UserName = model.OldPassword,
                 Password = model.NewPassword
             };
             var result = await UserService.ChangePassword(client);
+            
             if (result.Succeeded)
             {
-                //var user = await UserService.FindById(User.Identity.GetUserId());
-                //if (user != null)
-                //{
-                //    ClaimsIdentity claim = await _userService.Authenticate(client);
-                //    if (claim == null)
-                //    {
-                //        ModelState.AddModelError("", "Wrong password");
-                //    }
-                //    else
-                //    {
-                //        AuthenticationManager.SignOut();
-                //        AuthenticationManager.SignIn(new AuthenticationProperties
-                //        {
-                //            IsPersistent = true
-                //        }, claim);
-                //        return RedirectToAction("Index", new { Message = ManageMessageId.ChangePasswordSuccess });
-                //    }
-                //}
-                return RedirectToAction("Index", new { Message = ManageMessageId.ChangePasswordSuccess });
+                return RedirectToAction("Index", "Home", new { Message = ManageMessageId.ChangePasswordSuccess });
             }
             AddErrors(result);
             return View(model);
         }
-
-        //
-        // GET: /Manage/ChangePassword
-        public ActionResult DeleteAccount()
-        {
-            return View("DeleteAccount");
-        }
-
-        //
-        // POST: /Manage/ChangePassword
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> DeleteAccount(ChangePasswordViewModel model)
-        {
-            if (!ModelState.IsValid)
-            {
-                return View(model);
-            }
-
-            ClientViewModel client = new ClientViewModel
-            {
-                Id = User.Identity.GetUserId(),
-                UserName = model.OldPassword,
-                Password = model.NewPassword
-            };
-            var result = await UserService.ChangePassword(client);
-            if (result.Succeeded)
-            {
-                var user = await UserService.FindById(User.Identity.GetUserId());
-                if (user != null)
-                {
-                    ClaimsIdentity claim = await _userService.Authenticate(client);
-                    if (claim == null)
-                    {
-                        ModelState.AddModelError("", "Wrong password");
-                    }
-                    else
-                    {
-                        AuthenticationManager.SignOut();
-                        AuthenticationManager.SignIn(new AuthenticationProperties
-                        {
-                            IsPersistent = true
-                        }, claim);
-                        return RedirectToAction("Index", new { Message = ManageMessageId.ChangePasswordSuccess });
-                    }
-                }
-                return RedirectToAction("Index", new { Message = ManageMessageId.ChangePasswordSuccess });
-            }
-            AddErrors(result);
-            return View(model);
-        }
-
 
         #region Helpers
         private IAuthenticationManager AuthenticationManager
