@@ -12,43 +12,43 @@ namespace ServiceBooking.DAL.Repositories
 {
     public class StatusRepository : IRepository<Status>
     {
-        private ApplicationContext db;
+        public ApplicationContext Db { get; set; }
 
         public StatusRepository(ApplicationContext context)
         {
-            this.db = context;
+            this.Db = context;
         }
 
         public IEnumerable<Status> GetAll()
         {
-            return db.Status;
+            return Db.Status;
         }
 
         public Status Get(int id)
         {
-            return db.Status.Find(id);
+            return Db.Status.Find(id);
         }
 
         public void Create(Status book)
         {
-            db.Status.Add(book);
+            Db.Status.Add(book);
         }
 
         public void Update(Status book)
         {
-            db.Entry(book).State = EntityState.Modified;
+            Db.Entry(book).State = EntityState.Modified;
         }
 
         public IEnumerable<Status> Find(Func<Status, bool> predicate)
         {
-            return db.Status.Where(predicate).ToList();
+            return Db.Status.Where(predicate).ToList();
         }
 
         public void Delete(int id)
         {
-            Status book = db.Status.Find(id);
+            Status book = Db.Status.Find(id);
             if (book != null)
-                db.Status.Remove(book);
+                Db.Status.Remove(book);
         }
     }
 }

@@ -54,6 +54,9 @@ namespace ServiceBooking.Util
             _kernel.Bind<CategoryRepository>().ToConstructor(_ => new CategoryRepository(context)).InRequestScope();
             _kernel.Bind<ICategoryService>().To<CategoryService>();
 
+            _kernel.Bind<StatusRepository>().ToConstructor(_ => new StatusRepository(context)).InRequestScope();
+            _kernel.Bind<IStatusService>().To<StatusService>();
+
             _kernel.Bind<CommentRepository>().ToConstructor(_ => new CommentRepository(context)).InRequestScope();
             _kernel.Bind<ICommentService>().To<CommentService>();
 

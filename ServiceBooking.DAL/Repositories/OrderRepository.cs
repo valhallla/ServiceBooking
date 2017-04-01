@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,43 +13,46 @@ namespace ServiceBooking.DAL.Repositories
 {
     public class OrderRepository : IRepository<Order>
     {
-        private readonly ApplicationContext _db;
+        public ApplicationContext Db { get; set; }
 
         public OrderRepository(ApplicationContext context)
         {
-            this._db = context;
+            this.Db = context;
         }
 
         public IEnumerable<Order> GetAll()
         {
-            return _db.Orders.Include(o => o.Category).Include(o => o.Status);
+            return Db.Orders.Include(o => o.Category).Include(o => o.Status);
         }
 
         public Order Get(int id)
         {
-            return _db.Orders.Find(id);
+            return Db.Orders.Find(id);
         }
 
-        public void Create(Order book)
+        public void Create(Order order)
         {
-            _db.Orders.Add(book);
+            Db.Orders.Add(order);
+            Db.SaveChanges();  
         }
 
-        public void Update(Order book)
+        public void Update(Order order)
         {
-            _db.Entry(book).State = EntityState.Modified;
+            Db.Entry(order).State = EntityState.Modified;
+            Db.SaveChanges();
         }
 
         public IEnumerable<Order> Find(Func<Order, bool> predicate)
         {
-            return _db.Orders.Include(o => o.Category).Include(o => o.Status).Where(predicate).ToList();
+            return Db.Orders.Include(o => o.Category).Include(o => o.Status).Where(predicate).ToList();
         }
 
         public void Delete(int id)
         {
-            Order book = _db.Orders.Find(id);
-            if (book != null)
-                _db.Orders.Remove(book);
+            Order order = Db.Orders.Find(id);
+            if (order != null)
+                Db.Orders.Remove(order);
+            Db.SaveChanges();
         }
     }
 }

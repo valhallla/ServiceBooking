@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.ComponentModel.DataAnnotations;
 using System.Web.UI.WebControls;
+using System.Web.WebPages.Html;
 
 namespace ServiceBooking.WEB.Models
 {
@@ -51,15 +52,11 @@ namespace ServiceBooking.WEB.Models
 
         public string Category { get; set; }
 
-        public string Status { get; set; }
-
         [Required]
         [DataType(DataType.Date), DisplayFormat(DataFormatString = "{0:dd.MM.yyyy}", ApplyFormatInEditMode = true)]
         public DateTime CompletionDate { get; set; }
 
         [Required]
         public decimal Price { get; set; }
-
-        public int ClientUserId { get; set; }
     }
 }

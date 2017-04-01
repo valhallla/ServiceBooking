@@ -33,8 +33,6 @@ C:\ServiceBooking\ServiceBooking.BLL.Data\obj\Debug\ServiceBooking.BLL.Data.cspr
 C:\ServiceBooking\ServiceBooking.BLL.Data\obj\Debug\ServiceBooking.DAL.UnitOfWork.dll
 C:\ServiceBooking\ServiceBooking.BLL.Data\obj\Debug\ServiceBooking.DAL.UnitOfWork.pdb
 C:\ServiceBooking\ServiceBooking.BLL.Data\bin\Debug\ServiceBooking.DAL.UnitOfWork.dll.config
-C:\ServiceBooking\ServiceBooking.BLL.Data\bin\Debug\EntityFramework.SqlServer.dll
-C:\ServiceBooking\ServiceBooking.BLL.Data\bin\Debug\EntityFramework.SqlServer.xml
 C:\ServiceBooking\ServiceBooking.BLL.Data\bin\Debug\Microsoft.AspNet.Identity.Owin.dll
 C:\ServiceBooking\ServiceBooking.BLL.Data\bin\Debug\Microsoft.Owin.dll
 C:\ServiceBooking\ServiceBooking.BLL.Data\bin\Debug\Microsoft.Owin.Security.OAuth.dll

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity.SqlServer.Utilities;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -23,13 +24,13 @@ namespace ServiceBooking.DAL.Identity
         {
             var manager = new ApplicationUserRepository(
                 new CustomUserStore(context.Get<ApplicationContext>()));
-            // Configure validation logic for usernames 
+            
             manager.UserValidator = new UserValidator<ApplicationUser, int>(manager)
             {
                 AllowOnlyAlphanumericUserNames = false,
                 RequireUniqueEmail = true
             };
-            // Configure validation logic for passwords 
+            
             manager.PasswordValidator = new PasswordValidator
             {
                 RequiredLength = 6,
@@ -38,30 +39,29 @@ namespace ServiceBooking.DAL.Identity
                 RequireLowercase = true,
                 RequireUppercase = true,
             };
-            // Register two factor authentication providers. This application uses Phone 
-            // and Emails as a step of receiving a code for verifying the user 
-            // You can write your own provider and plug in here. 
-            //manager.RegisterTwoFactorProvider("PhoneCode",
-            //    new PhoneNumberTokenProvider<ApplicationUser, int>
-            //    {
-            //        MessageFormat = "Your security code is: {0}"
-            //    });
-            //manager.RegisterTwoFactorProvider("EmailCode",
-            //    new EmailTokenProvider<ApplicationUser, int>
-            //    {
-            //        Subject = "Security Code",
-            //        BodyFormat = "Your security code is: {0}"
-            //    });
-            //manager.EmailService = new EmailService();
-            //manager.SmsService = new SmsService();
-            //var dataProtectionProvider = options.DataProtectionProvider;
-            //if (dataProtectionProvider != null)
-            //{
-            //    manager.UserTokenProvider =
-            //        new DataProtectorTokenProvider<ApplicationUser, int>(
-            //            dataProtectionProvider.Create("ASP.NET Identity"));
-            //}
             return manager;
         }
+
+        //private IUserPasswordStore<ApplicationUser, int> GetPasswordStore()
+        //{
+        //    var cast = Store as IUserPasswordStore<ApplicationUser, int>;
+        //    if (cast == null)
+        //    {
+        //        throw new NotSupportedException();
+        //    }
+        //    return cast;
+        //}
+
+        //public override async Task<bool> CheckPasswordAsync(ApplicationUser user, string password)
+        //{
+        //    IUserPasswordStore<ApplicationUser, int> passwordStore = this.GetPasswordStore();
+        //    return await this.VerifyPasswordAsync(passwordStore, user, password).WithCurrentCulture<bool>();
+        //}
+
+        //protected virtual async Task<bool> VerifyPasswordAsync(IUserPasswordStore<ApplicationUser, int> store, ApplicationUser user, string password)
+        //{
+        //    string hash = await store.GetPasswordHashAsync(user).WithCurrentCulture<string>();
+        //    return this.PasswordHasher.VerifyHashedPassword(hash, password) != PasswordVerificationResult.Failed;
+        //}
     }
 }

@@ -177,3 +177,5 @@ C:\ServiceBooking\ServiceBooking.WEB\bin\EntityFramework.SqlServer.xml
 C:\ServiceBooking\ServiceBooking.WEB\bin\ServiceBooking.WEB.dll.config
 C:\ServiceBooking\ServiceBooking.WEB\bin\Microsoft.Owin.dll
 C:\ServiceBooking\ServiceBooking.WEB\bin\WebGrease.dll
+C:\ServiceBooking\ServiceBooking.WEB\bin\AutoMapper.dll
+C:\ServiceBooking\ServiceBooking.WEB\bin\AutoMapper.xml

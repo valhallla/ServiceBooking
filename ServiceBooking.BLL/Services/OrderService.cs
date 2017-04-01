@@ -1,31 +1,26 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using Ninject;
 using ServiceBooking.BLL.DTO;
 using ServiceBooking.BLL.Interfaces;
 using ServiceBooking.DAL.Entities;
 using ServiceBooking.DAL.Interfaces;
-using ServiceBooking.DAL.Repositories;
+using AutoMapper;
 
 namespace ServiceBooking.BLL.Services
 {
     public class OrderService : IOrderService
     {
-        public IRepository<Order> OrderRepository { get; }
+        private readonly IRepository<Order> _orderRepository;
 
         [Inject]
         public OrderService(IRepository<Order> orderRepository)
         {
-            OrderRepository = orderRepository;
+            _orderRepository = orderRepository;
         }
 
         public IEnumerable<OrderViewModel> GetAll()
         {
-            var orders = OrderRepository.GetAll();
+            var orders = _orderRepository.GetAll();
             var orderViewModels = new List<OrderViewModel>();
 
             foreach (var order in orders)
@@ -34,8 +29,8 @@ namespace ServiceBooking.BLL.Services
                 {
                     Id = order.Id,
                     Name = order.Name,
-                    Category = order.Category.Name,
-                    Status = order.Status.Value,
+                    CategoryId = order.Category.Id,
+                    StatusId = order.Status.Id,
                     AdminStatus = order.AdminStatus,
                     UploadDate = order.UploadDate,
                     CompletionDate = order.CompletionDate,
@@ -46,78 +41,22 @@ namespace ServiceBooking.BLL.Services
             return orderViewModels;
         }
 
-        //    public OrderService(IUnitOfWork uow)
-        //    {
-        //        Database = uow;
-        //    }
-
-        //    public void MakeOrder(OrderViewModel order)
-        //    {
-        //        var category = Database.Categories.Get(OrderViewModel.CategoryId);
-
-        //        // валидация
-        //        if (order == null)
-        //            throw new ValidationException("Телефон не найден", "");
-        //        // применяем скидку
-        //        decimal sum = new Discount(0.1m).GetDiscountedPrice(phone.Price);
-        //        //Order order = new Order
-        //        //{
-        //        //    Date = DateTime.Now,
-        //        //    Address = orderDto.Address,
-        //        //    PhoneId = phone.Id,
-        //        //    Sum = sum,
-        //        //    PhoneNumber = orderDto.PhoneNumber
-        //        //}
-
-        //    public CategoryViewModel Category(int? id)
-        //    {
-        //        throw new NotImplementedException();
-        //    }
-
-        //    public StatusViewModel Status(int? id)
-        //    {
-        //        throw new NotImplementedException();
-        //    }
-
-        //    public ClientViewModel Client(int? id)
-        //    {
-        //        throw new NotImplementedException();
-        //    }
-
-        //    public IEnumerable<ResponseViewModel> GetResponses()
-        //    {
-        //        throw new NotImplementedException();
-        //    }
-
-        //    public void Dispose()
-        //    {
-        //        throw new NotImplementedException();
-        //    }
-        //}
-
-        //public CategoryViewModel Category(int? id)
-        //{
-        //    throw new NotImplementedException();
-        //}
-
-        //public StatusViewModel Status(int? id)
-        //{
-        //    throw new NotImplementedException();
-        //}
-
-        //public ClientViewModel Client(int? id)
-        //{
-        //    throw new NotImplementedException();
-        //}
-
-        //public IEnumerable<ResponseViewModel> Responses()
-        //{
-        //    throw new NotImplementedException();
-        //}
-
-        public void Dispose()
+        public void Create(OrderViewModel order)
         {
-            throw new NotImplementedException();
+            Mapper.Initialize(cfg => cfg.CreateMap<OrderViewModel, Order>());
+            _orderRepository.Create(Mapper.Map<OrderViewModel, Order>(order));
+        }
+
+        public void ConfirmOrder(int id)
+        {
+            Order order = _orderRepository.Get(id);
+            order.AdminStatus = true;
+            _orderRepository.Update(order);
+        }
+
+        public void RejectOrder(int id)
+        {
+            _orderRepository.Delete(id);
         }
     }
 }

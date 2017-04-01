@@ -27,7 +27,7 @@ namespace ServiceBooking.BLL.DTO
 
         public bool IsPerformer { get; set; }
 
-        public int? CategoryId { get; set; }
+        public int CategoryId { get; set; }
 
         public string Info { get; set; }
 

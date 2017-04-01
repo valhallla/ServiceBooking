@@ -13,6 +13,7 @@ namespace ServiceBooking.BLL.Interfaces
         Task<OperationDetails> Create(ClientViewModel userDto);
         Task<ClaimsIdentity> Authenticate(ClientViewModel userDto);
         Task<IdentityResult> ChangePassword(ClientViewModel userDto);
-        //Task<ClientViewModel> FindById(int id);
+        Task<ClientViewModel> FindById(int id);
+        Task<OperationDetails> AddOrder(int clientId, OrderViewModel order);
     }
 }

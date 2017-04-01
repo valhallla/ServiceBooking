@@ -12,43 +12,43 @@ namespace ServiceBooking.DAL.Repositories
 {
     public class CommentRepository : IRepository<Comment>
     {
-        private ApplicationContext db;
+        public ApplicationContext Db { get; set; }
 
         public CommentRepository(ApplicationContext context)
         {
-            this.db = context;
+            this.Db = context;
         }
 
         public IEnumerable<Comment> GetAll()
         {
-            return db.Comments;
+            return Db.Comments;
         }
 
         public Comment Get(int id)
         {
-            return db.Comments.Find(id);
+            return Db.Comments.Find(id);
         }
 
         public void Create(Comment book)
         {
-            db.Comments.Add(book);
+            Db.Comments.Add(book);
         }
 
         public void Update(Comment book)
         {
-            db.Entry(book).State = EntityState.Modified;
+            Db.Entry(book).State = EntityState.Modified;
         }
 
         public IEnumerable<Comment> Find(Func<Comment, bool> predicate)
         {
-            return db.Comments.Where(predicate).ToList();
+            return Db.Comments.Where(predicate).ToList();
         }
 
         public void Delete(int id)
         {
-            Comment book = db.Comments.Find(id);
+            Comment book = Db.Comments.Find(id);
             if (book != null)
-                db.Comments.Remove(book);
+                Db.Comments.Remove(book);
         }
     }
 }

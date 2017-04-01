@@ -1,4 +1,6 @@
-﻿<!DOCTYPE html>
+﻿@using ServiceBooking.WEB.Models
+@model IEnumerable<IndexOrderViewModel>
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8" />
@@ -23,15 +25,15 @@
                 <ul class="nav navbar-nav">
                     @{
                         string ordersTitle = "Orders";
-                        @*if (Request.IsAuthenticated && this.User.IsInRole("admin"))
-                        {
-                            IEnumerable<ServiceBooking.BLL.DTO.OrderViewModel> orders = (new ServiceBooking.BLL.DTO.OrderViewModel().Orders;
-                            orders = orders.Where(model => !model.AdminStatus);
-                            if (orders != null)
-                            {
-                                ordersTitle += " + " + orders.Count().ToString();
-                            }
-                        }*@
+                        //if (Request.IsAuthenticated && User.IsInRole("admin"))
+                        //{
+                        //    IEnumerable<IndexOrderViewModel> orders = Model;
+                        //    orders = orders.Where(model => !model.AdminStatus);
+                        //    if (orders != null)
+                        //    {
+                        //        ordersTitle += " + " + orders.Count();
+                        //    }
+                        //}
                     }
                     <li>@Html.ActionLink(ordersTitle, "Index", "Orders")</li>
                     <li>@Html.ActionLink("Performers", "Index", "Performers")</li>

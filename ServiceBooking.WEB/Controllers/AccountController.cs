@@ -14,6 +14,7 @@ using Microsoft.Owin;
 using Microsoft.Owin.Host.SystemWeb;
 using Ninject;
 using ServiceBooking.DAL.Interfaces;
+using AutoMapper;
 
 namespace ServiceBooking.WEB.Controllers
 {
@@ -90,17 +91,13 @@ namespace ServiceBooking.WEB.Controllers
         {
             if (ModelState.IsValid)
             {
-                ClientViewModel userViewModel = new ClientViewModel
-                {
-                    Email = model.Email,
-                    Password = model.Password,
-                    EmailConfirmed = false,
-                    UserName = model.Email,
-                    Name = model.Name,
-                    Surname = model.Surname,
-                    IsPerformer = false,
-                    Role = "user"
-                };
+                Mapper.Initialize(cfg => cfg.CreateMap<RegisterViewModel, ClientViewModel>()
+                    .ForMember("UserName", opt => opt.MapFrom(c => c.Email))
+                    .ForMember("EmailConfirmed", opt => opt.MapFrom(c => true))
+                    .ForMember("IsPerformer", opt => opt.MapFrom(c => false))
+                    .ForMember("Role", opt => opt.MapFrom(c => "user")));
+
+                ClientViewModel userViewModel = Mapper.Map<RegisterViewModel, ClientViewModel>(model);
 
                 OperationDetails operationDetails = await _userService.Create(userViewModel);
                 if (operationDetails.Succedeed)

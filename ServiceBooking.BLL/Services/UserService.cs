@@ -12,25 +12,25 @@ using ServiceBooking.DAL.EF;
 using ServiceBooking.DAL.Entities;
 using ServiceBooking.DAL.Identity;
 using ServiceBooking.DAL.Interfaces;
+using AutoMapper;
+using System.Web.Helpers;
 
 namespace ServiceBooking.BLL.Services
 {
     public class UserService : IUserService
     {
-        //private readonly ApplicationContext _db;
-        private readonly IRepository<ClientUser> _client;
+        private readonly IRepository<ClientUser> _clientRepository;
         public ApplicationUserRepository UserManager { get; }
         public ApplicationRoleRepository RoleManager { get; }
 
         [Inject]
         public UserService(IRepository<ClientUser> client)
         {
-            _client = client;
+            _clientRepository = client;
             ApplicationContext db = new ApplicationContext("DefaultConnection");
             UserManager = new ApplicationUserRepository(new UserStore<ApplicationUser, CustomRole, int, CustomUserLogin, CustomUserRole, CustomUserClaim> (db));
             RoleManager = new ApplicationRoleRepository(new RoleStore<ApplicationRole>(db));
         }
-
 
         public async Task<OperationDetails> Create(ClientViewModel userDto)
         {
@@ -44,6 +44,7 @@ namespace ServiceBooking.BLL.Services
                     Name = userDto.Name,
                     Surname = userDto.Surname
                 };
+
                 var result = await UserManager.CreateAsync(user, userDto.Password);
                 if (result.Errors.Any())
                 {
@@ -62,7 +63,7 @@ namespace ServiceBooking.BLL.Services
                     AdminStatus = userDto.AdminStatus,
                 };
 
-                _client.Create(clientUser);
+                _clientRepository.Create(clientUser);
                 return new OperationDetails(true, "Registration succeeded", "");
             }
 
@@ -72,12 +73,24 @@ namespace ServiceBooking.BLL.Services
         public async Task<ClaimsIdentity> Authenticate(ClientViewModel userDto)
         {
             ClaimsIdentity claim = null;
-            ApplicationUser user;
-            if (userDto.Email.Equals("service.booking.2017@gmail.com") && userDto.Password.Equals("Kruner_13"))
-                //user = await UserManager.FindByEmailAsync(userDto.Email);
-                user = UserManager.Users.First();
-            else
-                user = await UserManager.FindAsync(userDto.Email, userDto.Password);
+            ApplicationUser user = /*_clientRepository.GetAll().Where(u => u.Email.Equals(userDto.Email)).ToArray().FirstOrDefault();*/await UserManager.FindByEmailAsync(userDto.Email);
+
+            if (user != null)
+            {
+                if (user.IsPasswordClear && user.PasswordHash.Equals(userDto.Password)) ;
+                else if (!user.IsPasswordClear)
+                    user = await UserManager.FindAsync(userDto.Email, userDto.Password);
+                else user = null;
+            }
+
+            //var user = UserManager.Users.ToArray(
+
+
+            //).FirstOrDefault(u => (u.Email.Equals(userDto.Email)) && 
+            //        (
+            //            (u.IsPasswordClear && Crypto.VerifyHashedPassword(u.PasswordHash, userDto.Password)) ||
+            //            (!u.IsPasswordClear && Crypto.VerifyHashedPassword(u.PasswordHash, Crypto.HashPassword(userDto.Password)))
+            //        ));
 
             if (user != null)
             {
@@ -92,16 +105,33 @@ namespace ServiceBooking.BLL.Services
             return await UserManager.ChangePasswordAsync(userDto.Id, userDto.UserName, userDto.Password);
         }
 
-        //public async Task<ClientViewModel> FindById(int id)
-        //{
-        //    ApplicationUser user = await UserManager.FindByIdAsync(id);
-        //    if (user != null)
-        //    {
-        //        _db.Entry(UserManager).State = EntityState.Modified;
-        //        return new ClientViewModel {Name = user.Name, Surname = user.Surname, Email = user.Email};
-        //    }
+        public async Task<ClientViewModel> FindById(int id)
+        {
+            ClientUser clientUser = _clientRepository.Get(id);
 
-        //    return null;
-        //}
+            if (clientUser != null)
+                return new ClientViewModel { Id = clientUser.Id };
+
+            return null;
+
+            //ApplicationUser user = await UserManager.FindByIdAsync(id);
+            //if (user != null)
+            //{
+            //    Db.Entry(UserManager).State = EntityState.Modified;
+            //    return new ClientViewModel { Name = user.Name, Surname = user.Surname, Email = user.Email };
+            //}
+
+            //return null;
+        }
+
+        public async Task<OperationDetails> AddOrder(int clientId, OrderViewModel orderVM)
+        {
+            ClientUser client = _clientRepository.Get(clientId);
+            Mapper.Initialize(cfg => cfg.CreateMap<OrderViewModel, Order>());
+            Order order = Mapper.Map<OrderViewModel, Order>(orderVM);
+            client.Orders.Add(order);
+            _clientRepository.Update(client);
+            return new OperationDetails(true, "Order creation succeeded", "");
+        }
     }
 }

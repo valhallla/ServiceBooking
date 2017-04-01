@@ -1,20 +1,24 @@
-﻿@using Microsoft.AspNet.Identity
+﻿@using System.Activities.Expressions
+@using Microsoft.AspNet.Identity
 @using ServiceBooking.WEB.Models
 @model IEnumerable<IndexOrderViewModel>
 
 @{
-    string newOrders = " ";
-    if (Request.IsAuthenticated && User.IsInRole("admin"))
+    string newOrders = string.Empty;
+    if (ViewBag.NewOrdersAmountString != null)
     {
-        IEnumerable<IndexOrderViewModel> orders = Model.Where(model => !model.AdminStatus);
-        newOrders += " + " + orders.Count();
+        newOrders = ViewBag.NewOrdersAmountString;
     }
-
     ViewBag.Title = "Orders";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Orders @Html.ActionLink(@newOrders, "Index", new { newApplications = true })</h2>
+<h2>Orders
+    @if (Request.IsAuthenticated && User.IsInRole("admin") && !newOrders.Equals(string.Empty))
+    {
+        @Html.ActionLink(@newOrders, "Index", new {newApplications = true})
+    }
+</h2>
 
 @if (!Request.IsAuthenticated)
 {
@@ -55,7 +59,7 @@ else
      {
          <hr/>
          <div class="row">
-             <div class="col-sm-8">
+             <div class="col-sm-9">
                  <b style="font-size: 20pt">
                      @Html.ActionLink(item.Name, "Details", new {id = item.Id})
                  </b> &emsp;
@@ -77,7 +81,7 @@ else
                     </h5>
                  }
              </div>
-             <div class="col-sm-4">
+             <div class="col-sm-3">
                  <h4>
                      @Html.DisplayFor(modelItem => item.Price) $
                  </h4>
@@ -89,8 +93,8 @@ else
                      if(ViewBag.IsNewOrdersPage)
                      {
                          <p>
-                             @Html.ActionLink("Confirm", "Confirm", "Orders", null, new {@class = "btn btn-primary btn-lg"})
-                             @Html.ActionLink("Reject", "Index", "Orders", null, new {@class = "btn btn-primary btn-lg"})
+                             @Html.ActionLink("Confirm", "Confirm", "Orders", new { id = item.Id }, new {@class = "btn btn-primary btn-lg"})
+                             @Html.ActionLink("Reject", "Reject", "Orders", new { id = item.Id }, new {@class = "btn btn-primary btn-lg"})
                          </p>
                      }
                      else
@@ -104,3 +108,5 @@ else
          </div>
      }
 }
+@Scripts.Render("~/bundles/jquery")
+@Scripts.Render("~/bundles/bootstrap")

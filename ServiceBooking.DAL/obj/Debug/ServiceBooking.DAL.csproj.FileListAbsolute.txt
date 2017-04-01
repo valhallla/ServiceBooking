@@ -57,3 +57,4 @@ C:\ServiceBooking\ServiceBooking.DAL\obj\Debug\ServiceBooking.DAL.Migrations.Ini
 C:\ServiceBooking\ServiceBooking.DAL\obj\Debug\ServiceBooking.DAL.csproj.GenerateResource.Cache
 C:\ServiceBooking\ServiceBooking.DAL\obj\Debug\ServiceBooking.DAL.Migrations.Version2.resources
 C:\ServiceBooking\ServiceBooking.DAL\obj\Debug\ServiceBooking.DAL.Migrations.version3.resources
+C:\ServiceBooking\ServiceBooking.DAL\obj\Debug\ServiceBooking.DAL.Migrations.Version4.resources

@@ -16,9 +16,9 @@ namespace ServiceBooking.DAL.Repositories
             _db = new ApplicationContext(connectionString);
         }
         
-        public async void Save()
+        public void Save()
         {
-            await _db.SaveChangesAsync();
+            _db.SaveChangesAsync();
         }
 
         public virtual void Dispose(bool disposing)

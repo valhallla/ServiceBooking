@@ -84,3 +84,5 @@ C:\ServiceBooking\ServiceBooking.Util\bin\Debug\Microsoft.Owin.Security.Cookies.
 C:\ServiceBooking\ServiceBooking.Util\bin\Debug\Newtonsoft.Json.xml
 C:\ServiceBooking\ServiceBooking.Util\bin\Debug\EntityFramework.xml
 C:\ServiceBooking\ServiceBooking.Util\bin\Debug\EntityFramework.SqlServer.xml
+C:\ServiceBooking\ServiceBooking.Util\bin\Debug\AutoMapper.dll
+C:\ServiceBooking\ServiceBooking.Util\bin\Debug\AutoMapper.xml
