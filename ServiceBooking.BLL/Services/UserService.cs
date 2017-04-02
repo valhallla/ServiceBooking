@@ -93,25 +93,13 @@ namespace ServiceBooking.BLL.Services
 
         public ClientViewModel FindById(int id)
         {
-             ApplicationUser user = UserManager.FindById(id);
+            ApplicationUser user = UserManager.FindById(id);
             if (user != null)
             {
-                //Db.Entry(UserManager).State = EntityState.Modified;
-                return new ClientViewModel { Name = user.Name, Surname = user.Surname, Email = user.Email };
+                Mapper.Initialize(cfg => cfg.CreateMap<ApplicationUser, ClientViewModel>());
+                return Mapper.Map<ApplicationUser, ClientViewModel>(user);
             }
-
             return null;
-
-            ////ApplicationUser user = UserManager.FindById(id);
-            //var user = _clientRepository.Get(id);
-
-            //if (user != null)
-            //{
-            //    Mapper.Initialize(cfg => cfg.CreateMap<ClientUser, ClientViewModel>());
-            //    return Mapper.Map<ClientUser, ClientViewModel>(user);
-            //}
-
-            //return null;
         }
     }
 }

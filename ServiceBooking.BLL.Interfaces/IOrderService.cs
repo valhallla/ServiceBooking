@@ -10,11 +10,6 @@ namespace ServiceBooking.BLL.Interfaces
 {
     public interface IOrderService
     {
-        //void MakeOrder(OrderViewModel order);
-        //CategoryViewModel Category(int? id);
-        //StatusViewModel Status(int? id);
-        //ClientViewModel Client(int? id);
-        //IEnumerable<ResponseViewModel> Responses();
         IEnumerable<OrderViewModel> GetAll();
         OperationDetails Create(OrderViewModel orderDto);
         OperationDetails ConfirmOrder(int id);

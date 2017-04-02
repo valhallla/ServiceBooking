@@ -66,48 +66,34 @@ else
                 </b> &emsp;
                 Published @Html.DisplayFor(modelItem => item.UploadDate)
                 <br />
-                <h4>@Html.DisplayFor(modelItem => item.Description)</h4>
-
                 <h5>
                     To finish by @Html.DisplayFor(modelItem => item.CompletionDate) &emsp;
                     <b>@Html.DisplayFor(modelItem => item.Category)</b>
                 </h5>
-                @if (Request.IsAuthenticated && !User.IsInRole("admin") && item.ClientUserId == User.Identity.GetUserId<int>())
+                @if (Request.IsAuthenticated)
                 {
                     <h5>
-                        @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
+                        @if (!User.IsInRole("admin") && item.ClientUserId == User.Identity.GetUserId<int>())
+                        {
+                            @*@Html.ActionLink("Edit", "Edit", new { id = item.Id }) |*@
+                        }
                         @Html.ActionLink("Delete", "Delete", "Orders", new
-                    {
-                        id = item.Id,
-                        isMyOrdersPage = ViewBag.IsMyOrdersPage,
-                        isNewOrdersPage = ViewBag.IsNewOrdersPage
-                    })
+                        {
+                            id = item.Id,
+                            isMyOrdersPage = ViewBag.IsMyOrdersPage
+                        }, null)
                     </h5>
                 }
             </div>
             <div class="col-sm-3">
                 <h4>@Html.DisplayFor(modelItem => item.Price) $</h4>
                 <h4>@Html.DisplayFor(modelItem => item.Status)</h4>
-                @if (Request.IsAuthenticated && User.IsInRole("admin"))
+                @if (Request.IsAuthenticated && User.IsInRole("admin") && ViewBag.IsNewOrdersPage)
                 {
-                    if (ViewBag.IsNewOrdersPage)
-                    {
-                        <p>
-                            @Html.ActionLink("Confirm", "Confirm", "Orders", new { id = item.Id }, new { @class = "btn btn-primary btn-lg" })
-                            @Html.ActionLink("Reject", "Reject", "Orders", new { id = item.Id }, new { @class = "btn btn-primary btn-lg" })
-                        </p>
-                    }
-                    else
-                    {
-                        <p>
-                            @Html.ActionLink("Delete", "Delete", "Orders", new
-                        {
-                            id = item.Id,
-                            isMyOrdersPage = ViewBag.IsMyOrdersPage,
-                            isNewOrdersPage = ViewBag.IsNewOrdersPage
-                        }, new { @class = "btn btn-primary btn-lg" })
-                        </p>
-                    }
+                    <p>
+                        @Html.ActionLink("Confirm", "Confirm", "Orders", new { id = item.Id }, new { @class = "btn btn-primary btn-lg" })
+                        @Html.ActionLink("Reject", "Reject", "Orders", new { id = item.Id }, new { @class = "btn btn-primary btn-lg" })
+                    </p>
                 }
             </div>
         </div>

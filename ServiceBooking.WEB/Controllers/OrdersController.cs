@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
-using System.Web;
 using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
 using ServiceBooking.BLL.DTO;
@@ -12,7 +10,6 @@ using ServiceBooking.Util;
 using ServiceBooking.WEB.Models;
 using AutoMapper;
 using ServiceBooking.BLL.Infrastructure;
-using ServiceBooking.DAL.Entities;
 
 namespace ServiceBooking.WEB.Controllers
 {
@@ -21,27 +18,33 @@ namespace ServiceBooking.WEB.Controllers
         private static IOrderService _orderService;
         private static ICategoryService _categoryService;
         private static IStatusService _statusService;
+        private static IResponseService _responseService;
         private static IUserService _userService;
         private static IUnitOfWork _unitOfWork;
 
-        public OrdersController() : this(_orderService, _categoryService, _statusService, _userService, _unitOfWork) { }
+        public OrdersController() : this(_orderService, _categoryService, 
+            _statusService, _responseService, _userService, _unitOfWork) { }
 
         public OrdersController(IOrderService orderService, ICategoryService categoryService, 
-            IStatusService statusService, IUserService userService, IUnitOfWork unitOfWork)
+            IStatusService statusService, IResponseService responseService, 
+            IUserService userService, IUnitOfWork unitOfWork)
         {
             _orderService = orderService;
             _categoryService = categoryService;
             _statusService = statusService;
+            _responseService = responseService;
             _userService = userService;
             _unitOfWork = unitOfWork;
         }
 
         public OrdersController(NinjectDependencyResolver resolver, IOrderService orderService, 
-            ICategoryService categoryService, IStatusService statusService, IUserService userService, IUnitOfWork unitOfWork)
+            ICategoryService categoryService, IStatusService statusService, IResponseService responseService, 
+            IUserService userService, IUnitOfWork unitOfWork)
         {
             _orderService = orderService;
             _categoryService = categoryService;
             _statusService = statusService;
+            _responseService = responseService;
             _userService = userService;
             _unitOfWork = unitOfWork;
         }
@@ -52,7 +55,7 @@ namespace ServiceBooking.WEB.Controllers
             var ordersDto = _orderService.GetAll();
 
             ViewBag.NewOrdersAmountString = string.Empty;
-            var newOrdersAmount = ordersDto.ToList().Count(model => !model.AdminStatus);
+            var newOrdersAmount = ordersDto.Count(model => !model.AdminStatus);
             if (newOrdersAmount > 0)
                 ViewBag.NewOrdersAmountString = " + " +  newOrdersAmount.ToString();
 
@@ -74,7 +77,7 @@ namespace ServiceBooking.WEB.Controllers
 
                 if (!ordersDto.Any())
                     ViewBag.Message = "You have no orders";
-                ViewBag.IsMyOrdersPage = true;
+                ViewBag.IsMyOrdersPage = true;  
             }
 
             Mapper.Initialize(cfg => cfg.CreateMap<OrderViewModel, IndexOrderViewModel>()
@@ -83,6 +86,35 @@ namespace ServiceBooking.WEB.Controllers
             var orders = Mapper.Map<IEnumerable<OrderViewModel>, List<IndexOrderViewModel>>(ordersDto);
 
             return View(orders);
+        }
+
+        // GET: Orders/Details/5
+        public ActionResult Details(int id)
+        {
+            var responsesDto = _responseService.GetAllForOrder(id);
+            Mapper.Initialize(cfg => cfg.CreateMap<ResponseViewModel, IndexResponseViewModel>()
+                .ForMember("PerformerId", opt => opt.MapFrom(c => c.PerformerId))
+                .ForMember("PerformerName", opt => opt.MapFrom(c => _userService.FindById(c.PerformerId).Surname
+                    + _userService.FindById(c.PerformerId).Name))
+                );
+            var responses = Mapper.Map<IEnumerable<ResponseViewModel>, List<IndexResponseViewModel>>(responsesDto);
+
+            var orderDto = _orderService.Find(id);
+            if (orderDto == null)
+                return HttpNotFound();
+            var clientUser = _userService.FindById(orderDto.ClientUserId);
+
+            Mapper.Initialize(cfg => cfg.CreateMap<OrderViewModel, DetailsOrderViewModel>()
+                .ForMember("CustomerName", opt => opt.MapFrom(c => clientUser.Surname + " " + clientUser.Name))
+                .ForMember("Category", opt => opt.MapFrom(c => _categoryService.FindById(c.CategoryId).Name))
+                .ForMember("Status", opt => opt.MapFrom(c => _statusService.FindById(c.StatusId).Value))
+                .ForMember("Responses", opt => opt.MapFrom(c => responses))
+                );
+            DetailsOrderViewModel order = Mapper.Map<OrderViewModel, DetailsOrderViewModel>(orderDto);
+
+            ViewBag.IsPerformer = _userService.FindById(User.Identity.GetUserId<int>()).IsPerformer;
+
+            return View(order);
         }
 
         // GET: Orders/Create
@@ -130,24 +162,19 @@ namespace ServiceBooking.WEB.Controllers
         }
 
         // GET: Orders/Delete/5
-        public ActionResult Delete(int id, bool? isMyOrdersPage, bool? isNewOrdersPage)
+        public ActionResult Delete(int id, bool? isMyOrdersPage)
         {
             var orderDto = _orderService.Find(id);
             if (orderDto == null)
                 return HttpNotFound();
             var clientUser = _userService.FindById(orderDto.ClientUserId);
 
-            Mapper.Initialize(cfg => cfg.CreateMap<OrderViewModel, IndexOrderViewModel>()
-                .ForMember("Category", opt => opt.MapFrom(c => _categoryService.FindById(c.CategoryId).Name))
-                .ForMember("Status", opt => opt.MapFrom(c => _statusService.FindById(c.StatusId).Value))
-                .ForMember("CustomerName", opt => opt.MapFrom(c => clientUser.Surname + " " + clientUser.Name))
-            );
+            Mapper.Initialize(cfg => cfg.CreateMap<OrderViewModel, DeleteOrderViewModel>()
+                .ForMember("CustomerName", opt => opt.MapFrom(c => clientUser.Id == User.Identity.GetUserId<int>() 
+                    ? "you" : clientUser.Surname + " " + clientUser.Name)));
+            DeleteOrderViewModel order = Mapper.Map<OrderViewModel, DeleteOrderViewModel>(orderDto);
 
-            IndexOrderViewModel order = Mapper.Map<OrderViewModel, IndexOrderViewModel>(orderDto);
-            var orders = new List<IndexOrderViewModel>();
-            orders.Add(order);
-
-            return View("Delete", orders);
+            return View(order);
         }
 
         // POST: Orders/Delete/5
