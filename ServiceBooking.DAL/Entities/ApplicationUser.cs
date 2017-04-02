@@ -19,6 +19,21 @@ namespace ServiceBooking.DAL.Entities
 
         public bool IsPasswordClear { get; set; }
 
+        public virtual ICollection<Order> Orders { get; set; }
+
+        public bool IsPerformer { get; set; }
+
+        public int? CategoryId { get; set; }
+        public Category Category { get; set; }
+
+        public string Info { get; set; }
+
+        public int? Rating { get; set; }
+
+        public string AdminStatus { get; set; }
+
+        public virtual ICollection<Comment> Comments { get; set; }
+
         public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<ApplicationUser, int> manager)
         {
             // Note the authenticationType must match the one defined in

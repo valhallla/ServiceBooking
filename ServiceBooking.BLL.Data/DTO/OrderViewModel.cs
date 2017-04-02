@@ -27,6 +27,6 @@ namespace ServiceBooking.BLL.DTO
 
         public int Price { get; set; }
 
-        public virtual int ClientUserId { get; set; }
+        public virtual int UserId { get; set; }
     }
 }

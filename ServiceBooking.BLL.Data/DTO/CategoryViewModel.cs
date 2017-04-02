@@ -11,6 +11,6 @@ namespace ServiceBooking.BLL.DTO
 
         public virtual ICollection<Order> Orders { get; set; }
 
-        public virtual ICollection<ClientUser> Performers { get; set; }
+        public virtual ICollection<ApplicationUser> Performers { get; set; }
     }
 }

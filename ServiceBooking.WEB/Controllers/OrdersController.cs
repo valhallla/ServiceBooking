@@ -73,7 +73,7 @@ namespace ServiceBooking.WEB.Controllers
             if (myOrders != null && myOrders.Value)
             {
                 ordersDto = _orderService.GetAll();
-                ordersDto = ordersDto.Where(model => model.ClientUserId == User.Identity.GetUserId<int>()).OrderByDescending(m => m.UploadDate);
+                ordersDto = ordersDto.Where(model => model.UserId == User.Identity.GetUserId<int>()).OrderByDescending(m => m.UploadDate);
 
                 if (!ordersDto.Any())
                     ViewBag.Message = "You have no orders";
@@ -102,7 +102,7 @@ namespace ServiceBooking.WEB.Controllers
             var orderDto = _orderService.Find(id);
             if (orderDto == null)
                 return HttpNotFound();
-            var clientUser = _userService.FindById(orderDto.ClientUserId);
+            var clientUser = _userService.FindById(orderDto.UserId);
 
             Mapper.Initialize(cfg => cfg.CreateMap<OrderViewModel, DetailsOrderViewModel>()
                 .ForMember("CustomerName", opt => opt.MapFrom(c => clientUser.Surname + " " + clientUser.Name))
@@ -136,7 +136,7 @@ namespace ServiceBooking.WEB.Controllers
                 .ForMember("StatusId", opt => opt.MapFrom(c => 1))
                 .ForMember("AdminStatus", opt => opt.MapFrom(c => false))
                 .ForMember("UploadDate", opt => opt.MapFrom(c => DateTime.Today))
-                .ForMember("ClientUserId", opt => opt.MapFrom(c => User.Identity.GetUserId<int>())));
+                .ForMember("UserId", opt => opt.MapFrom(c => User.Identity.GetUserId<int>())));
             OrderViewModel orderDto = Mapper.Map<CreateOrderViewModel, OrderViewModel>(order);
 
             if (ModelState.IsValid)
@@ -167,7 +167,7 @@ namespace ServiceBooking.WEB.Controllers
             var orderDto = _orderService.Find(id);
             if (orderDto == null)
                 return HttpNotFound();
-            var clientUser = _userService.FindById(orderDto.ClientUserId);
+            var clientUser = _userService.FindById(orderDto.UserId);
 
             Mapper.Initialize(cfg => cfg.CreateMap<OrderViewModel, DeleteOrderViewModel>()
                 .ForMember("CustomerName", opt => opt.MapFrom(c => clientUser.Id == User.Identity.GetUserId<int>() 

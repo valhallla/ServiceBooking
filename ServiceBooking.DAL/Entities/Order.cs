@@ -35,8 +35,8 @@ namespace ServiceBooking.DAL.Entities
         [Required]
         public int Price { get; set; }
 
-        public virtual int ClientUserId { get; set; }
-        public ClientUser ClientUser { get; set; }
+        public virtual int UserId { get; set; }
+        public ApplicationUser User { get; set; }
 
         public virtual ICollection<Response> Responses { get; set; }
     }

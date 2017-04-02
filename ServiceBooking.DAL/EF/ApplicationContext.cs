@@ -2,7 +2,6 @@
 using Microsoft.AspNet.Identity.EntityFramework;
 using ServiceBooking.DAL.Entities;
 using ServiceBooking.DAL.Identity;
-using ServiceBooking.DAL.Migrations;
 
 namespace ServiceBooking.DAL.EF
 {
@@ -27,7 +26,6 @@ namespace ServiceBooking.DAL.EF
 
         public ApplicationContext(string conectionString) : base(conectionString) { }
 
-        public DbSet<ClientUser> Clients { get; set; }
         public DbSet<Order> Orders { get; set; }
         public DbSet<Comment> Comments { get; set; }
         public DbSet<Response> Responses { get; set; }

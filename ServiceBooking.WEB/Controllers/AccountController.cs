@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Web;
+﻿using System.Web;
 using System.Web.Mvc;
 using Microsoft.Owin.Security;
 using System.Threading.Tasks;
@@ -10,9 +9,6 @@ using ServiceBooking.BLL.Infrastructure;
 using ServiceBooking.BLL.Interfaces;
 using ServiceBooking.WEB.Models;
 using ServiceBooking.Util;
-using Microsoft.Owin;
-using Microsoft.Owin.Host.SystemWeb;
-using Ninject;
 using ServiceBooking.DAL.Interfaces;
 using AutoMapper;
 
@@ -92,10 +88,12 @@ namespace ServiceBooking.WEB.Controllers
                 Mapper.Initialize(cfg => cfg.CreateMap<RegisterViewModel, ClientViewModel>()
                     .ForMember("UserName", opt => opt.MapFrom(c => c.Email))
                     .ForMember("EmailConfirmed", opt => opt.MapFrom(c => true))
-                    .ForMember("IsPerformer", opt => opt.MapFrom(c => false))
+                    .ForMember("IsPerformer", opt => opt.MapFrom(c => true))
+                    .ForMember("Rating", opt => opt.MapFrom(c => 0))
                     .ForMember("Role", opt => opt.MapFrom(c => "user")));
 
                 ClientViewModel userViewModel = Mapper.Map<RegisterViewModel, ClientViewModel>(model);
+                userViewModel.CategoryId = null;
 
                 OperationDetails operationDetails = await _userService.Create(userViewModel);
                 if (operationDetails.Succedeed)

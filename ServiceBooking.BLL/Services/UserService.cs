@@ -17,12 +17,12 @@ namespace ServiceBooking.BLL.Services
 {
     public class UserService : IUserService
     {
-        private readonly IRepository<ClientUser> _clientRepository;
+        private readonly IRepository<ApplicationUser> _clientRepository;
         public ApplicationUserRepository UserManager { get; }
         public ApplicationRoleRepository RoleManager { get; }
 
         [Inject]
-        public UserService(IRepository<ClientUser> client)
+        public UserService(IRepository<ApplicationUser> client)
         {
             _clientRepository = client;
             ApplicationContext db = new ApplicationContext("DefaultConnection");
@@ -45,11 +45,11 @@ namespace ServiceBooking.BLL.Services
 
                 await UserManager.AddToRoleAsync(user.Id, userDto.Role);
 
-                Mapper.Initialize(cfg => cfg.CreateMap<ClientViewModel, ClientUser>()
-                    .ForMember("ApplicationUserId", opt => opt.MapFrom(c => user.Id)));
-                ClientUser clientUser = Mapper.Map<ClientViewModel, ClientUser>(userDto);
+                //Mapper.Initialize(cfg => cfg.CreateMap<ClientViewModel, ClientUser>()
+                //    .ForMember("ApplicationUserId", opt => opt.MapFrom(c => user.Id)));
+                //ClientUser clientUser = Mapper.Map<ClientViewModel, ClientUser>(userDto);
 
-                _clientRepository.Create(clientUser);
+                //_clientRepository.Create(clientUser);
                 return new OperationDetails(true, "Registration succeeded", "");
             }
 

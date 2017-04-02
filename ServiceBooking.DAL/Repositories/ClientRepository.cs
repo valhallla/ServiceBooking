@@ -8,7 +8,7 @@ using ServiceBooking.DAL.Interfaces;
 
 namespace ServiceBooking.DAL.Repositories
 {
-    public class ClientRepository : IRepository<ClientUser>
+    public class ClientRepository : IRepository<ApplicationUser>
     {
         public ApplicationContext Db { get; set; }
 
@@ -17,14 +17,14 @@ namespace ServiceBooking.DAL.Repositories
             Db = db;
         }
 
-        public void Create(ClientUser item)
+        public void Create(ApplicationUser item)
         {
-            Db.Clients.Add(item);
+            Db.Users.Add(item);
         }
 
-        public void Delete(ClientUser item)
+        public void Delete(ApplicationUser item)
         {
-            Db.Clients.Remove(item);
+            Db.Users.Remove(item);
             Db.SaveChanges();
         }
 
@@ -33,31 +33,31 @@ namespace ServiceBooking.DAL.Repositories
             Db.Dispose();
         }
 
-        public IEnumerable<ClientUser> GetAll()
+        public IEnumerable<ApplicationUser> GetAll()
         {
-            return Db.Clients;
+            return Db.Users;
         }
 
-        public ClientUser Get(int id)
+        public ApplicationUser Get(int id)
         {
-            return Db.Clients.Find(id);
+            return Db.Users.Find(id);
         }
 
-        public IEnumerable<ClientUser> Find(Func<ClientUser, bool> predicate)
+        public IEnumerable<ApplicationUser> Find(Func<ApplicationUser, bool> predicate)
         {
-            return Db.Clients.Where(predicate).ToList();
+            return Db.Users.Where(predicate).ToList();
         }
 
-        public void Update(ClientUser item)
+        public void Update(ApplicationUser item)
         {
             Db.Entry(item).State = EntityState.Modified;
         }
 
         public void Delete(int id)
         {
-            ClientUser client = Db.Clients.Find(id);
+            ApplicationUser client = Db.Users.Find(id);
             if (client != null)
-                Db.Clients.Remove(client);
+                Db.Users.Remove(client);
         }
     }
 }
