@@ -47,8 +47,6 @@ C:\ServiceBooking\ServiceBooking.BLL\bin\Debug\Microsoft.Owin.Security.OAuth.xml
 C:\ServiceBooking\ServiceBooking.BLL\bin\Debug\Microsoft.Owin.Security.xml
 C:\ServiceBooking\ServiceBooking.BLL\bin\Debug\Microsoft.Owin.Security.Cookies.xml
 C:\ServiceBooking\ServiceBooking.BLL\bin\Debug\Newtonsoft.Json.xml
-C:\ServiceBooking\ServiceBooking.BLL\bin\Debug\EntityFramework.xml
-C:\ServiceBooking\ServiceBooking.BLL\bin\Debug\EntityFramework.SqlServer.xml
 C:\ServiceBooking\ServiceBooking.BLL\bin\Debug\AutoMapper.dll
 C:\ServiceBooking\ServiceBooking.BLL\bin\Debug\AutoMapper.xml
 C:\ServiceBooking\ServiceBooking.BLL\bin\Debug\System.Web.Helpers.dll

@@ -16,8 +16,9 @@ namespace ServiceBooking.BLL.Interfaces
         //ClientViewModel Client(int? id);
         //IEnumerable<ResponseViewModel> Responses();
         IEnumerable<OrderViewModel> GetAll();
-        void Create(OrderViewModel orderDto);
-        void ConfirmOrder(int id);
-        void RejectOrder(int id);
+        OperationDetails Create(OrderViewModel orderDto);
+        OperationDetails ConfirmOrder(int id);
+        OperationDetails DeleteOrder(int id);
+        OrderViewModel Find(int id);
     }
 }

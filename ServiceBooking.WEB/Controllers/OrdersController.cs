@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
@@ -10,6 +11,8 @@ using ServiceBooking.DAL.Interfaces;
 using ServiceBooking.Util;
 using ServiceBooking.WEB.Models;
 using AutoMapper;
+using ServiceBooking.BLL.Infrastructure;
+using ServiceBooking.DAL.Entities;
 
 namespace ServiceBooking.WEB.Controllers
 {
@@ -101,14 +104,15 @@ namespace ServiceBooking.WEB.Controllers
                 .ForMember("StatusId", opt => opt.MapFrom(c => 1))
                 .ForMember("AdminStatus", opt => opt.MapFrom(c => false))
                 .ForMember("UploadDate", opt => opt.MapFrom(c => DateTime.Today))
-                .ForMember("ClientUserId", opt => opt.MapFrom(c => User.Identity.GetUserId<int>()))
-                );
+                .ForMember("ClientUserId", opt => opt.MapFrom(c => User.Identity.GetUserId<int>())));
             OrderViewModel orderDto = Mapper.Map<CreateOrderViewModel, OrderViewModel>(order);
 
             if (ModelState.IsValid)
             {
-                _orderService.Create(orderDto);
-                return RedirectToAction("Index");
+                OperationDetails operationDetails = _orderService.Create(orderDto);
+                if (operationDetails.Succedeed)
+                    return RedirectToAction("Index");
+                ModelState.AddModelError(operationDetails.Property, operationDetails.Message);
             }
             return View(order);
         }
@@ -116,14 +120,42 @@ namespace ServiceBooking.WEB.Controllers
         public ActionResult Confirm(int id)
         {
             _orderService.ConfirmOrder(id);
-            _unitOfWork.Save();
             return RedirectToAction("Index");
         }
 
         public ActionResult Reject(int id)
         {
-            _orderService.RejectOrder(id);
-            _unitOfWork.Save();
+            _orderService.DeleteOrder(id);
+            return RedirectToAction("Index");
+        }
+
+        // GET: Orders/Delete/5
+        public ActionResult Delete(int id, bool? isMyOrdersPage, bool? isNewOrdersPage)
+        {
+            var orderDto = _orderService.Find(id);
+            if (orderDto == null)
+                return HttpNotFound();
+            var clientUser = _userService.FindById(orderDto.ClientUserId);
+
+            Mapper.Initialize(cfg => cfg.CreateMap<OrderViewModel, IndexOrderViewModel>()
+                .ForMember("Category", opt => opt.MapFrom(c => _categoryService.FindById(c.CategoryId).Name))
+                .ForMember("Status", opt => opt.MapFrom(c => _statusService.FindById(c.StatusId).Value))
+                .ForMember("CustomerName", opt => opt.MapFrom(c => clientUser.Surname + " " + clientUser.Name))
+            );
+
+            IndexOrderViewModel order = Mapper.Map<OrderViewModel, IndexOrderViewModel>(orderDto);
+            var orders = new List<IndexOrderViewModel>();
+            orders.Add(order);
+
+            return View("Delete", orders);
+        }
+
+        // POST: Orders/Delete/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Delete(int id)
+        {
+            _orderService.DeleteOrder(id);
             return RedirectToAction("Index");
         }
     }

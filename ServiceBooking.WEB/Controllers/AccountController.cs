@@ -58,9 +58,7 @@ namespace ServiceBooking.WEB.Controllers
                 ClientViewModel userViewModel = new ClientViewModel { Email = model.Email, Password = model.Password };
                 ClaimsIdentity claim = await _userService.Authenticate(userViewModel);
                 if (claim == null)
-                {
                     ModelState.AddModelError("", "Wrong login or password");
-                }
                 else
                 {
                     AuthenticationManager.SignOut();

@@ -1,5 +1,4 @@
-﻿using System.Data.Entity;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using ServiceBooking.BLL.DTO;
 using ServiceBooking.BLL.Infrastructure;
@@ -13,7 +12,6 @@ using ServiceBooking.DAL.Entities;
 using ServiceBooking.DAL.Identity;
 using ServiceBooking.DAL.Interfaces;
 using AutoMapper;
-using System.Web.Helpers;
 
 namespace ServiceBooking.BLL.Services
 {
@@ -28,7 +26,8 @@ namespace ServiceBooking.BLL.Services
         {
             _clientRepository = client;
             ApplicationContext db = new ApplicationContext("DefaultConnection");
-            UserManager = new ApplicationUserRepository(new UserStore<ApplicationUser, CustomRole, int, CustomUserLogin, CustomUserRole, CustomUserClaim> (db));
+            UserManager = new ApplicationUserRepository(new UserStore<ApplicationUser, 
+                CustomRole, int, CustomUserLogin, CustomUserRole, CustomUserClaim> (db));
             RoleManager = new ApplicationRoleRepository(new RoleStore<ApplicationRole>(db));
         }
 
@@ -37,31 +36,18 @@ namespace ServiceBooking.BLL.Services
             ApplicationUser user = await UserManager.FindByEmailAsync(userDto.Email);
             if (user == null)
             {
-                user = new ApplicationUser
-                {
-                    Email = userDto.Email,
-                    UserName = userDto.Email,
-                    Name = userDto.Name,
-                    Surname = userDto.Surname
-                };
+                Mapper.Initialize(cfg => cfg.CreateMap<ClientViewModel, ApplicationUser>());
+                user = Mapper.Map<ClientViewModel, ApplicationUser>(userDto);
 
                 var result = await UserManager.CreateAsync(user, userDto.Password);
                 if (result.Errors.Any())
-                {
                     return new OperationDetails(false, result.Errors.FirstOrDefault(), "");
-                }
 
                 await UserManager.AddToRoleAsync(user.Id, userDto.Role);
 
-                ClientUser clientUser = new ClientUser
-                {
-                    ApplicationUserId = user.Id,
-                    IsPerformer = userDto.IsPerformer,
-                    CategoryId = userDto.CategoryId,
-                    Info = userDto.Info,
-                    Rating = userDto.Rating,
-                    AdminStatus = userDto.AdminStatus,
-                };
+                Mapper.Initialize(cfg => cfg.CreateMap<ClientViewModel, ClientUser>()
+                    .ForMember("ApplicationUserId", opt => opt.MapFrom(c => user.Id)));
+                ClientUser clientUser = Mapper.Map<ClientViewModel, ClientUser>(userDto);
 
                 _clientRepository.Create(clientUser);
                 return new OperationDetails(true, "Registration succeeded", "");
@@ -73,7 +59,7 @@ namespace ServiceBooking.BLL.Services
         public async Task<ClaimsIdentity> Authenticate(ClientViewModel userDto)
         {
             ClaimsIdentity claim = null;
-            ApplicationUser user = /*_clientRepository.GetAll().Where(u => u.Email.Equals(userDto.Email)).ToArray().FirstOrDefault();*/await UserManager.FindByEmailAsync(userDto.Email);
+            ApplicationUser user = await UserManager.FindByEmailAsync(userDto.Email);
 
             if (user != null)
             {
@@ -105,33 +91,27 @@ namespace ServiceBooking.BLL.Services
             return await UserManager.ChangePasswordAsync(userDto.Id, userDto.UserName, userDto.Password);
         }
 
-        public async Task<ClientViewModel> FindById(int id)
+        public ClientViewModel FindById(int id)
         {
-            ClientUser clientUser = _clientRepository.Get(id);
-
-            if (clientUser != null)
-                return new ClientViewModel { Id = clientUser.Id };
+             ApplicationUser user = UserManager.FindById(id);
+            if (user != null)
+            {
+                //Db.Entry(UserManager).State = EntityState.Modified;
+                return new ClientViewModel { Name = user.Name, Surname = user.Surname, Email = user.Email };
+            }
 
             return null;
 
-            //ApplicationUser user = await UserManager.FindByIdAsync(id);
+            ////ApplicationUser user = UserManager.FindById(id);
+            //var user = _clientRepository.Get(id);
+
             //if (user != null)
             //{
-            //    Db.Entry(UserManager).State = EntityState.Modified;
-            //    return new ClientViewModel { Name = user.Name, Surname = user.Surname, Email = user.Email };
+            //    Mapper.Initialize(cfg => cfg.CreateMap<ClientUser, ClientViewModel>());
+            //    return Mapper.Map<ClientUser, ClientViewModel>(user);
             //}
 
             //return null;
-        }
-
-        public async Task<OperationDetails> AddOrder(int clientId, OrderViewModel orderVM)
-        {
-            ClientUser client = _clientRepository.Get(clientId);
-            Mapper.Initialize(cfg => cfg.CreateMap<OrderViewModel, Order>());
-            Order order = Mapper.Map<OrderViewModel, Order>(orderVM);
-            client.Orders.Add(order);
-            _clientRepository.Update(client);
-            return new OperationDetails(true, "Order creation succeeded", "");
         }
     }
 }

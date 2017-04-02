@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity;
-using System.Data.SqlClient;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using ServiceBooking.DAL.EF;
 using ServiceBooking.DAL.Entities;
 using ServiceBooking.DAL.Interfaces;
@@ -17,7 +14,7 @@ namespace ServiceBooking.DAL.Repositories
 
         public OrderRepository(ApplicationContext context)
         {
-            this.Db = context;
+            Db = context;
         }
 
         public IEnumerable<Order> GetAll()

@@ -1,53 +1,60 @@
-﻿@using Microsoft.AspNet.Identity
-@model ServiceBooking.Models.Order
+﻿@*@model ServiceBooking.WEB.Models.DeleteOrderViewModel*@
+@model IEnumerable<ServiceBooking.WEB.Models.IndexOrderViewModel>
 
 @{
-    var item = Model;
-    string customerName = ViewBag.CustomerName.ToString();
     ViewBag.Title = "Delete Order";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Delete</h2>
+<h2>@ViewBag.Title</h2>
 
 <h3>Are you sure you want to delete this order?</h3>
-<hr/>
-<b style="font-size: 25pt">
-    @Html.DisplayFor(modelItem => item.Name)
-</b>
-<div class="row">
-    <div class="col-sm-8">
-        <h3>
-            by @Html.ActionLink(@customerName, "Details", "Performers")
-        </h3>
-        <h5>
-            <b>@Html.DisplayFor(modelItem => item.Category.Name)</b>
-        </h5>
-        <h4>
-            @Html.DisplayFor(modelItem => item.Description)
-        </h4>
-    </div>
-    <div class="col-sm-4">
-        <h4>
-            <b>@Html.DisplayFor(modelItem => item.Price) $</b>
-        </h4>
-        <h4>
-            To finish by @Html.DisplayFor(modelItem => item.CompletionDate) &emsp;
-
-        </h4>
-        Published @Html.DisplayFor(modelItem => item.UploadDate)
-        <h4>
-            <b>@Html.DisplayFor(modelItem => item.Status.Value)</b>
-        </h4>
-    </div>
-</div>
-
-@using (Html.BeginForm())
+<hr />
+@foreach (var item in Model)
 {
-    @Html.AntiForgeryToken()
 
-    <div class="form-actions no-color">
-        <input type="submit" value="Delete" class="btn btn-default" /> 
-        @Html.ActionLink("Cancel", "Index", "Orders", null, new {@class = "btn btn-default"})
+    <b style="font-size: 25pt">
+        @Html.DisplayFor(modelItem => item.Name)
+    </b>
+    <div class="row">
+        <div class="col-sm-8">
+            <h3>
+                by @Html.DisplayFor(modelItem => item.CustomerName)
+            </h3>
+            <h5>
+                <b>@Html.DisplayFor(modelItem => item.Category)</b>
+            </h5>
+            <h4>
+                @Html.DisplayFor(modelItem => item.Description)
+            </h4>
+        </div>
+        <div class="col-sm-4">
+            <h4>
+                <b>@Html.DisplayFor(modelItem => item.Price) $</b>
+            </h4>
+            <h4>
+                To finish by @Html.DisplayFor(modelItem => item.CompletionDate) &emsp;
+
+            </h4>
+            Published @Html.DisplayFor(modelItem => item.UploadDate)
+            <h4>
+                <b>@Html.DisplayFor(modelItem => item.Status)</b>
+            </h4>
+        </div>
     </div>
+
+    using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            <input type="submit" value="Delete" class="btn btn-default" />
+
+            @Html.ActionLink("Cancel", "Index", "Orders", new
+           {
+               isMyOrdersPage = ViewBag.IsMyOrdersPage,
+               isNewOrdersPage = ViewBag.IsNewOrdersPage
+           }, new { @class = "btn btn-default" })
+        </div>
+    }
 }

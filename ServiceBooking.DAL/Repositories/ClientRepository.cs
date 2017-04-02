@@ -20,7 +20,6 @@ namespace ServiceBooking.DAL.Repositories
         public void Create(ClientUser item)
         {
             Db.Clients.Add(item);
-            //Db.SaveChanges();
         }
 
         public void Delete(ClientUser item)

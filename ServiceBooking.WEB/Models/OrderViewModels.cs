@@ -38,6 +38,8 @@ namespace ServiceBooking.WEB.Models
         public decimal Price { get; set; }
 
         public int ClientUserId { get; set; }
+
+        public string CustomerName { get; set; }
     }
 
     public class CreateOrderViewModel
