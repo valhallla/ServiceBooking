@@ -53,7 +53,7 @@ C:\ServiceBooking\ServiceBooking.DAL\bin\Debug\Microsoft.Owin.Security.xml
 C:\ServiceBooking\ServiceBooking.DAL\bin\Debug\Microsoft.Owin.Security.Cookies.xml
 C:\ServiceBooking\ServiceBooking.DAL\bin\Debug\Microsoft.Owin.Security.OAuth.xml
 C:\ServiceBooking\ServiceBooking.DAL\bin\Debug\Newtonsoft.Json.xml
-C:\ServiceBooking\ServiceBooking.DAL\obj\Debug\ServiceBooking.DAL.Migrations.InitialVersion.resources
+C:\ServiceBooking\ServiceBooking.DAL\obj\Debug\ServiceBooking.DAL.Migrations.Version1.resources
 C:\ServiceBooking\ServiceBooking.DAL\obj\Debug\ServiceBooking.DAL.csproj.GenerateResource.Cache
 C:\ServiceBooking\ServiceBooking.DAL\obj\Debug\ServiceBooking.DAL.Migrations.Version2.resources
 C:\ServiceBooking\ServiceBooking.DAL\obj\Debug\ServiceBooking.DAL.Migrations.Version3.resources

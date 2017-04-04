@@ -88,7 +88,7 @@ namespace ServiceBooking.WEB.Controllers
                 Mapper.Initialize(cfg => cfg.CreateMap<RegisterViewModel, ClientViewModel>()
                     .ForMember("UserName", opt => opt.MapFrom(c => c.Email))
                     .ForMember("EmailConfirmed", opt => opt.MapFrom(c => true))
-                    .ForMember("IsPerformer", opt => opt.MapFrom(c => true))
+                    .ForMember("IsPerformer", opt => opt.MapFrom(c => false))
                     .ForMember("Rating", opt => opt.MapFrom(c => 0))
                     .ForMember("Role", opt => opt.MapFrom(c => "user")));
 

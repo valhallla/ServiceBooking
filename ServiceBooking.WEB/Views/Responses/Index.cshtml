@@ -1,0 +1,27 @@
+﻿@model IEnumerable<ServiceBooking.WEB.Models.IndexResponseViewModel>
+    
+@foreach (var item in Model)
+{
+    <div class="well">
+        <div class="row">
+            <div class="col-sm-9">
+                <h4>@Html.DisplayFor(modelItem => item.Text)</h4>
+                <br/>
+                @Html.DisplayFor(modelItem => item.Date)       
+            </div>
+            <div class="col-sm-3" style="text-align:center">
+                <h4>@Html.DisplayFor(modelItem => item.PerformerName) </h4>
+                <br />
+                @for (int i = 0; i < item.PerformerRating; i++)
+                {
+                    <img style="height: 30px; float: none; margin-left: 7px; margin-right: 7px" src="@Url.Content(@"~/Content/star.png")" alt="" />
+                }
+                @for (int i = item.PerformerRating; i < 5; i++)
+                {
+                    <img style="height: 30px; float: none; margin-left: 7px; margin-right: 7px" src="@Url.Content(@"~/Content/emptystar.png")" alt="" />
+                }  
+            </div>
+        </div>
+        
+    </div>
+}

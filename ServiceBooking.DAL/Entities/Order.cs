@@ -25,7 +25,7 @@ namespace ServiceBooking.DAL.Entities
 
         public bool AdminStatus { get; set; }
 
-        [DataType(DataType.Date), DisplayFormat(DataFormatString = "{0:dd.MM.yyyy}", ApplyFormatInEditMode = true)]
+        [DataType(DataType.DateTime), DisplayFormat(DataFormatString = "{0:dd.MM.yyyy}", ApplyFormatInEditMode = true)]
         public DateTime UploadDate { get; set; }
 
         [Required]

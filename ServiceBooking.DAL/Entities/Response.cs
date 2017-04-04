@@ -14,6 +14,9 @@ namespace ServiceBooking.DAL.Entities
         [Required]
         public string Text { get; set; }
 
+        [DataType(DataType.DateTime), DisplayFormat(DataFormatString = "{0:dd.MM.yyyy}", ApplyFormatInEditMode = true)]
+        public DateTime Date { get; set; }
+
         public int? OrderId { get; set; }
         public Order Order { get; set; }
 

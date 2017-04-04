@@ -29,14 +29,15 @@ namespace ServiceBooking.DAL.Repositories
             return Db.Responses.Find(id);
         }
 
-        public void Create(Response book)
+        public void Create(Response response)
         {
-            Db.Responses.Add(book);
+            Db.Responses.Add(response);
+            Db.SaveChanges();
         }
 
-        public void Update(Response book)
+        public void Update(Response response)
         {
-            Db.Entry(book).State = EntityState.Modified;
+            Db.Entry(response).State = EntityState.Modified;
         }
 
         public IEnumerable<Response> Find(Func<Response, bool> predicate)
@@ -46,9 +47,9 @@ namespace ServiceBooking.DAL.Repositories
 
         public void Delete(int id)
         {
-            Response book = Db.Responses.Find(id);
-            if (book != null)
-                Db.Responses.Remove(book);
+            Response response = Db.Responses.Find(id);
+            if (response != null)
+                Db.Responses.Remove(response);
         }
     }
 }

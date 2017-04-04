@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Ninject;
 using ServiceBooking.BLL.DTO;
+using ServiceBooking.BLL.Infrastructure;
 using ServiceBooking.BLL.Interfaces;
 using ServiceBooking.DAL.Entities;
 using ServiceBooking.DAL.Interfaces;
@@ -25,8 +26,17 @@ namespace ServiceBooking.BLL.Services
         public IEnumerable<ResponseViewModel> GetAllForOrder(int orderId)
         {
             var responses = _responseRepository.Find(r => r.OrderId == orderId);
-            Mapper.Initialize(cfg => cfg.CreateMap<Response, ResponseViewModel>());
+            Mapper.Initialize(cfg => cfg.CreateMap<Response, ResponseViewModel>()
+                .ForMember("PerformerId", opt => opt.MapFrom(c => c.UserId)));
             return Mapper.Map<IEnumerable<Response>, List<ResponseViewModel>>(responses);
+        }
+
+        public OperationDetails Create(ResponseViewModel response)
+        {
+            Mapper.Initialize(cfg => cfg.CreateMap<ResponseViewModel, Response>()
+                .ForMember("UserId", opt => opt.MapFrom(c => c.PerformerId)));
+            _responseRepository.Create(Mapper.Map<ResponseViewModel, Response>(response));
+            return new OperationDetails(true, @"Sending response succeeded", string.Empty);
         }
     }
 }

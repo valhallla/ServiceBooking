@@ -73,7 +73,7 @@ else
                 @if (Request.IsAuthenticated)
                 {
                     <h5>
-                        @if (!User.IsInRole("admin") && item.ClientUserId == User.Identity.GetUserId<int>())
+                        @if (!User.IsInRole("admin") && item.CustomerId == User.Identity.GetUserId<int>())
                         {
                             @*@Html.ActionLink("Edit", "Edit", new { id = item.Id }) |*@
                         }

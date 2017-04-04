@@ -95,7 +95,8 @@ namespace ServiceBooking.WEB.Controllers
             Mapper.Initialize(cfg => cfg.CreateMap<ResponseViewModel, IndexResponseViewModel>()
                 .ForMember("PerformerId", opt => opt.MapFrom(c => c.PerformerId))
                 .ForMember("PerformerName", opt => opt.MapFrom(c => _userService.FindById(c.PerformerId).Surname
-                    + _userService.FindById(c.PerformerId).Name))
+                    + " " + _userService.FindById(c.PerformerId).Name))
+                .ForMember("PerformerRating", opt => opt.MapFrom(c => _userService.FindById(c.PerformerId).Rating))
                 );
             var responses = Mapper.Map<IEnumerable<ResponseViewModel>, List<IndexResponseViewModel>>(responsesDto);
 
@@ -105,6 +106,7 @@ namespace ServiceBooking.WEB.Controllers
             var clientUser = _userService.FindById(orderDto.UserId);
 
             Mapper.Initialize(cfg => cfg.CreateMap<OrderViewModel, DetailsOrderViewModel>()
+                .ForMember("CustomerId", opt => opt.MapFrom(c => clientUser.Id))
                 .ForMember("CustomerName", opt => opt.MapFrom(c => clientUser.Surname + " " + clientUser.Name))
                 .ForMember("Category", opt => opt.MapFrom(c => _categoryService.FindById(c.CategoryId).Name))
                 .ForMember("Status", opt => opt.MapFrom(c => _statusService.FindById(c.StatusId).Value))
@@ -112,7 +114,9 @@ namespace ServiceBooking.WEB.Controllers
                 );
             DetailsOrderViewModel order = Mapper.Map<OrderViewModel, DetailsOrderViewModel>(orderDto);
 
-            ViewBag.IsPerformer = _userService.FindById(User.Identity.GetUserId<int>()).IsPerformer;
+            var currentUser = _userService.FindById(User.Identity.GetUserId<int>());
+            ViewBag.IsPerformer = currentUser.IsPerformer;
+            ViewBag.Rating = currentUser.Rating;
 
             return View(order);
         }
@@ -135,7 +139,7 @@ namespace ServiceBooking.WEB.Controllers
                 .ForMember("CategoryId", opt => opt.MapFrom(c => _categoryService.FindByName(c.Category).Id))
                 .ForMember("StatusId", opt => opt.MapFrom(c => 1))
                 .ForMember("AdminStatus", opt => opt.MapFrom(c => false))
-                .ForMember("UploadDate", opt => opt.MapFrom(c => DateTime.Today))
+                .ForMember("UploadDate", opt => opt.MapFrom(c => DateTime.Now))
                 .ForMember("UserId", opt => opt.MapFrom(c => User.Identity.GetUserId<int>())));
             OrderViewModel orderDto = Mapper.Map<CreateOrderViewModel, OrderViewModel>(order);
 
@@ -152,13 +156,13 @@ namespace ServiceBooking.WEB.Controllers
         public ActionResult Confirm(int id)
         {
             _orderService.ConfirmOrder(id);
-            return RedirectToAction("Index");
+            return RedirectToAction("Index", new {newApplications = true});
         }
 
         public ActionResult Reject(int id)
         {
             _orderService.DeleteOrder(id);
-            return RedirectToAction("Index");
+            return RedirectToAction("Index", new { newApplications = true });
         }
 
         // GET: Orders/Delete/5

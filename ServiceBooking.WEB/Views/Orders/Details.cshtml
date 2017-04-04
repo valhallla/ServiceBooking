@@ -1,8 +1,12 @@
-﻿@model ServiceBooking.WEB.Models.DetailsOrderViewModel
+﻿@using Microsoft.AspNet.Identity
+@using ServiceBooking.WEB.Models
+@model ServiceBooking.WEB.Models.DetailsOrderViewModel
 
 @{
     ViewBag.Title = "Details";
     Layout = "~/Views/Shared/_Layout.cshtml";
+
+    IEnumerable<IndexResponseViewModel> responses = Model.Responses;
 }
 
 <h2>@Html.DisplayFor(model => model.Name)</h2>
@@ -13,7 +17,7 @@
     <div class="col-sm-9">
         Published @Html.DisplayFor(model => model.UploadDate)
         <br />
-        <h4>@Html.DisplayFor(model => model.Description)</h4>
+        <h4>@Html.DisplayTextFor(model => model.Description)</h4>
         <h5>
             To finish by @Html.DisplayFor(model => model.CompletionDate) &emsp;
             <b>@Html.DisplayFor(model => model.Category)</b>
@@ -26,12 +30,17 @@
 </div>
 
 <h2>Responses</h2>
-@if (ViewBag.IsPerformer)
+@if (ViewBag.IsPerformer & User.Identity.GetUserId<int>() != Model.CustomerId && 
+    responses.Select(r => r.PerformerId).All(pid => pid != User.Identity.GetUserId<int>()))
 {
-    @Html.Partial(@"~/Views/Partial/Responses.cshtml")
+    @Html.Partial(@"~/Views/Responses/Create.cshtml", new CreateResponseViewModel {OrderId = Model.Id})
 }
 
 @if (!Model.Responses.Any())
 {
     <h3>No responses</h3>
+}
+else
+{
+    @Html.Partial(@"~/Views/Responses/Index.cshtml", responses)
 }

@@ -14,10 +14,10 @@ namespace ServiceBooking.WEB.Models
 
         public bool AdminStatus { get; set; }
 
-        public int ClientUserId { get; set; }
+        public int CustomerId { get; set; }
 
         [Required]
-        [DataType(DataType.Date), DisplayFormat(DataFormatString = "{0:dd.MM.yyyy}", ApplyFormatInEditMode = true)]
+        [DataType(DataType.DateTime), DisplayFormat(DataFormatString = "{0:dd.MM.yyyy}", ApplyFormatInEditMode = true)]
         public DateTime UploadDate { get; set; }
 
         public string Category { get; set; }
@@ -51,7 +51,7 @@ namespace ServiceBooking.WEB.Models
         public bool AdminStatus { get; set; }
 
         [Required]
-        [DataType(DataType.Date), DisplayFormat(DataFormatString = "{0:dd.MM.yyyy}", ApplyFormatInEditMode = true)]
+        [DataType(DataType.DateTime), DisplayFormat(DataFormatString = "{0:dd.MM.yyyy}", ApplyFormatInEditMode = true)]
         public DateTime UploadDate { get; set; }
 
         [Required]
@@ -59,7 +59,9 @@ namespace ServiceBooking.WEB.Models
         public DateTime CompletionDate { get; set; }
 
         [Required]
-        public decimal Price { get; set; }     
+        public decimal Price { get; set; }  
+        
+        public int CustomerId { get; set; }
 
         public string CustomerName { get; set; }
 
@@ -95,7 +97,7 @@ namespace ServiceBooking.WEB.Models
         public string Name { get; set; }
 
         [Required]
-        [DataType(DataType.Date), DisplayFormat(DataFormatString = "{0:dd.MM.yyyy}", ApplyFormatInEditMode = true)]
+        [DataType(DataType.DateTime), DisplayFormat(DataFormatString = "{0:dd.MM.yyyy}", ApplyFormatInEditMode = true)]
         public DateTime UploadDate { get; set; }
 
         public string CustomerName { get; set; }
