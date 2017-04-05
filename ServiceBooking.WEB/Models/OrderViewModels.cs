@@ -46,6 +46,8 @@ namespace ServiceBooking.WEB.Models
 
         public string Category { get; set; }
 
+        public int StatusId { get; set; }
+
         public string Status { get; set; }
 
         public bool AdminStatus { get; set; }

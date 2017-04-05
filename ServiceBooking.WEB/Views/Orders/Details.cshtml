@@ -9,9 +9,27 @@
     IEnumerable<IndexResponseViewModel> responses = Model.Responses;
 }
 
-<h2>@Html.DisplayFor(model => model.Name)</h2>
-@Html.ActionLink("← Back to List", "Index") |
-@Html.ActionLink("Edit", "Edit", new { id = Model.Id })
+<div class="row">
+    <div class="col-sm-1">
+        <h2>@Html.DisplayFor(model => model.Name)</h2>
+    </div>
+    @if (Request.IsAuthenticated)
+    {
+        if (Model.CustomerId == User.Identity.GetUserId<int>() && Model.AdminStatus && ViewBag.StatusMessage != null)
+        {
+            string statusMessage = ViewBag.StatusMessage;
+            <br/>
+            @Html.ActionLink(statusMessage, "ChangeStatus", "Orders", new { orderId = Model.Id }, new { @class = "btn btn-primary" })
+        }
+        if ((Model.CustomerId == User.Identity.GetUserId<int>() && Model.AdminStatus) || User.IsInRole("admin"))
+        {
+            <div class="col-sm-1" style="float: right">
+                <br />
+                @Html.ActionLink("Delete", "Delete", "Orders", new { id = Model.Id }, new { @class = "btn btn-primary" })
+            </div>
+        }
+    }
+</div>
 <hr/>
 <div class="row">
     <div class="col-sm-9">
@@ -29,18 +47,28 @@
     </div>
 </div>
 
-<h2>Responses</h2>
-@if (ViewBag.IsPerformer & User.Identity.GetUserId<int>() != Model.CustomerId && 
-    responses.Select(r => r.PerformerId).All(pid => pid != User.Identity.GetUserId<int>()))
+@if (Request.IsAuthenticated && User.IsInRole("admin") && !Model.AdminStatus)
 {
-    @Html.Partial(@"~/Views/Responses/Create.cshtml", new CreateResponseViewModel {OrderId = Model.Id})
-}
-
-@if (!Model.Responses.Any())
-{
-    <h3>No responses</h3>
+    <p>
+        @Html.ActionLink("Confirm", "Confirm", "Orders", new {id = Model.Id}, new {@class = "btn btn-primary btn-lg"})
+        @Html.ActionLink("Reject", "Reject", "Orders", new {id = Model.Id}, new {@class = "btn btn-primary btn-lg"})
+    </p>
 }
 else
 {
-    @Html.Partial(@"~/Views/Responses/Index.cshtml", responses)
+    <h2>Responses</h2>
+    if (ViewBag.IsPerformer & User.Identity.GetUserId<int>() != Model.CustomerId &&
+         responses.Select(r => r.PerformerId).All(pid => pid != User.Identity.GetUserId<int>()))
+     {
+         @Html.Partial(@"~/Views/Responses/Create.cshtml", new CreateResponseViewModel {OrderId = Model.Id})
+     }
+
+    if (!Model.Responses.Any())
+     {
+         <h3>No responses</h3>
+     }
+     else
+     {
+         @Html.Partial(@"~/Views/Responses/Index.cshtml", responses)
+     }
 }

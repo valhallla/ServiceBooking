@@ -24,11 +24,8 @@ namespace ServiceBooking.BLL.Services
         public IEnumerable<OrderViewModel> GetAll()
         {
             var orders = _orderRepository.GetAll().ToList();
-
             Mapper.Initialize(cfg => cfg.CreateMap<Order, OrderViewModel>());
-            var orderViewModels = Mapper.Map<List<Order>, List<OrderViewModel>>(orders);
-
-            return orderViewModels;
+            return Mapper.Map<List<Order>, List<OrderViewModel>>(orders);
         }
 
         public OperationDetails Create(OrderViewModel order)
@@ -61,6 +58,18 @@ namespace ServiceBooking.BLL.Services
             Order order = _orderRepository.Get(id);
             Mapper.Initialize(cfg => cfg.CreateMap<Order, OrderViewModel>());
             return Mapper.Map<Order, OrderViewModel>(order);
+        }
+
+        public OperationDetails ChangeStatus(int id)
+        {
+            Order order = _orderRepository.Get(id);
+            if (order != null)
+            {
+                order.StatusId++;
+                _orderRepository.Update(order);
+                return new OperationDetails(true, @"Order status updated", string.Empty);
+            }
+            return new OperationDetails(false, @"Order doesn't exist", "Id");
         }
     }
 }

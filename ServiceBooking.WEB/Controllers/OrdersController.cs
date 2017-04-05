@@ -117,8 +117,16 @@ namespace ServiceBooking.WEB.Controllers
             var currentUser = _userService.FindById(User.Identity.GetUserId<int>());
             ViewBag.IsPerformer = currentUser.IsPerformer;
             ViewBag.Rating = currentUser.Rating;
+            if (order.StatusId < 3)
+                ViewBag.StatusMessage = "Mark as" + _statusService.FindById(order.StatusId + 1).Value;
 
             return View(order);
+        }
+
+        public ActionResult ChangeStatus(int orderId)
+        {
+            _orderService.ChangeStatus(orderId);
+            return RedirectToAction("Details", new { id = orderId });
         }
 
         // GET: Orders/Create

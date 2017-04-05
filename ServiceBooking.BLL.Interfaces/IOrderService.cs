@@ -15,5 +15,6 @@ namespace ServiceBooking.BLL.Interfaces
         OperationDetails ConfirmOrder(int id);
         OperationDetails DeleteOrder(int id);
         OrderViewModel Find(int id);
+        OperationDetails ChangeStatus(int id);
     }
 }

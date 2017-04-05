@@ -75,13 +75,16 @@ else
                     <h5>
                         @if (!User.IsInRole("admin") && item.CustomerId == User.Identity.GetUserId<int>())
                         {
-                            @*@Html.ActionLink("Edit", "Edit", new { id = item.Id }) |*@
+                            @Html.ActionLink("Edit", "Edit", new { id = item.Id })
                         }
-                        @Html.ActionLink("Delete", "Delete", "Orders", new
+                        else if (User.IsInRole("admin") || item.CustomerId == User.Identity.GetUserId<int>())
                         {
-                            id = item.Id,
-                            isMyOrdersPage = ViewBag.IsMyOrdersPage
-                        }, null)
+                            @Html.ActionLink("Delete", "Delete", "Orders", new
+                            {
+                                id = item.Id,
+                                isMyOrdersPage = ViewBag.IsMyOrdersPage
+                            }, null)
+                        }
                     </h5>
                 }
             </div>
