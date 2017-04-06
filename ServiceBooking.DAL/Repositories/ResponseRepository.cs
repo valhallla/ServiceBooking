@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using ServiceBooking.DAL.EF;
 using ServiceBooking.DAL.Entities;
 using ServiceBooking.DAL.Interfaces;

@@ -10,9 +10,9 @@ namespace ServiceBooking.BLL.Interfaces
 {
     public interface IUserService
     {
-        Task<OperationDetails> Create(ClientViewModel userDto);
-        Task<ClaimsIdentity> Authenticate(ClientViewModel userDto);
-        Task<IdentityResult> ChangePassword(ClientViewModel userDto);
-        ClientViewModel FindById(int id);
+        Task<OperationDetails> Create(ClientViewModelBLL userDto);
+        Task<ClaimsIdentity> Authenticate(ClientViewModelBLL userDto);
+        Task<IdentityResult> ChangePassword(ClientViewModelBLL userDto);
+        ClientViewModelBLL FindById(int id);
     }
 }

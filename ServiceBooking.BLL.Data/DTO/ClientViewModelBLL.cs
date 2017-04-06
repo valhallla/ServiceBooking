@@ -3,7 +3,7 @@ using ServiceBooking.DAL.Entities;
 
 namespace ServiceBooking.BLL.DTO
 {
-    public class ClientViewModel
+    public class ClientViewModelBLL
     {
         public int Id { get; set; }
 
@@ -35,7 +35,7 @@ namespace ServiceBooking.BLL.DTO
 
         public string Role { get; set; }
 
-        public ClientViewModel()
+        public ClientViewModelBLL()
         {
             Orders = new List<Order>();
             Comments = new List<Comment>();

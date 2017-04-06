@@ -21,7 +21,7 @@ namespace ServiceBooking.DAL.Repositories
 
         public IEnumerable<Category> GetAll()
         {
-            return Db.Categories;
+            return Db.Categories.Include(c => c.Orders).Include(c => c.Performers);
         }
 
         public Category Get(int id)

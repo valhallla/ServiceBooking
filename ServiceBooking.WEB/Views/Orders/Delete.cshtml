@@ -16,7 +16,12 @@
     Posted @Html.DisplayFor(model => model.UploadDate) by @Html.DisplayFor(model => model.CustomerName)
 </h3>
 
-@using (Html.BeginForm())
+@using (Html.BeginForm("Delete", "Orders", new
+    {
+        isMyOrdersPage = ViewBag.IsMyOrdersPage,
+        isNewOrdersPage = ViewBag.IsNewOrdersPage,
+        currentCategoryId = ViewBag.CurrentCategoryId
+    }, FormMethod.Post, new { enctype = "multipart/form-data" }))
 {
     @Html.AntiForgeryToken()
 
@@ -24,9 +29,10 @@
         <input type="submit" value="Delete" class="btn btn-default" />
 
         @Html.ActionLink("Cancel", "Index", "Orders", new
-        {
-            isMyOrdersPage = ViewBag.IsMyOrdersPage,
-            isNewOrdersPage = ViewBag.IsNewOrdersPage
-        }, new { @class = "btn btn-default" })
+       {
+           myOrders = ViewBag.IsMyOrdersPage,
+           newApplications = ViewBag.IsNewOrdersPage,
+           currentCategoryId = ViewBag.CurrentCategoryId
+       }, new { @class = "btn btn-default" })
     </div>
 }

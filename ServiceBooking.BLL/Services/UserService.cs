@@ -31,13 +31,13 @@ namespace ServiceBooking.BLL.Services
             RoleManager = new ApplicationRoleRepository(new RoleStore<ApplicationRole>(db));
         }
 
-        public async Task<OperationDetails> Create(ClientViewModel userDto)
+        public async Task<OperationDetails> Create(ClientViewModelBLL userDto)
         {
             ApplicationUser user = await UserManager.FindByEmailAsync(userDto.Email);
             if (user == null)
             {
-                Mapper.Initialize(cfg => cfg.CreateMap<ClientViewModel, ApplicationUser>());
-                user = Mapper.Map<ClientViewModel, ApplicationUser>(userDto);
+                Mapper.Initialize(cfg => cfg.CreateMap<ClientViewModelBLL, ApplicationUser>());
+                user = Mapper.Map<ClientViewModelBLL, ApplicationUser>(userDto);
 
                 var result = await UserManager.CreateAsync(user, userDto.Password);
                 if (result.Errors.Any())
@@ -56,7 +56,7 @@ namespace ServiceBooking.BLL.Services
             return new OperationDetails(false, "Login is already taken by another user", "Email");
         }
 
-        public async Task<ClaimsIdentity> Authenticate(ClientViewModel userDto)
+        public async Task<ClaimsIdentity> Authenticate(ClientViewModelBLL userDto)
         {
             ClaimsIdentity claim = null;
             ApplicationUser user = await UserManager.FindByEmailAsync(userDto.Email);
@@ -86,18 +86,18 @@ namespace ServiceBooking.BLL.Services
             return claim;
         }
 
-        public async Task<IdentityResult> ChangePassword(ClientViewModel userDto)
+        public async Task<IdentityResult> ChangePassword(ClientViewModelBLL userDto)
         {
             return await UserManager.ChangePasswordAsync(userDto.Id, userDto.UserName, userDto.Password);
         }
 
-        public ClientViewModel FindById(int id)
+        public ClientViewModelBLL FindById(int id)
         {
             ApplicationUser user = UserManager.FindById(id);
             if (user != null)
             {
-                Mapper.Initialize(cfg => cfg.CreateMap<ApplicationUser, ClientViewModel>());
-                return Mapper.Map<ApplicationUser, ClientViewModel>(user);
+                Mapper.Initialize(cfg => cfg.CreateMap<ApplicationUser, ClientViewModelBLL>());
+                return Mapper.Map<ApplicationUser, ClientViewModelBLL>(user);
             }
             return null;
         }

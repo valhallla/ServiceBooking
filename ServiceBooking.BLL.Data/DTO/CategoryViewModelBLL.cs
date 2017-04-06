@@ -3,7 +3,7 @@ using ServiceBooking.DAL.Entities;
 
 namespace ServiceBooking.BLL.DTO
 {
-    public class CategoryViewModel
+    public class CategoryViewModelBLL
     {
         public int Id { get; set; }
 

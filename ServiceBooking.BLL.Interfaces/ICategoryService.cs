@@ -9,8 +9,8 @@ namespace ServiceBooking.BLL.Interfaces
 {
     public interface ICategoryService
     {
-        IEnumerable<CategoryViewModel> GetAll();
-        CategoryViewModel FindById(int id);
-        CategoryViewModel FindByName(string name);
+        IEnumerable<CategoryViewModelBLL> GetAll();
+        CategoryViewModelBLL FindById(int id);
+        CategoryViewModelBLL FindByName(string name);
     }
 }

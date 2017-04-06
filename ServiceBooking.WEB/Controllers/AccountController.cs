@@ -51,7 +51,7 @@ namespace ServiceBooking.WEB.Controllers
         {
             if (ModelState.IsValid)
             {
-                ClientViewModel userViewModel = new ClientViewModel { Email = model.Email, Password = model.Password };
+                ClientViewModelBLL userViewModel = new ClientViewModelBLL { Email = model.Email, Password = model.Password };
                 ClaimsIdentity claim = await _userService.Authenticate(userViewModel);
                 if (claim == null)
                     ModelState.AddModelError("", "Wrong login or password");
@@ -85,14 +85,14 @@ namespace ServiceBooking.WEB.Controllers
         {
             if (ModelState.IsValid)
             {
-                Mapper.Initialize(cfg => cfg.CreateMap<RegisterViewModel, ClientViewModel>()
+                Mapper.Initialize(cfg => cfg.CreateMap<RegisterViewModel, ClientViewModelBLL>()
                     .ForMember("UserName", opt => opt.MapFrom(c => c.Email))
                     .ForMember("EmailConfirmed", opt => opt.MapFrom(c => true))
                     .ForMember("IsPerformer", opt => opt.MapFrom(c => false))
                     .ForMember("Rating", opt => opt.MapFrom(c => 0))
                     .ForMember("Role", opt => opt.MapFrom(c => "user")));
 
-                ClientViewModel userViewModel = Mapper.Map<RegisterViewModel, ClientViewModel>(model);
+                ClientViewModelBLL userViewModel = Mapper.Map<RegisterViewModel, ClientViewModelBLL>(model);
                 userViewModel.CategoryId = null;
 
                 OperationDetails operationDetails = await _userService.Create(userViewModel);

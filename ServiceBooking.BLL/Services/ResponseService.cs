@@ -23,19 +23,19 @@ namespace ServiceBooking.BLL.Services
             _responseRepository = responseRepository;
         }
 
-        public IEnumerable<ResponseViewModel> GetAllForOrder(int orderId)
+        public IEnumerable<ResponseViewModelBLL> GetAllForOrder(int orderId)
         {
             var responses = _responseRepository.Find(r => r.OrderId == orderId);
-            Mapper.Initialize(cfg => cfg.CreateMap<Response, ResponseViewModel>()
+            Mapper.Initialize(cfg => cfg.CreateMap<Response, ResponseViewModelBLL>()
                 .ForMember("PerformerId", opt => opt.MapFrom(c => c.UserId)));
-            return Mapper.Map<IEnumerable<Response>, List<ResponseViewModel>>(responses);
+            return Mapper.Map<IEnumerable<Response>, List<ResponseViewModelBLL>>(responses);
         }
 
-        public OperationDetails Create(ResponseViewModel response)
+        public OperationDetails Create(ResponseViewModelBLL response)
         {
-            Mapper.Initialize(cfg => cfg.CreateMap<ResponseViewModel, Response>()
+            Mapper.Initialize(cfg => cfg.CreateMap<ResponseViewModelBLL, Response>()
                 .ForMember("UserId", opt => opt.MapFrom(c => c.PerformerId)));
-            _responseRepository.Create(Mapper.Map<ResponseViewModel, Response>(response));
+            _responseRepository.Create(Mapper.Map<ResponseViewModelBLL, Response>(response));
             return new OperationDetails(true, @"Sending response succeeded", string.Empty);
         }
     }

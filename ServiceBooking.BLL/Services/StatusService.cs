@@ -19,21 +19,21 @@ namespace ServiceBooking.BLL
             _statusRepository = statusRepository;
         }
 
-        public StatusViewModel FindById(int id)
+        public StatusViewModelBLL FindById(int id)
         {
             Status status = _statusRepository.Get(id);
 
             if (status != null)
-                return new StatusViewModel { Id = status.Id, Value = status.Value };
+                return new StatusViewModelBLL { Id = status.Id, Value = status.Value };
 
             return null;
         }
 
-        public IEnumerable<StatusViewModel> GetAll()
+        public IEnumerable<StatusViewModelBLL> GetAll()
         {
             var statuses = _statusRepository.GetAll().ToList();
-            Mapper.Initialize(cfg => cfg.CreateMap<Status, StatusViewModel>());
-            return Mapper.Map<List<Status>, List<StatusViewModel>>(statuses);
+            Mapper.Initialize(cfg => cfg.CreateMap<Status, StatusViewModelBLL>());
+            return Mapper.Map<List<Status>, List<StatusViewModelBLL>>(statuses);
         }
     }
 }

@@ -1,15 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Ninject;
 using ServiceBooking.BLL.DTO;
 using ServiceBooking.BLL.Interfaces;
 using ServiceBooking.DAL.Entities;
 using ServiceBooking.DAL.Interfaces;
-using ServiceBooking.DAL.Repositories;
-using ServiceBooking.DAL.EF;
+using AutoMapper;
 
 namespace ServiceBooking.BLL.Services
 {
@@ -23,38 +19,28 @@ namespace ServiceBooking.BLL.Services
             _categoryRepository = categoryRepository;
         }
 
-        public IEnumerable<CategoryViewModel> GetAll()
+        public IEnumerable<CategoryViewModelBLL> GetAll()
         {
-            var categories = _categoryRepository.GetAll().ToArray();
-            var categoryViewModels = new List<CategoryViewModel>();
-
-            foreach (var category in categories)
-            {
-                categoryViewModels.Add(new CategoryViewModel
-                {
-                    Id = category.Id,
-                    Name = category.Name,
-                });
-            }
-            return categoryViewModels;
+            Mapper.Initialize(cfg => cfg.CreateMap<Category, CategoryViewModelBLL>());
+            return Mapper.Map<List<Category>, List<CategoryViewModelBLL>>(_categoryRepository.GetAll().ToList());
         }
 
-        public CategoryViewModel FindById(int id)
+        public CategoryViewModelBLL FindById(int id)
         {
             Category category = _categoryRepository.Get(id);
 
             if (category != null)
-                return new CategoryViewModel { Id = category.Id, Name = category.Name};
+                return new CategoryViewModelBLL { Id = category.Id, Name = category.Name};
 
             return null;
         }
 
-        public CategoryViewModel FindByName(string name)
+        public CategoryViewModelBLL FindByName(string name)
         {
             Category category = _categoryRepository.GetAll().FirstOrDefault(c => c.Name.Equals(name));
 
             if (category != null)
-                return new CategoryViewModel { Id = category.Id, Name = category.Name };
+                return new CategoryViewModelBLL { Id = category.Id, Name = category.Name };
 
             return null;
         }

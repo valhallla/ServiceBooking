@@ -71,7 +71,7 @@ namespace ServiceBooking.WEB.Controllers
                 return View(model);
             }
 
-            ClientViewModel client = new ClientViewModel
+            ClientViewModelBLL client = new ClientViewModelBLL
             {
                 Id = User.Identity.GetUserId<int>(),
                 UserName = model.OldPassword,

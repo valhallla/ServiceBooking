@@ -38,10 +38,10 @@ namespace ServiceBooking.WEB.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Send(CreateResponseViewModel response)
         {
-            Mapper.Initialize(cfg => cfg.CreateMap<CreateResponseViewModel, ResponseViewModel>()
+            Mapper.Initialize(cfg => cfg.CreateMap<CreateResponseViewModel, ResponseViewModelBLL>()
                .ForMember("Date", opt => opt.MapFrom(c => DateTime.Now))
                .ForMember("PerformerId", opt => opt.MapFrom(c => User.Identity.GetUserId<int>())));
-            ResponseViewModel responseDto = Mapper.Map<CreateResponseViewModel, ResponseViewModel>(response);
+            ResponseViewModelBLL responseDto = Mapper.Map<CreateResponseViewModel, ResponseViewModelBLL>(response);
 
             if (ModelState.IsValid)
             {

@@ -21,17 +21,17 @@ namespace ServiceBooking.BLL.Services
             _orderRepository = orderRepository;
         }
 
-        public IEnumerable<OrderViewModel> GetAll()
+        public IEnumerable<OrderViewModelBLL> GetAll()
         {
             var orders = _orderRepository.GetAll().ToList();
-            Mapper.Initialize(cfg => cfg.CreateMap<Order, OrderViewModel>());
-            return Mapper.Map<List<Order>, List<OrderViewModel>>(orders);
+            Mapper.Initialize(cfg => cfg.CreateMap<Order, OrderViewModelBLL>());
+            return Mapper.Map<List<Order>, List<OrderViewModelBLL>>(orders);
         }
 
-        public OperationDetails Create(OrderViewModel order)
+        public OperationDetails Create(OrderViewModelBLL order)
         {
-            Mapper.Initialize(cfg => cfg.CreateMap<OrderViewModel, Order>());
-            _orderRepository.Create(Mapper.Map<OrderViewModel, Order>(order));
+            Mapper.Initialize(cfg => cfg.CreateMap<OrderViewModelBLL, Order>());
+            _orderRepository.Create(Mapper.Map<OrderViewModelBLL, Order>(order));
             return new OperationDetails(true, @"Creation succeeded", string.Empty);
         }
 
@@ -41,6 +41,7 @@ namespace ServiceBooking.BLL.Services
             if (order != null)
             {
                 order.AdminStatus = true;
+                order.UploadDate = DateTime.Now;
                 _orderRepository.Update(order);
                 return new OperationDetails(true, @"Order confirmed", string.Empty);
             }
@@ -53,11 +54,11 @@ namespace ServiceBooking.BLL.Services
             return new OperationDetails(false, @"Order deleted", string.Empty);
         }
 
-        public OrderViewModel Find(int id)
+        public OrderViewModelBLL Find(int id)
         {
             Order order = _orderRepository.Get(id);
-            Mapper.Initialize(cfg => cfg.CreateMap<Order, OrderViewModel>());
-            return Mapper.Map<Order, OrderViewModel>(order);
+            Mapper.Initialize(cfg => cfg.CreateMap<Order, OrderViewModelBLL>());
+            return Mapper.Map<Order, OrderViewModelBLL>(order);
         }
 
         public OperationDetails ChangeStatus(int id)

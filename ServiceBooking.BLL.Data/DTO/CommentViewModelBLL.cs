@@ -7,12 +7,14 @@ using ServiceBooking.DAL.Entities;
 
 namespace ServiceBooking.BLL.DTO
 {
-    public class StatusViewModel
+    public class CommentViewModelBLL
     {
         public int Id { get; set; }
 
-        public string Value { get; set; }
+        public string Text { get; set; }
 
-        public virtual ICollection<Order> Orders { get; set; }
+        public int Rating { get; set; }
+
+        public int UserId { get; set; }
     }
 }

@@ -5,100 +5,136 @@
 
 @{
     string newOrders = string.Empty;
+    string[] names = ViewBag.Names;
     if (ViewBag.NewOrdersAmountString != null)
     {
         newOrders = ViewBag.NewOrdersAmountString;
     }
+    IEnumerable<CategoryViewModel> categories = ViewBag.CategoriesList;
+    OrderSorts sort = ViewBag.Sort;
+
     ViewBag.Title = "Orders";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>
-    Orders
-    @if (Request.IsAuthenticated && User.IsInRole("admin") && !newOrders.Equals(string.Empty))
-    {
-        @Html.ActionLink(@newOrders, "Index", new { newApplications = true })
-    }
-</h2>
+<div class="row">
+    <div class="col-sm-3">
+        <h2>
+            Orders
+            @if (Request.IsAuthenticated && User.IsInRole("admin") && !newOrders.Equals(string.Empty))
+            {
+                @Html.ActionLink(@newOrders, "Index", new { categoryId = ViewBag.CurrentCategoryId, newApplications = true })
+            }
+        </h2>
 
-@if (!Request.IsAuthenticated)
-{
-    <h4>@Html.ActionLink("Place an order", "Create")</h4>
-    ViewBag.IsAuthorized = false;
-}
-
-@if (Request.IsAuthenticated && !User.IsInRole("admin"))
-{
-    <h4>
-        @Html.ActionLink("Place an order", "Create") |
-        @if (ViewBag.IsMyOrdersPage)
+        @if (!Request.IsAuthenticated)
         {
-            @Html.ActionLink("All orders", "Index")
+            <h4>@Html.ActionLink("Place an order", "Create")</h4>
+            ViewBag.IsAuthorized = false;
+        }
+
+        @if (Request.IsAuthenticated && !User.IsInRole("admin"))
+        {
+            <h4>
+                @Html.ActionLink("Place an order", "Create") |
+                @if (ViewBag.IsMyOrdersPage)
+                {
+                    @Html.ActionLink("All orders", "Index")
+                }
+                else
+                {
+                    @Html.ActionLink("My orders", "Index", new { categoryId = ViewBag.CurrentCategoryId, myOrders = true })
+                }
+            </h4>
+            ViewBag.IsAuthorized = true;
+        }
+        else if (Request.IsAuthenticated && User.IsInRole("admin") && ViewBag.IsNewOrdersPage)
+        {
+            <h4>
+                @Html.ActionLink("Back to confirmed orders", "Index")
+            </h4>
+        }
+    </div>
+    <div class="col-sm-6">
+        @Html.Partial("~/Views/Shared/Search.cshtml", names)
+    </div>
+    <div class="col-sm-3">
+        @Html.Partial("~/Views/Shared/Sort.cshtml", sort)
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-sm-9">
+        @if (ViewBag.Message != null)
+        {
+            <hr />
+            <h3>@ViewBag.Message</h3>
         }
         else
         {
-            @Html.ActionLink("My orders", "Index", new { myOrders = true })
+            foreach (var item in Model)
+            {
+                <hr />
+                <div class="row">
+                    <div class="col-sm-9">
+                        <b style="font-size: 20pt">
+                            @Html.ActionLink(item.Name, "Details", new { id = item.Id })
+                        </b><br/> 
+                        Published @Html.DisplayFor(modelItem => item.UploadDate)
+                        <br />
+                        <h5>
+                            To finish by @Html.DisplayFor(modelItem => item.CompletionDate) &emsp;
+                            <b>@Html.DisplayFor(modelItem => item.Category)</b>
+                        </h5>
+                        @if (Request.IsAuthenticated && (User.IsInRole("admin") || item.CustomerId == User.Identity.GetUserId<int>()))
+                        {
+                            <h5>
+                                @Html.ActionLink("Delete", "Delete", "Orders", new
+                                {
+                                    id = item.Id,
+                                    isMyOrdersPage = ViewBag.IsMyOrdersPage,
+                                    isNewOrdersPage = ViewBag.IsNewOrdersPage,
+                                    currentCategoryId = ViewBag.CurrentCategoryId
+                                }, null)
+                            </h5>
+                        }
+                    </div>
+                    <div class="col-sm-3">
+                        <h4>@Html.DisplayFor(modelItem => item.Price) $</h4>
+                        @if (!ViewBag.IsNewOrdersPage)
+                        {
+                            <h4>
+                                @if (!item.AdminStatus)
+                                {
+                                    @Html.DisplayName("Pending confirmation")
+                                }
+                                else
+                                {
+                                    @Html.DisplayFor(modelItem => item.Status)
+                                }
+                            </h4>
+                        }
+                        @if (Request.IsAuthenticated && User.IsInRole("admin") && ViewBag.IsNewOrdersPage)
+                        {
+                            <p>
+                                @Html.ActionLink("Confirm", "Confirm", "Orders", new
+                               {
+                                   id = item.Id,
+                                   categoryId = ViewBag.CurrentCategoryId
+                               }, new { @class = "btn btn-primary btn-lg" })
+                                @Html.ActionLink("Reject", "Reject", "Orders", new
+                               {
+                                   id = item.Id,
+                                   categoryId = ViewBag.CurrentCategoryId
+                               }, new { @class = "btn btn-primary btn-lg" })
+                            </p>
+                        }
+                    </div>
+                </div>
+            }
         }
-    </h4>
-    ViewBag.IsAuthorized = true;
-}
-else if (Request.IsAuthenticated && User.IsInRole("admin") && ViewBag.IsNewOrdersPage)
-{
-    <h4>
-        @Html.ActionLink("Back to confirmed orders", "Index")
-    </h4>
-}
-
-@if (ViewBag.Message != null)
-{
-    <hr />
-    <h3>@ViewBag.Message</h3>
-}
-else
-{
-    foreach (var item in Model)
-    {
-        <hr />
-        <div class="row">
-            <div class="col-sm-9">
-                <b style="font-size: 20pt">
-                    @Html.ActionLink(item.Name, "Details", new { id = item.Id })
-                </b> &emsp;
-                Published @Html.DisplayFor(modelItem => item.UploadDate)
-                <br />
-                <h5>
-                    To finish by @Html.DisplayFor(modelItem => item.CompletionDate) &emsp;
-                    <b>@Html.DisplayFor(modelItem => item.Category)</b>
-                </h5>
-                @if (Request.IsAuthenticated)
-                {
-                    <h5>
-                        @if (!User.IsInRole("admin") && item.CustomerId == User.Identity.GetUserId<int>())
-                        {
-                            @Html.ActionLink("Edit", "Edit", new { id = item.Id })
-                        }
-                        else if (User.IsInRole("admin") || item.CustomerId == User.Identity.GetUserId<int>())
-                        {
-                            @Html.ActionLink("Delete", "Delete", "Orders", new
-                            {
-                                id = item.Id,
-                                isMyOrdersPage = ViewBag.IsMyOrdersPage
-                            }, null)
-                        }
-                    </h5>
-                }
-            </div>
-            <div class="col-sm-3">
-                <h4>@Html.DisplayFor(modelItem => item.Price) $</h4>
-                <h4>@Html.DisplayFor(modelItem => item.Status)</h4>
-                @if (Request.IsAuthenticated && User.IsInRole("admin") && ViewBag.IsNewOrdersPage)
-                {
-                    <p>
-                        @Html.ActionLink("Confirm", "Confirm", "Orders", new { id = item.Id }, new { @class = "btn btn-primary btn-lg" })
-                        @Html.ActionLink("Reject", "Reject", "Orders", new { id = item.Id }, new { @class = "btn btn-primary btn-lg" })
-                    </p>
-                }
-            </div>
-        </div>
-    }
-}
+    </div>
+    <div class="col-sm-3">
+        @Html.Partial("~/Views/Categories/Index.cshtml", categories)
+    </div>
+</div>

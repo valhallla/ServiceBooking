@@ -10,11 +10,11 @@ namespace ServiceBooking.BLL.Interfaces
 {
     public interface IOrderService
     {
-        IEnumerable<OrderViewModel> GetAll();
-        OperationDetails Create(OrderViewModel orderDto);
+        IEnumerable<OrderViewModelBLL> GetAll();
+        OperationDetails Create(OrderViewModelBLL orderDto);
         OperationDetails ConfirmOrder(int id);
         OperationDetails DeleteOrder(int id);
-        OrderViewModel Find(int id);
+        OrderViewModelBLL Find(int id);
         OperationDetails ChangeStatus(int id);
     }
 }

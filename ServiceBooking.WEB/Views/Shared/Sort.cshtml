@@ -1,0 +1,38 @@
+﻿@using ServiceBooking.WEB.Models
+@model OrderSorts
+    
+@{
+    var sorts = new List<string>
+    {
+        "New orders first",
+        "Expensive orders first",
+        "Active orders first"
+    };
+}
+
+<br/>
+<div class="dropdown">
+    <button class="btn btn-primary dropdown-toggle" style="width: 180px;"type="button" data-toggle="dropdown">
+        @sorts[(int)Model]
+        <span class="caret"></span>
+    </button>
+    <ul class="dropdown-menu">
+        @foreach (var item in sorts)
+        {
+            string liClass = "";
+            if (sorts.IndexOf(item) == (int) Model)
+            {
+                liClass = "active";
+            }
+            <li class="@liClass">
+                @Html.ActionLink(item, "Index", "Orders", new
+                {
+                    categoryId = ViewBag.CurrentCategoryId,
+                    newApplications = ViewBag.IsNewOrdersPage,
+                    myOrders = ViewBag.IsMyOrdersPage,
+                    sort = (OrderSorts)(sorts.IndexOf(item))
+                }, null)
+            </li>
+        }
+    </ul>
+</div>

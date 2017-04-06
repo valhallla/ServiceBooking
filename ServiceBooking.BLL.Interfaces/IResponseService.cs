@@ -6,7 +6,7 @@ namespace ServiceBooking.BLL.Interfaces
 {
     public interface IResponseService
     {
-        IEnumerable<ResponseViewModel> GetAllForOrder(int orderId);
-        OperationDetails Create(ResponseViewModel response);
+        IEnumerable<ResponseViewModelBLL> GetAllForOrder(int orderId);
+        OperationDetails Create(ResponseViewModelBLL response);
     }
 }

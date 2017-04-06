@@ -7,16 +7,12 @@ using ServiceBooking.DAL.Entities;
 
 namespace ServiceBooking.BLL.DTO
 {
-    public class ResponseViewModel
+    public class StatusViewModelBLL
     {
         public int Id { get; set; }
 
-        public string Text { get; set; }
+        public string Value { get; set; }
 
-        public DateTime Date { get; set; }
-
-        public int? OrderId { get; set; }
-
-        public int PerformerId { get; set; }
+        public virtual ICollection<Order> Orders { get; set; }
     }
 }

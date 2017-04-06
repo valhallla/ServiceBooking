@@ -7,7 +7,7 @@ using ServiceBooking.DAL.Entities;
 
 namespace ServiceBooking.BLL.DTO
 {
-    public class OrderViewModel
+    public class OrderViewModelBLL
     {
         public int Id { get; set; }
 

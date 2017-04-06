@@ -7,14 +7,16 @@ using ServiceBooking.DAL.Entities;
 
 namespace ServiceBooking.BLL.DTO
 {
-    public class CommentViewModel
+    public class ResponseViewModelBLL
     {
         public int Id { get; set; }
 
         public string Text { get; set; }
 
-        public int Rating { get; set; }
+        public DateTime Date { get; set; }
 
-        public int UserId { get; set; }
+        public int? OrderId { get; set; }
+
+        public int PerformerId { get; set; }
     }
 }

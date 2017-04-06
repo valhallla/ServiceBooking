@@ -10,30 +10,35 @@
 }
 
 <div class="row">
-    <div class="col-sm-1">
+    <div class="col-sm-9">
         <h2>@Html.DisplayFor(model => model.Name)</h2>
     </div>
-    @if (Request.IsAuthenticated)
-    {
-        if (Model.CustomerId == User.Identity.GetUserId<int>() && Model.AdminStatus && ViewBag.StatusMessage != null)
+    <div class="col-sm-3" style="float: right">
+        @if (Request.IsAuthenticated)
         {
-            string statusMessage = ViewBag.StatusMessage;
-            <br/>
-            @Html.ActionLink(statusMessage, "ChangeStatus", "Orders", new { orderId = Model.Id }, new { @class = "btn btn-primary" })
-        }
-        if ((Model.CustomerId == User.Identity.GetUserId<int>() && Model.AdminStatus) || User.IsInRole("admin"))
-        {
-            <div class="col-sm-1" style="float: right">
+            if (Model.CustomerId == User.Identity.GetUserId<int>() && Model.AdminStatus && ViewBag.StatusMessage != null)
+            {
+                string statusMessage = ViewBag.StatusMessage;
                 <br />
-                @Html.ActionLink("Delete", "Delete", "Orders", new { id = Model.Id }, new { @class = "btn btn-primary" })
-            </div>
+                @Html.ActionLink(statusMessage, "ChangeStatus", "Orders", new { orderId = Model.Id }, new { Style = "margin-right: 10px;", @class = "btn btn-primary" })
+            }
+            if ((Model.CustomerId == User.Identity.GetUserId<int>() && Model.AdminStatus) || User.IsInRole("admin"))
+            {
+                @Html.ActionLink("Delete", "Delete", "Orders", new
+       {
+           id = Model.Id,
+           isMyOrdersPage = ViewBag.IsMyOrdersPage,
+           isNewOrdersPage = ViewBag.IsNewOrdersPage,
+           currentCategoryId = ViewBag.CurrentCategoryId
+       }, new { @class = "btn btn-primary" })
+            }
         }
-    }
+    </div>
 </div>
 <hr/>
 <div class="row">
     <div class="col-sm-9">
-        Published @Html.DisplayFor(model => model.UploadDate)
+        Published @Html.DisplayFor(model => model.UploadDate) by <b style="font-size: 18px;"><u>@Html.DisplayFor(model => model.CustomerName)</u></b>
         <br />
         <h4>@Html.DisplayTextFor(model => model.Description)</h4>
         <h5>

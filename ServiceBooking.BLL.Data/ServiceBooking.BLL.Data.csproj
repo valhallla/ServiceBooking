@@ -40,12 +40,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DTO\CategoryViewModel.cs" />
-    <Compile Include="DTO\ClientViewModel.cs" />
-    <Compile Include="DTO\CommentViewModel.cs" />
-    <Compile Include="DTO\OrderViewModel.cs" />
-    <Compile Include="DTO\ResponseViewModel.cs" />
-    <Compile Include="DTO\StatusViewModel.cs" />
+    <Compile Include="DTO\CategoryViewModelBLL.cs" />
+    <Compile Include="DTO\ClientViewModelBLL.cs" />
+    <Compile Include="DTO\CommentViewModelBLL.cs" />
+    <Compile Include="DTO\OrderViewModelBLL.cs" />
+    <Compile Include="DTO\ResponseViewModelBLL.cs" />
+    <Compile Include="DTO\StatusViewModelBLL.cs" />
     <Compile Include="Infrastructure\OperationDetails.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
