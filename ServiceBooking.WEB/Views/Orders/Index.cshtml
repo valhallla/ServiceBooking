@@ -1,11 +1,16 @@
-﻿@using System.Activities.Expressions
-@using Microsoft.AspNet.Identity
+﻿@using Microsoft.AspNet.Identity
 @using ServiceBooking.WEB.Models
 @model IEnumerable<IndexOrderViewModel>
 
 @{
     string newOrders = string.Empty;
     string[] names = ViewBag.Names;
+
+    int? currentCategoryId = ViewBag.CurrentCategoryId;
+    string searchOrderName = ViewBag.SearchName;
+    bool newApplications = ViewBag.IsNewOrdersPage;
+    bool myOrders = ViewBag.IsMyOrdersPage;
+
     if (ViewBag.NewOrdersAmountString != null)
     {
         newOrders = ViewBag.NewOrdersAmountString;
@@ -56,7 +61,15 @@
         }
     </div>
     <div class="col-sm-6">
-        @Html.Partial("~/Views/Shared/Search.cshtml", names)
+        <br/>
+        @using (Html.BeginForm("Index", "Orders", null, FormMethod.Get, new { enctype = "multipart/form-data" }))
+        {
+            <input type="text" id="searchName" class="search-control" name="searchName" data-autocomplete-source='@Url.Action("AutocompleteSearch", "Orders")' />
+            @Html.Hidden("currentCategoryId", currentCategoryId)
+            @Html.Hidden("newApplications", newApplications)
+            @Html.Hidden("myOrders", myOrders)
+            <input type="submit" value="Search" class="btn btn-default" />
+        }
     </div>
     <div class="col-sm-3">
         @Html.Partial("~/Views/Shared/Sort.cshtml", sort)
@@ -79,7 +92,7 @@
                     <div class="col-sm-9">
                         <b style="font-size: 20pt">
                             @Html.ActionLink(item.Name, "Details", new { id = item.Id })
-                        </b><br/> 
+                        </b><br />
                         Published @Html.DisplayFor(modelItem => item.UploadDate)
                         <br />
                         <h5>
@@ -90,12 +103,12 @@
                         {
                             <h5>
                                 @Html.ActionLink("Delete", "Delete", "Orders", new
-                                {
-                                    id = item.Id,
-                                    isMyOrdersPage = ViewBag.IsMyOrdersPage,
-                                    isNewOrdersPage = ViewBag.IsNewOrdersPage,
-                                    currentCategoryId = ViewBag.CurrentCategoryId
-                                }, null)
+                           {
+                               id = item.Id,
+                               isMyOrdersPage = ViewBag.IsMyOrdersPage,
+                               isNewOrdersPage = ViewBag.IsNewOrdersPage,
+                               currentCategoryId = ViewBag.CurrentCategoryId
+                           }, null)
                             </h5>
                         }
                     </div>
@@ -118,15 +131,15 @@
                         {
                             <p>
                                 @Html.ActionLink("Confirm", "Confirm", "Orders", new
-                               {
-                                   id = item.Id,
-                                   categoryId = ViewBag.CurrentCategoryId
-                               }, new { @class = "btn btn-primary btn-lg" })
+                           {
+                               id = item.Id,
+                               categoryId = ViewBag.CurrentCategoryId
+                           }, new { @class = "btn btn-primary btn-lg" })
                                 @Html.ActionLink("Reject", "Reject", "Orders", new
-                               {
-                                   id = item.Id,
-                                   categoryId = ViewBag.CurrentCategoryId
-                               }, new { @class = "btn btn-primary btn-lg" })
+                           {
+                               id = item.Id,
+                               categoryId = ViewBag.CurrentCategoryId
+                           }, new { @class = "btn btn-primary btn-lg" })
                             </p>
                         }
                     </div>

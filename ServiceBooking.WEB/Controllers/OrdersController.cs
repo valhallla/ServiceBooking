@@ -50,7 +50,7 @@ namespace ServiceBooking.WEB.Controllers
         }
 
         // GET: Orders
-        public ActionResult Index(int? categoryId, bool newApplications = false, 
+        public ActionResult Index(int? categoryId, string searchName, bool newApplications = false, 
             bool myOrders = false, OrderSorts sort = OrderSorts.New)
         {
             var ordersDto = _orderService.GetAll();
@@ -95,6 +95,10 @@ namespace ServiceBooking.WEB.Controllers
             );
             var categories = Mapper.Map<List<CategoryViewModelBLL>, List<CategoryViewModel>>(categoriesDto);
             ViewBag.CategoriesList = categories;
+
+            if (searchName != null)
+                ordersDto = ordersDto.Where(o => o.Name.Contains(searchName));
+            ViewBag.SearchName = searchName;
 
             switch (sort)
             {
