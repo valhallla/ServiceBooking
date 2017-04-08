@@ -6,47 +6,39 @@
     {
         itemsAmount += item.ItemsAmount;
     }
+    string className = string.Empty;
 }
 
 <h3>Categories</h3>
 <div class="list-group">
     @if (ViewBag.CurrentCategoryId == null)
     {
-        <a href="@Url.Action("Index", "Orders", new
-                 {
-                     newApplications = ViewBag.IsNewOrdersPage,
-                     myOrders = ViewBag.IsMyOrdersPage
-                 })" class="list-group-item active">All &emsp;<span><b>@itemsAmount</b></span></a>
+        className = "active";
     }
-    else
-    {
-        <a href="@Url.Action("Index", "Orders", new
+    <a href="@Url.Action("Index", "Orders", new
         {
             newApplications = ViewBag.IsNewOrdersPage,
-            myOrders = ViewBag.IsMyOrdersPage
-        })" class="list-group-item">All &emsp;<span><b>@itemsAmount</b></span></a>
-    }
+            myOrders = ViewBag.IsMyOrdersPage,
+            sort = ViewBag.Sort
+        })" class="list-group-item @className">All &emsp;<span><b>@itemsAmount</b></span></a>
 
     @foreach (var item in Model)
     {
         if (ViewBag.CurrentCategoryId == item.Id)
         {
-            <a href="@Url.Action("Index", "Orders", new
-                     {
-                         categoryId = item.Id,
-                         newApplications = ViewBag.IsNewOrdersPage,
-                         myOrders = ViewBag.IsMyOrdersPage
-                     })" class="list-group-item active">@item.Name &emsp;<span><b>@item.ItemsAmount</b></span></a>
+            className = "active";
         }
         else
         {
-            <a href="@Url.Action("Index", "Orders", new
+            className = string.Empty;
+        }
+        <a href="@Url.Action("Index", "Orders", new
                      {
                          categoryId = item.Id,
                          newApplications = ViewBag.IsNewOrdersPage,
-                         myOrders = ViewBag.IsMyOrdersPage
-                     })" class="list-group-item">@item.Name &emsp;<span><b>@item.ItemsAmount</b></span></a>
-        }
+                         myOrders = ViewBag.IsMyOrdersPage,
+                         sort = ViewBag.Sort
+                     })" class="list-group-item @className">@item.Name&emsp;<span><b>@item.ItemsAmount</b></span></a>
     }
 </div>
 

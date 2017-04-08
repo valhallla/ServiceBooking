@@ -1,79 +1,69 @@
-﻿@model ServiceBooking.WEB.Models.IndexManagerViewModel
+﻿@model ServiceBooking.WEB.Models.IndexManageViewModel
 @{
-    ViewBag.Title = "Manage Account";
+    ViewBag.Title = "Manage account";
     Layout = "~/Views/Shared/_Layout.cshtml";
+
+    bool isPerformer = (bool)(Session["isPerformer"]);
+    bool adminStatus = (bool)(Session["adminStatus"]);
 }
 
-<h2>@ViewBag.Title.</h2>
-
-<p class="text-success">@ViewBag.StatusMessage</p>
-<div>
-    <h4>Change your account settings</h4>
-    <hr />
-    @Html.ActionLink("Change password", "ChangePassword", "Manage", new { newApplications = true }, new { @class = "btn btn-primary btn-lg" })
-    @if (Request.IsAuthenticated && User.IsInRole("user"))
-    {
-        @Html.ActionLink("Delete account", "DeleteAccount", "Manage", new { newApplications = true }, new { @class = "btn btn-primary btn-lg" })
-    }
-        @*<dt>External Logins:</dt>
-            <dd>
-                @Model.Logins.Count [
-                @Html.ActionLink("Manage", "ManageLogins") ]
-            </dd>*@
-        @*
-            Phone Numbers can used as a second factor of verification in a two-factor authentication system.
-
-             See <a href="http://go.microsoft.com/fwlink/?LinkId=403804">this article</a>
-                for details on setting up this ASP.NET application to support two-factor authentication using SMS.
-
-             Uncomment the following block after you have set up two-factor authentication
-        *@
-        @*
-            <dt>Phone Number:</dt>
-            <dd>
-                @(Model.PhoneNumber ?? "None")
-                @if (Model.PhoneNumber != null)
-                {
-                    <br />
-                    <text>[&nbsp;&nbsp;@Html.ActionLink("Change", "AddPhoneNumber")&nbsp;&nbsp;]</text>
-                    using (Html.BeginForm("RemovePhoneNumber", "Manage", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
-                    {
-                        @Html.AntiForgeryToken()
-                        <text>[<input type="submit" value="Remove" class="btn-link" />]</text>
-                    }
-                }
-                else
-                {
-                    <text>[&nbsp;&nbsp;@Html.ActionLink("Add", "AddPhoneNumber")
-                }
-            </dd>
-        *@
-        @*<dt>Two-Factor Authentication:</dt>
-            <dd>
-                <p>
-                    There are no two-factor authentication providers configured. See <a href="http://go.microsoft.com/fwlink/?LinkId=403804">this article</a>
-                    for details on setting up this ASP.NET application to support two-factor authentication.
-                </p>*@
-        @*@if (Model.TwoFactor)
+<h2>@ViewBag.Title</h2>
+<hr />
+<div class="row">
+    <div class="col-sm-7">
+        @using (Html.BeginForm("ChangePassword", "Manage", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+        {
+            @Html.AntiForgeryToken()
+            @Html.ValidationSummary("", new { @class = "text-danger" })
+            <div class="form-group">
+                @Html.LabelFor(m => m.OldPassword, new { @class = "col-md-2 control-label customLabel" })
+                <div class="col-md-10">
+                    @Html.PasswordFor(m => m.OldPassword, new { @class = "form-control" })
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(m => m.NewPassword, new { @class = "col-md-2 control-label customLabel" })
+                <div class="col-md-10">
+                    @Html.PasswordFor(m => m.NewPassword, new { @class = "form-control" })
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(m => m.ConfirmPassword, new { @class = "col-md-2 control-label customLabel" })
+                <div class="col-md-10">
+                    @Html.PasswordFor(m => m.ConfirmPassword, new { @class = "form-control" })
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <input type="submit" value="Change password" class="btn btn-default" />
+                </div>
+            </div>
+        }
+    </div>
+    <div class="col-sm-5">
+        @if (!User.IsInRole("admin"))
+        {
+            if (!adminStatus && !isPerformer)
             {
-                using (Html.BeginForm("DisableTwoFactorAuthentication", "Manage", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
-                {
-                    @Html.AntiForgeryToken()
-                    <text>Enabled
-                    <input type="submit" value="Disable" class="btn btn-link" />
-                    </text>
-                }
+                @Html.ActionLink("Become a performer", "BecomePerformer", "Manage", null, new { @class = "btn btn-primary btn-lg" })
             }
-            else
+            if (isPerformer && !adminStatus)
             {
-                using (Html.BeginForm("EnableTwoFactorAuthentication", "Manage", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
-                {
-                    @Html.AntiForgeryToken()
-                    <text>Disabled
-                    <input type="submit" value="Enable" class="btn btn-link" />
-                    </text>
-                }
-            }*@
-        @* </dd>*@
+                <h3>Your request for becoming a performer is pending confirmetion</h3>
+            }
+            if (adminStatus && !isPerformer)
+            {
+                <h3>
+                    @Html.ActionLink("X", "Close", "Manage", null, new { Style = "border: none;", @class = "btn btn-default close" })
+                    Your request for becoming a performer has been rejected
+                </h3>
+            }
+            <br/><br/>
+            @Html.ActionLink("Delete account", "DeleteAccount", "Account", null, new { @class = "btn btn-primary btn-lg" })
+        }
+    </div>
 </div>
 
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

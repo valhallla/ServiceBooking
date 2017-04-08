@@ -46,6 +46,7 @@
     <Compile Include="DTO\OrderViewModelBLL.cs" />
     <Compile Include="DTO\ResponseViewModelBLL.cs" />
     <Compile Include="DTO\StatusViewModelBLL.cs" />
+    <Compile Include="Infrastructure\Global.cs" />
     <Compile Include="Infrastructure\OperationDetails.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

@@ -28,12 +28,6 @@ namespace ServiceBooking.WEB.Controllers
             _unitOfWork = unitOfWork;
         }
 
-        public AccountController(NinjectDependencyResolver resolver, IUserService userService, IUnitOfWork unitOfWork)
-        {
-            _userService = userService;
-            _unitOfWork = unitOfWork;
-        }
-
         private IAuthenticationManager AuthenticationManager
         {
             get
@@ -110,6 +104,30 @@ namespace ServiceBooking.WEB.Controllers
                 }
                 else
                     ModelState.AddModelError(operationDetails.Property, operationDetails.Message);
+            }
+            return View(model);
+        }
+
+        public ActionResult DeleteAccount()
+        {
+            return View("DeleteAccount");
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> DeleteAccount(DeleteAccountViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                ClientViewModelBLL user = new ClientViewModelBLL {Password = model.Password, Email = User.Identity.Name};
+                var operationDetails = await _userService.DeleteAccount(user);
+                if (operationDetails.Succedeed)
+                {
+                    LogOff();
+                    return RedirectToAction("Index", "Home");
+                }
+
+                ModelState.AddModelError(operationDetails.Property, operationDetails.Message);
             }
             return View(model);
         }

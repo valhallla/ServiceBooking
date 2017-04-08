@@ -5,6 +5,7 @@ using ServiceBooking.BLL.DTO;
 using ServiceBooking.BLL.Infrastructure;
 using Microsoft.AspNet.Identity;
 using System.Security.Claims;
+using System.Web;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Ninject;
 using ServiceBooking.BLL.Interfaces;
@@ -23,13 +24,20 @@ namespace ServiceBooking.BLL.Services
         public ApplicationRoleRepository RoleManager { get; }
 
         [Inject]
-        public UserService(IRepository<ApplicationUser> client)
+        public UserService(IRepository<ApplicationUser> clientRepository)
         {
-            _clientRepository = client;
+            _clientRepository = clientRepository;
             ApplicationContext db = new ApplicationContext("DefaultConnection");
             UserManager = new ApplicationUserRepository(new UserStore<ApplicationUser, 
                 CustomRole, int, CustomUserLogin, CustomUserRole, CustomUserClaim> (db));
             RoleManager = new ApplicationRoleRepository(new RoleStore<ApplicationRole>(db));
+
+            var currentUser = _clientRepository.Get(HttpContext.Current.User.Identity.GetUserId<int>());
+            if (currentUser != null)
+            {
+                HttpContext.Current.Session["isPrformer"] = Global.IsPerformer = currentUser.IsPerformer;
+                HttpContext.Current.Session["adminStatus"] = Global.AdminStatus = currentUser.AdminStatus;
+            }
         }
 
         public async Task<OperationDetails> Create(ClientViewModelBLL userDto)
@@ -51,7 +59,7 @@ namespace ServiceBooking.BLL.Services
                 //ClientUser clientUser = Mapper.Map<ClientViewModel, ClientUser>(userDto);
 
                 //_clientRepository.Create(clientUser);
-                return new OperationDetails(true, "Registration succeeded", "");
+                return new OperationDetails(true, "Registration succeeded", string.Empty);
             }
 
             return new OperationDetails(false, "Login is already taken by another user", "Email");
@@ -83,6 +91,8 @@ namespace ServiceBooking.BLL.Services
             {
                 claim = await UserManager.CreateIdentityAsync(user,
                     DefaultAuthenticationTypes.ApplicationCookie);
+                HttpContext.Current.Session["isPrformer"] = Global.IsPerformer = user.IsPerformer;
+                HttpContext.Current.Session["adminStatus"] = Global.AdminStatus = user.AdminStatus;
             }
             return claim;
         }
@@ -108,6 +118,32 @@ namespace ServiceBooking.BLL.Services
             var users = _clientRepository.GetAll().ToList();
             Mapper.Initialize(cfg => cfg.CreateMap<ApplicationUser, ClientViewModelBLL>());
             return Mapper.Map<List<ApplicationUser>, List<ClientViewModelBLL>>(users);
+        }
+
+        public OperationDetails Update(ClientViewModelBLL userDto)
+        {
+            ApplicationUser user = _clientRepository.Get(userDto.Id);
+            if (user != null)
+            {
+                Mapper.Initialize(cfg => cfg.CreateMap<ClientViewModelBLL, ApplicationUser>());
+                Mapper.Map(userDto, user);
+                _clientRepository.Update(user);
+                Global.AdminStatus = userDto.AdminStatus;
+                Global.IsPerformer = userDto.IsPerformer;
+                return new OperationDetails(true, @"User information updated", string.Empty);
+            }
+            return new OperationDetails(false, @"User doesn't exist", "Id");
+        }
+
+        public async Task<OperationDetails> DeleteAccount(ClientViewModelBLL userDto)
+        {
+            var user = await UserManager.FindAsync(userDto.Email, userDto.Password);
+            if (user != null)
+            {
+                _clientRepository.Delete(user.Id);
+                return new OperationDetails(true, "Deleting account succeeded", string.Empty);
+            }
+            return new OperationDetails(false, "Incorrect password", "Password");
         }
     }
 }

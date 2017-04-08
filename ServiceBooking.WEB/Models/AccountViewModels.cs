@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace ServiceBooking.WEB.Models
 {
@@ -49,11 +50,16 @@ namespace ServiceBooking.WEB.Models
 
     public class BecomePerformerViewModel
     {
+        [Display(Name = "Company (optional)")]
+        public string Company { get; set; }
+
+        [Required]
         [Display(Name = "Info")]
+        [DataType(DataType.MultilineText)]
         public string Info { get; set; }
 
-        //[Display(Name = "Categories")]
-        //public ICollection<C>
+        [Display(Name = "Categories")]
+        public ICollection<CategoryViewModel> Categories { get; set; }
     }
 
     public class ResetPasswordViewModel
@@ -75,6 +81,14 @@ namespace ServiceBooking.WEB.Models
         public string ConfirmPassword { get; set; }
 
         public string Code { get; set; }
+    }
+
+    public class DeleteAccountViewModel
+    {
+        [Required]
+        [DataType(DataType.Password)]
+        [Display(Name = "Password")]
+        public string Password { get; set; }
     }
 
     public class ForgotPasswordViewModel

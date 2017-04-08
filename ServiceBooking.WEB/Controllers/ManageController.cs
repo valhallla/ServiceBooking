@@ -8,6 +8,8 @@ using ServiceBooking.BLL.DTO;
 using ServiceBooking.BLL.Interfaces;
 using ServiceBooking.DAL.Interfaces;
 using ServiceBooking.WEB.Models;
+using AutoMapper;
+using ServiceBooking.BLL.Infrastructure;
 
 namespace ServiceBooking.WEB.Controllers
 {
@@ -25,59 +27,34 @@ namespace ServiceBooking.WEB.Controllers
             _unitOfWork = unitOfWork;
         }
 
-        public IUserService UserService
-        {
-            get
-            {
-                return _userService ?? HttpContext.GetOwinContext().GetUserManager<IUserService>();
-            }
-        }
-
-        // GET: Manage
-        public async Task<ActionResult> Index(ManageMessageId? message)
-        {
-            ViewBag.StatusMessage =
-               message == ManageMessageId.ChangePasswordSuccess ? "Your password has been changed."
-               : message == ManageMessageId.SetPasswordSuccess ? "Your password has been set."
-               : message == ManageMessageId.SetTwoFactorSuccess ? "Your two-factor authentication provider has been set."
-               : message == ManageMessageId.Error ? "An error has occurred."
-               : message == ManageMessageId.AddPhoneSuccess ? "Your phone number was added."
-               : message == ManageMessageId.RemovePhoneSuccess ? "Your phone number was removed."
-               : "";
-
-            var userId = User.Identity.GetUserId();
-            var model = new IndexManagerViewModel
-            {
-                BrowserRemembered = await AuthenticationManager.TwoFactorBrowserRememberedAsync(userId)
-            };
-            return View(model);
-        }
-
         //
-        // GET: /Manage/ChangePassword
-        public ActionResult ChangePassword()
+        // GET: /Manage/Index
+        public ActionResult Index()
         {
-            return View("ChangePassword");
+            Session["adminStatus"] = Global.AdminStatus;
+            Session["isPerformer"] = Global.IsPerformer;
+            return View("Index");
         }
 
         //
         // POST: /Manage/ChangePassword
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> ChangePassword(ChangePasswordViewModel model)
+        public async Task<ActionResult> ChangePassword(IndexManageViewModel model)
         {
             if (!ModelState.IsValid)
             {
                 return View(model);
             }
 
-            ClientViewModelBLL client = new ClientViewModelBLL
-            {
-                Id = User.Identity.GetUserId<int>(),
-                UserName = model.OldPassword,
-                Password = model.NewPassword
-            };
-            var result = await UserService.ChangePassword(client);
+            Mapper.Initialize(cfg => cfg.CreateMap<IndexManageViewModel, ClientViewModelBLL>()
+                .ForMember("Id", opt => opt.MapFrom(c => User.Identity.GetUserId<int>()))
+                .ForMember("UserName", opt => opt.MapFrom(c => c.OldPassword))
+                .ForMember("Password", opt => opt.MapFrom(c => c.NewPassword))
+                );
+            ClientViewModelBLL client = Mapper.Map<IndexManageViewModel, ClientViewModelBLL>(model);
+
+            var result = await _userService.ChangePassword(client);
             
             if (result.Succeeded)
             {
@@ -86,6 +63,21 @@ namespace ServiceBooking.WEB.Controllers
             AddErrors(result);
             return View(model);
         }
+
+        public ActionResult BecomePerformer()
+        {
+            return View("BecomePerformer");
+        }
+
+        public ActionResult Close()
+        {
+            var userDto = _userService.FindById(User.Identity.GetUserId<int>());
+            userDto.AdminStatus = false;
+            _userService.Update(userDto);
+            return RedirectToAction("Index");
+        }
+
+
 
         #region Helpers
         private IAuthenticationManager AuthenticationManager

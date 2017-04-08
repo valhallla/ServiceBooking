@@ -20,6 +20,8 @@ namespace ServiceBooking.BLL.DTO
 
         public string Surname { get; set; }
 
+        public string Company { get; set; }
+
         public DateTime RegistrationDate { get; set; }
 
         public ICollection<Order> Orders { get; set; }

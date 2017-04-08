@@ -1,10 +1,12 @@
 ﻿@using Microsoft.AspNet.Identity
+@using PagedList.Mvc;
 @using ServiceBooking.WEB.Models
-@model IEnumerable<IndexOrderViewModel>
+@model PagedList.IPagedList<IndexOrderViewModel>
+<link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
 
 @{
     string newOrders = string.Empty;
-    string[] names = ViewBag.Names;
+    var names = ViewBag.Names;
 
     int? currentCategoryId = ViewBag.CurrentCategoryId;
     bool newApplications = ViewBag.IsNewOrdersPage;
@@ -64,24 +66,30 @@
         <br />
         @using (Html.BeginForm("Index", "Orders", null, FormMethod.Get, new { enctype = "multipart/form-data" }))
         {
-            <input type="text" id="searchName" class="search-control" name="searchName" data-autocomplete-source='@Url.Action("AutocompleteSearch", "Orders")' />
+            <input type="text"  class="search-control" id="searchName" name="searchName" data-autocomplete-source='@names' />
             @Html.Hidden("currentCategoryId", currentCategoryId)
             @Html.Hidden("newApplications", newApplications)
             @Html.Hidden("myOrders", myOrders)
+            @Html.Hidden("sort", orderSort)
             <input type="submit" value="Search" class="btn btn-default" />
         }
+      
+        <script type=”text/javascript” language=”javascript”>
+            $(document).ready(function () {
+                $(‘#searchName’).autocomplete({
+                    source: @names
+                });
+            })
+        </script>
 
-        <script src='@Url.Content("~/Scripts/jquery-1.10.2.min.js")' type="text/javascript"></script>
-        <script src='@Url.Content("~/Scripts/jquery-ui-1.11.3.min.js")' type="text/javascript"></script>
-
-        <script type="text/javascript">
+        @*<script type="text/javascript">
             $(function() {
                 $("[data-autocomplete-source]").each(function() {
                     var target = $(this);
                     target.autocomplete({ source: target.attr("data-autocomplete-source") });
                 });
             });
-        </script>
+        </script>*@
     </div>
     <div class="col-sm-3">
         @Html.Partial("~/Views/Shared/Sort.cshtml", orderSort)
@@ -112,16 +120,17 @@
                             <b>@Html.DisplayFor(modelItem => item.Category)</b>
                         </h5>
                         @if (Request.IsAuthenticated && ((User.IsInRole("admin") && !ViewBag.IsNewOrdersPage) 
-                            || item.CustomerId == User.Identity.GetUserId<int>()))
+                                                         || item.CustomerId == User.Identity.GetUserId<int>()))
                         {
                             <h5>
                                 @Html.ActionLink("Delete", "Delete", "Orders", new
-                           {
-                               id = item.Id,
-                               isMyOrdersPage = ViewBag.IsMyOrdersPage,
-                               isNewOrdersPage = ViewBag.IsNewOrdersPage,
-                               currentCategoryId = ViewBag.CurrentCategoryId
-                           }, null)
+                                {
+                                    id = item.Id,
+                                    isMyOrdersPage = ViewBag.IsMyOrdersPage,
+                                    isNewOrdersPage = ViewBag.IsNewOrdersPage,
+                                    currentCategoryId = ViewBag.CurrentCategoryId,
+                                    sort = orderSort
+                                }, null)
                             </h5>
                         }
                     </div>
@@ -170,3 +179,15 @@
         @Html.Partial("~/Views/Categories/Index.cshtml", categories)
     </div>
 </div>
+<br />
+Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+
+@Html.PagedListPager(Model, page => Url.Action("Index", new
+{
+    page,
+    isMyOrdersPage = ViewBag.IsMyOrdersPage,
+    isNewOrdersPage = ViewBag.IsNewOrdersPage,
+    currentCategoryId = ViewBag.CurrentCategoryId,
+    ordersSort = ViewBag.Sort,
+    searchName = ViewBag.SearchName
+}))

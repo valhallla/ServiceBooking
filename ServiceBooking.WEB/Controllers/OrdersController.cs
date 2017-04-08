@@ -10,6 +10,8 @@ using ServiceBooking.Util;
 using ServiceBooking.WEB.Models;
 using AutoMapper;
 using ServiceBooking.BLL.Infrastructure;
+using PagedList.Mvc;
+using PagedList;
 
 namespace ServiceBooking.WEB.Controllers
 {
@@ -38,21 +40,9 @@ namespace ServiceBooking.WEB.Controllers
             _unitOfWork = unitOfWork;
         }
 
-        public OrdersController(NinjectDependencyResolver resolver, IOrderService orderService,
-            ICategoryService categoryService, IStatusService statusService, IResponseService responseService,
-            IUserService userService, IUnitOfWork unitOfWork)
-        {
-            _orderService = orderService;
-            _categoryService = categoryService;
-            _statusService = statusService;
-            _responseService = responseService;
-            _userService = userService;
-            _unitOfWork = unitOfWork;
-        }
-
         // GET: Orders
-        public ActionResult Index(int? categoryId, string searchName, bool newApplications = false,
-            bool myOrders = false, OrderSorts sort = OrderSorts.New)
+        public ActionResult Index(int? page, int? categoryId, string searchName, 
+            bool newApplications = false, bool myOrders = false, OrderSorts sort = OrderSorts.New)
         {
             var ordersDto = _orderService.GetAll();
             if (ordersDto == null)
@@ -119,10 +109,13 @@ namespace ServiceBooking.WEB.Controllers
                 .ForMember("Status", opt => opt.MapFrom(c => _statusService.FindById(c.StatusId).Value)));
             var orders = Mapper.Map<IEnumerable<OrderViewModelBLL>, List<IndexOrderViewModel>>(ordersDto);
 
-            //var names = orders.Select(o => o.Name).ToArray();
-            //ViewBag.Names = names;
+            var orderNames = _orderService.GetAll().Select(o => o.Name).ToArray();
+            var filteredNames = orderNames.Where(o => o.IndexOf(searchName, StringComparison.InvariantCultureIgnoreCase) >= 0);
+            ViewBag.Names = Json(filteredNames, JsonRequestBehavior.AllowGet);
 
-            return View(orders);
+            int pageSize = 3;
+            int pageNumber = (page ?? 1);
+            return View(orders.ToPagedList(pageNumber, pageSize));
         }
 
         // GET: Orders/Details/5
@@ -260,11 +253,9 @@ namespace ServiceBooking.WEB.Controllers
 
         public ActionResult AutocompleteSearch(string orderName)
         {
-            var orders = _orderService.GetAll().Where(o => o.Name.Contains(orderName))
-                            .Select(o => new { value = o.Name })
-                            .Distinct();
-
-            return Json(orders, JsonRequestBehavior.AllowGet);
+            var orderNames = _orderService.GetAll().Select(o => o.Name).ToArray();
+            var filteredNames = orderNames.Where(o => o.IndexOf(orderName, StringComparison.InvariantCultureIgnoreCase) >= 0);
+            return Json(filteredNames, JsonRequestBehavior.AllowGet);
         }
     }
 }

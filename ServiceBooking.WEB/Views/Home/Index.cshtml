@@ -24,18 +24,11 @@
             @Html.ActionLink("New performers" + newPerformers, "Index", "Performers", new { newApplications = true }, new { @class = "btn btn-primary btn-lg" })
         </p>
     }
-    else if(Request.IsAuthenticated)
-    {
-        <p>
-            <a href="~/Orders/Create" class="btn btn-primary btn-lg">Place an order</a>
-            <a href="~/Home/Index" class="btn btn-primary btn-lg">Become a performer</a>
-        </p>
-    }
     else
     {
         <p>
-            <a href="~/Account/Login" class="btn btn-primary btn-lg">Place an order</a>
-            <a href="~/Home/Index" class="btn btn-primary btn-lg">Become a performer</a>
+            @Html.ActionLink("Place an order", "Create", "Orders", null, new { @class = "btn btn-primary btn-lg" })
+            @Html.ActionLink("Become a performer", "BecomePerformer", "Manage", null, new { @class = "btn btn-primary btn-lg" })
         </p>
     }
 </div>

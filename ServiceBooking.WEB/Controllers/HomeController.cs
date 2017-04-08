@@ -23,13 +23,7 @@ namespace ServiceBooking.WEB.Controllers
             _orderService = orderService;
             _userService = userService;
         }
-
-        public HomeController(NinjectDependencyResolver resolver, IOrderService orderService, IUserService userService)
-        {
-            _orderService = orderService;
-            _userService = userService;
-        }
-
+        
         public ActionResult Index()
         {
             var orders = _orderService.GetAll();
@@ -50,6 +44,11 @@ namespace ServiceBooking.WEB.Controllers
             if (newPerformersAmount > 0)
                 ViewBag.NewPerformerssAmountString = " + " + newPerformersAmount;
 
+            return View();
+        }
+
+        public ActionResult Contact()
+        {
             return View();
         }
     }

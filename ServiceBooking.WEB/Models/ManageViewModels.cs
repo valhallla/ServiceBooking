@@ -7,14 +7,13 @@ using Microsoft.Owin.Security;
 
 namespace ServiceBooking.WEB.Models
 {
-    public class IndexManagerViewModel
+    public class IndexManageViewModel
     {
-        //public string PhoneNumber { get; set; }
-        public bool BrowserRemembered { get; set; }
-    }
+        [Required]
+        [DataType(DataType.Password)]
+        [Display(Name = "Current password")]
+        public string OldPassword { get; set; }
 
-    public class SetPasswordViewModel
-    {
         [Required]
         [StringLength(100, ErrorMessage = "The {0} must be at least {2} characters long.", MinimumLength = 6)]
         [DataType(DataType.Password)]
@@ -25,15 +24,14 @@ namespace ServiceBooking.WEB.Models
         [Display(Name = "Confirm new password")]
         [Compare("NewPassword", ErrorMessage = "The new password and confirmation password do not match.")]
         public string ConfirmPassword { get; set; }
+
+        public bool IsPerformer { get; set; }
+
+        public bool AdminStatus { get; set; }
     }
 
-    public class ChangePasswordViewModel
+    public class SetPasswordViewModel
     {
-        [Required]
-        [DataType(DataType.Password)]
-        [Display(Name = "Current password")]
-        public string OldPassword { get; set; }
-
         [Required]
         [StringLength(100, ErrorMessage = "The {0} must be at least {2} characters long.", MinimumLength = 6)]
         [DataType(DataType.Password)]

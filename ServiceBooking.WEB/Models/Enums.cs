@@ -11,4 +11,10 @@ namespace ServiceBooking.WEB.Models
         Expensive,
         Active
     }
+
+    public enum PerformerSorts
+    {
+        New,
+        Best
+    }
 }

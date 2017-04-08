@@ -51,6 +51,7 @@ namespace ServiceBooking.DAL.Repositories
         public void Update(ApplicationUser item)
         {
             Db.Entry(item).State = EntityState.Modified;
+            Db.SaveChanges();
         }
 
         public void Delete(int id)
@@ -58,6 +59,7 @@ namespace ServiceBooking.DAL.Repositories
             ApplicationUser client = Db.Users.Find(id);
             if (client != null)
                 Db.Users.Remove(client);
+            Db.SaveChanges();
         }
     }
 }
