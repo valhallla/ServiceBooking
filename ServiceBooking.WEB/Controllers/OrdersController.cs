@@ -22,11 +22,12 @@ namespace ServiceBooking.WEB.Controllers
         private static IUserService _userService;
         private static IUnitOfWork _unitOfWork;
 
-        public OrdersController() : this(_orderService, _categoryService, 
-            _statusService, _responseService, _userService, _unitOfWork) { }
+        public OrdersController() : this(_orderService, _categoryService,
+            _statusService, _responseService, _userService, _unitOfWork)
+        { }
 
-        public OrdersController(IOrderService orderService, ICategoryService categoryService, 
-            IStatusService statusService, IResponseService responseService, 
+        public OrdersController(IOrderService orderService, ICategoryService categoryService,
+            IStatusService statusService, IResponseService responseService,
             IUserService userService, IUnitOfWork unitOfWork)
         {
             _orderService = orderService;
@@ -37,8 +38,8 @@ namespace ServiceBooking.WEB.Controllers
             _unitOfWork = unitOfWork;
         }
 
-        public OrdersController(NinjectDependencyResolver resolver, IOrderService orderService, 
-            ICategoryService categoryService, IStatusService statusService, IResponseService responseService, 
+        public OrdersController(NinjectDependencyResolver resolver, IOrderService orderService,
+            ICategoryService categoryService, IStatusService statusService, IResponseService responseService,
             IUserService userService, IUnitOfWork unitOfWork)
         {
             _orderService = orderService;
@@ -50,15 +51,17 @@ namespace ServiceBooking.WEB.Controllers
         }
 
         // GET: Orders
-        public ActionResult Index(int? categoryId, string searchName, bool newApplications = false, 
+        public ActionResult Index(int? categoryId, string searchName, bool newApplications = false,
             bool myOrders = false, OrderSorts sort = OrderSorts.New)
         {
             var ordersDto = _orderService.GetAll();
+            if (ordersDto == null)
+                return HttpNotFound();
 
             ViewBag.NewOrdersAmountString = string.Empty;
             var newOrdersAmount = ordersDto.Count(model => !model.AdminStatus);
             if (newOrdersAmount > 0)
-                ViewBag.NewOrdersAmountString = " + " +  newOrdersAmount;
+                ViewBag.NewOrdersAmountString = " + " + newOrdersAmount;
 
             ViewBag.IsNewOrdersPage = false;
             if (newApplications)
@@ -77,7 +80,7 @@ namespace ServiceBooking.WEB.Controllers
 
                 if (!ordersDto.Any())
                     ViewBag.Message = "You have no orders";
-                ViewBag.IsMyOrdersPage = true;  
+                ViewBag.IsMyOrdersPage = true;
             }
 
             if (categoryId != null)
@@ -199,23 +202,25 @@ namespace ServiceBooking.WEB.Controllers
             return View(order);
         }
 
-        public ActionResult Confirm(int id, int? categoryId)
+        public ActionResult Confirm(int id, int? currentCategoryId, OrderSorts ordersSort)
         {
             _orderService.ConfirmOrder(id);
             return RedirectToAction("Index", new
             {
                 newApplications = _orderService.GetAll().Count(o => !o.AdminStatus) > 0,
-                currentCategoryId = categoryId
+                categoryId = currentCategoryId,
+                sort = ordersSort
             });
         }
 
-        public ActionResult Reject(int id, int? categoryId)
+        public ActionResult Reject(int id, int? currentCategoryId, OrderSorts ordersSort)
         {
             _orderService.DeleteOrder(id);
             return RedirectToAction("Index", new
             {
                 newApplications = _orderService.GetAll().Count(o => !o.AdminStatus) > 0,
-                currentCategoryId = categoryId
+                categoryId = currentCategoryId,
+                sort = ordersSort
             });
         }
 
@@ -228,7 +233,7 @@ namespace ServiceBooking.WEB.Controllers
             var clientUser = _userService.FindById(orderDto.UserId);
 
             Mapper.Initialize(cfg => cfg.CreateMap<OrderViewModelBLL, DeleteOrderViewModel>()
-                .ForMember("CustomerName", opt => opt.MapFrom(c => clientUser.Id == User.Identity.GetUserId<int>() 
+                .ForMember("CustomerName", opt => opt.MapFrom(c => clientUser.Id == User.Identity.GetUserId<int>()
                     ? "you" : clientUser.Surname + " " + clientUser.Name)));
             DeleteOrderViewModel order = Mapper.Map<OrderViewModelBLL, DeleteOrderViewModel>(orderDto);
 

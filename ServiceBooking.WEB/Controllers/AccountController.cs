@@ -1,4 +1,5 @@
-﻿using System.Web;
+﻿using System;
+using System.Web;
 using System.Web.Mvc;
 using Microsoft.Owin.Security;
 using System.Threading.Tasks;
@@ -90,10 +91,11 @@ namespace ServiceBooking.WEB.Controllers
                     .ForMember("EmailConfirmed", opt => opt.MapFrom(c => true))
                     .ForMember("IsPerformer", opt => opt.MapFrom(c => false))
                     .ForMember("Rating", opt => opt.MapFrom(c => 0))
+                    .ForMember("RegistrationDate", opt => opt.MapFrom(c => DateTime.Today))
+                    .ForMember("AdminStatus", opt => opt.MapFrom(c => false))
                     .ForMember("Role", opt => opt.MapFrom(c => "user")));
 
                 ClientViewModelBLL userViewModel = Mapper.Map<RegisterViewModel, ClientViewModelBLL>(model);
-                userViewModel.CategoryId = null;
 
                 OperationDetails operationDetails = await _userService.Create(userViewModel);
                 if (operationDetails.Succedeed)

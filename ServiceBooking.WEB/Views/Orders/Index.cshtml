@@ -7,16 +7,16 @@
     string[] names = ViewBag.Names;
 
     int? currentCategoryId = ViewBag.CurrentCategoryId;
-    string searchOrderName = ViewBag.SearchName;
     bool newApplications = ViewBag.IsNewOrdersPage;
     bool myOrders = ViewBag.IsMyOrdersPage;
+    OrderSorts orderSort = ViewBag.Sort;
 
     if (ViewBag.NewOrdersAmountString != null)
     {
         newOrders = ViewBag.NewOrdersAmountString;
     }
+
     IEnumerable<CategoryViewModel> categories = ViewBag.CategoriesList;
-    OrderSorts sort = ViewBag.Sort;
 
     ViewBag.Title = "Orders";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -25,10 +25,10 @@
 <div class="row">
     <div class="col-sm-3">
         <h2>
-            Orders
+            @ViewBag.Title
             @if (Request.IsAuthenticated && User.IsInRole("admin") && !newOrders.Equals(string.Empty))
             {
-                @Html.ActionLink(@newOrders, "Index", new { categoryId = ViewBag.CurrentCategoryId, newApplications = true })
+                @Html.ActionLink(@newOrders, "Index", new { categoryId = ViewBag.CurrentCategoryId, newApplications = true, sort = orderSort })
             }
         </h2>
 
@@ -44,11 +44,11 @@
                 @Html.ActionLink("Place an order", "Create") |
                 @if (ViewBag.IsMyOrdersPage)
                 {
-                    @Html.ActionLink("All orders", "Index")
+                    @Html.ActionLink("All orders", "Index", new { categoryId = ViewBag.CurrentCategoryId, sort = orderSort })
                 }
                 else
                 {
-                    @Html.ActionLink("My orders", "Index", new { categoryId = ViewBag.CurrentCategoryId, myOrders = true })
+                    @Html.ActionLink("My orders", "Index", new { categoryId = ViewBag.CurrentCategoryId, myOrders = true, sort = orderSort })
                 }
             </h4>
             ViewBag.IsAuthorized = true;
@@ -56,12 +56,12 @@
         else if (Request.IsAuthenticated && User.IsInRole("admin") && ViewBag.IsNewOrdersPage)
         {
             <h4>
-                @Html.ActionLink("Back to confirmed orders", "Index")
+                @Html.ActionLink("Back to confirmed orders", "Index", new { categoryId = ViewBag.CurrentCategoryId, sort = orderSort })
             </h4>
         }
     </div>
     <div class="col-sm-6">
-        <br/>
+        <br />
         @using (Html.BeginForm("Index", "Orders", null, FormMethod.Get, new { enctype = "multipart/form-data" }))
         {
             <input type="text" id="searchName" class="search-control" name="searchName" data-autocomplete-source='@Url.Action("AutocompleteSearch", "Orders")' />
@@ -70,9 +70,21 @@
             @Html.Hidden("myOrders", myOrders)
             <input type="submit" value="Search" class="btn btn-default" />
         }
+
+        <script src='@Url.Content("~/Scripts/jquery-1.10.2.min.js")' type="text/javascript"></script>
+        <script src='@Url.Content("~/Scripts/jquery-ui-1.11.3.min.js")' type="text/javascript"></script>
+
+        <script type="text/javascript">
+            $(function() {
+                $("[data-autocomplete-source]").each(function() {
+                    var target = $(this);
+                    target.autocomplete({ source: target.attr("data-autocomplete-source") });
+                });
+            });
+        </script>
     </div>
     <div class="col-sm-3">
-        @Html.Partial("~/Views/Shared/Sort.cshtml", sort)
+        @Html.Partial("~/Views/Shared/Sort.cshtml", orderSort)
     </div>
 </div>
 
@@ -99,7 +111,8 @@
                             To finish by @Html.DisplayFor(modelItem => item.CompletionDate) &emsp;
                             <b>@Html.DisplayFor(modelItem => item.Category)</b>
                         </h5>
-                        @if (Request.IsAuthenticated && (User.IsInRole("admin") || item.CustomerId == User.Identity.GetUserId<int>()))
+                        @if (Request.IsAuthenticated && ((User.IsInRole("admin") && !ViewBag.IsNewOrdersPage) 
+                            || item.CustomerId == User.Identity.GetUserId<int>()))
                         {
                             <h5>
                                 @Html.ActionLink("Delete", "Delete", "Orders", new
@@ -130,16 +143,22 @@
                         @if (Request.IsAuthenticated && User.IsInRole("admin") && ViewBag.IsNewOrdersPage)
                         {
                             <p>
+                                @if (Model.Count() == 1)
+                                {
+                                    ViewBag.CurrentCategoryId = null;
+                                }
                                 @Html.ActionLink("Confirm", "Confirm", "Orders", new
-                           {
-                               id = item.Id,
-                               categoryId = ViewBag.CurrentCategoryId
-                           }, new { @class = "btn btn-primary btn-lg" })
+                                {
+                                    id = item.Id,
+                                    currentCategoryId = ViewBag.CurrentCategoryId,
+                                    ordersSort = orderSort
+                                }, new {@class = "btn btn-primary btn-lg"})
                                 @Html.ActionLink("Reject", "Reject", "Orders", new
-                           {
-                               id = item.Id,
-                               categoryId = ViewBag.CurrentCategoryId
-                           }, new { @class = "btn btn-primary btn-lg" })
+                                {
+                                    id = item.Id,
+                                    currentCategoryId = ViewBag.CurrentCategoryId,
+                                    ordersSort = orderSort
+                                }, new {@class = "btn btn-primary btn-lg"})
                             </p>
                         }
                     </div>

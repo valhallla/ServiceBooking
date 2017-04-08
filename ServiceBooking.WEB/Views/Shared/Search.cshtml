@@ -1,5 +1,5 @@
 ﻿<br/>
-@using (Html.BeginForm("Search", "Orders", null, FormMethod.Post, new { enctype = "multipart/form-data" }))
+@using (Html.BeginForm("Index", "Orders", null, FormMethod.Post, new {enctype = "multipart/form-data"}))
 {
     <input type="text" id="name" class="search-control" name="name" data-autocomplete-source='@Url.Action("AutocompleteSearch", "Orders")'/>
     <input type="submit" value="Search" class="btn btn-default"/>

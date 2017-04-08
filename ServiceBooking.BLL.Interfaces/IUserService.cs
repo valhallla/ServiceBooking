@@ -14,5 +14,6 @@ namespace ServiceBooking.BLL.Interfaces
         Task<ClaimsIdentity> Authenticate(ClientViewModelBLL userDto);
         Task<IdentityResult> ChangePassword(ClientViewModelBLL userDto);
         ClientViewModelBLL FindById(int id);
+        IEnumerable<ClientViewModelBLL> GetAll();
     }
 }

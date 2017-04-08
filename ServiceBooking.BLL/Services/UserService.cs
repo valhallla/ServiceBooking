@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using ServiceBooking.BLL.DTO;
 using ServiceBooking.BLL.Infrastructure;
@@ -100,6 +101,13 @@ namespace ServiceBooking.BLL.Services
                 return Mapper.Map<ApplicationUser, ClientViewModelBLL>(user);
             }
             return null;
+        }
+
+        public IEnumerable<ClientViewModelBLL> GetAll()
+        {
+            var users = _clientRepository.GetAll().ToList();
+            Mapper.Initialize(cfg => cfg.CreateMap<ApplicationUser, ClientViewModelBLL>());
+            return Mapper.Map<List<ApplicationUser>, List<ClientViewModelBLL>>(users);
         }
     }
 }

@@ -16,10 +16,10 @@
     <div class="col-sm-3" style="float: right">
         @if (Request.IsAuthenticated)
         {
+            <br />
             if (Model.CustomerId == User.Identity.GetUserId<int>() && Model.AdminStatus && ViewBag.StatusMessage != null)
             {
                 string statusMessage = ViewBag.StatusMessage;
-                <br />
                 @Html.ActionLink(statusMessage, "ChangeStatus", "Orders", new { orderId = Model.Id }, new { Style = "margin-right: 10px;", @class = "btn btn-primary" })
             }
             if ((Model.CustomerId == User.Identity.GetUserId<int>() && Model.AdminStatus) || User.IsInRole("admin"))

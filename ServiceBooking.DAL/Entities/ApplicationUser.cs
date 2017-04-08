@@ -23,14 +23,17 @@ namespace ServiceBooking.DAL.Entities
 
         public bool IsPerformer { get; set; }
 
-        public int? CategoryId { get; set; }
-        public Category Category { get; set; }
+        public string Company { get; set; }
+
+        public virtual ICollection<Category> Categories { get; set; }
+
+        public DateTime RegistrationDate { get; set; }
 
         public string Info { get; set; }
 
         public int? Rating { get; set; }
 
-        public string AdminStatus { get; set; }
+        public bool AdminStatus { get; set; }
 
         public virtual ICollection<Comment> Comments { get; set; }
 

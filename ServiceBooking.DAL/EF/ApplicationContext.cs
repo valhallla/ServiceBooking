@@ -31,5 +31,15 @@ namespace ServiceBooking.DAL.EF
         public DbSet<Response> Responses { get; set; }
         public DbSet<Category> Categories { get; set; }
         public DbSet<Status> Status { get; set; }
+
+        //protected override void OnModelCreating(DbModelBuilder modelBuilder)
+        //{
+        //    modelBuilder.Entity<Category>().HasMany(c => c.ApplicationUsers)
+        //        .WithMany(u => u.Categories)
+        //        .Map(t => t.MapLeftKey("CategoryId")
+        //        .MapRightKey("ApplicationUserId")
+        //        .ToTable("CategoryUser"));
+        //}
+
     }
 }

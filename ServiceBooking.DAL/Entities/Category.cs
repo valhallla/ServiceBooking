@@ -16,6 +16,6 @@ namespace ServiceBooking.DAL.Entities
 
         public virtual ICollection<Order> Orders { get; set; }
 
-        public virtual ICollection<ApplicationUser> Performers { get; set; }
+        public virtual ICollection<ApplicationUser> ApplicationUsers { get; set; }
     }
 }

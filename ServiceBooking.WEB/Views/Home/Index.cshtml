@@ -1,4 +1,16 @@
 ﻿@{
+    string newOrders = string.Empty;
+    string newPerformers = string.Empty;
+
+    if (ViewBag.NewOrdersAmountString != null)
+    {
+        newOrders = ViewBag.NewOrdersAmountString;
+    }
+    if (ViewBag.NewPerformersAmountString != null)
+    {
+        newPerformers = ViewBag.NewPerformersAmountString;
+    }
+
     ViewBag.Title = "Home";
 }
 
@@ -8,8 +20,8 @@
     @if (Request.IsAuthenticated && User.IsInRole("admin"))
     {
         <p>
-            @Html.ActionLink("New orders", "Index", "Orders", new { newApplications = true }, new { @class = "btn btn-primary btn-lg" })
-            @Html.ActionLink("New performers", "Index", "Performers", new { newApplications = true }, new { @class = "btn btn-primary btn-lg" })
+            @Html.ActionLink("New orders" + newOrders, "Index", "Orders", new { newApplications = true }, new { @class = "btn btn-primary btn-lg" })
+            @Html.ActionLink("New performers" + newPerformers, "Index", "Performers", new { newApplications = true }, new { @class = "btn btn-primary btn-lg" })
         </p>
     }
     else if(Request.IsAuthenticated)

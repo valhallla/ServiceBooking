@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using ServiceBooking.DAL.Entities;
 
 namespace ServiceBooking.BLL.DTO
@@ -19,17 +20,19 @@ namespace ServiceBooking.BLL.DTO
 
         public string Surname { get; set; }
 
+        public DateTime RegistrationDate { get; set; }
+
         public ICollection<Order> Orders { get; set; }
 
         public bool IsPerformer { get; set; }
 
-        public int? CategoryId { get; set; }
+        public ICollection<Category> Categories { get; set; }
 
         public string Info { get; set; }
 
         public int? Rating { get; set; }
 
-        public string AdminStatus { get; set; }
+        public bool AdminStatus { get; set; }
 
         public ICollection<Comment> Comments { get; set; }
 
