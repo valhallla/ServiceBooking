@@ -4,6 +4,7 @@ using System.Web.Mvc;
 using Microsoft.Owin.Security;
 using System.Threading.Tasks;
 using System.Security.Claims;
+using AuthFilterApp.Filters;
 using Microsoft.AspNet.Identity;
 using ServiceBooking.BLL.DTO;
 using ServiceBooking.BLL.Infrastructure;
@@ -108,6 +109,8 @@ namespace ServiceBooking.WEB.Controllers
             return View(model);
         }
 
+        [Authorize(Roles = "user")]
+        [AdminAccessDenied]
         public ActionResult DeleteAccount()
         {
             return View("DeleteAccount");
@@ -115,6 +118,8 @@ namespace ServiceBooking.WEB.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "user")]
+        [AdminAccessDenied]
         public async Task<ActionResult> DeleteAccount(DeleteAccountViewModel model)
         {
             if (ModelState.IsValid)
@@ -133,6 +138,8 @@ namespace ServiceBooking.WEB.Controllers
         }
 
         [AllowAnonymous]
+        [Authorize(Roles = "user")]
+        [AdminAccessDenied]
         public async Task<ActionResult> ConfirmEmail(string userId, string code)
         {
             if (userId == null || code == null)

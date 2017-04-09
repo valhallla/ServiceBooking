@@ -39,10 +39,10 @@ namespace ServiceBooking.WEB.Controllers
             if (users == null)
                 return HttpNotFound();
 
-            ViewBag.NewPerformerssAmountString = string.Empty;
+            ViewBag.NewPerformersAmountString = string.Empty;
             var newPerformersAmount = users.Count(model => !model.AdminStatus && model.IsPerformer);
             if (newPerformersAmount > 0)
-                ViewBag.NewPerformerssAmountString = " + " + newPerformersAmount;
+                ViewBag.NewPerformersAmountString = " + " + newPerformersAmount;
 
             return View();
         }

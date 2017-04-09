@@ -44,6 +44,26 @@ namespace ServiceBooking.WEB.Models
         public string ConfirmPassword { get; set; }
     }
 
+    public class BecomePerformerViewModel
+    {
+        [Display(Name = "Company (optional)")]
+        public string Company { get; set; }
+
+        [Required]
+        [Display(Name = "Activity information")]
+        [DataType(DataType.MultilineText)]
+        public string Info { get; set; }
+
+        [Required]
+        [Display(Name = "Categories")]
+        public List<CategoryViewModel> Categories { get; set; }
+
+        public BecomePerformerViewModel()
+        {
+            Categories = new List<CategoryViewModel>();
+        }
+    }
+
     //public class AddPhoneNumberViewModel
     //{
     //    [Required]

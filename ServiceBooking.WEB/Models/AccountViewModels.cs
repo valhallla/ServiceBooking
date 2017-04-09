@@ -48,20 +48,6 @@ namespace ServiceBooking.WEB.Models
         public string ConfirmPassword { get; set; }
     }
 
-    public class BecomePerformerViewModel
-    {
-        [Display(Name = "Company (optional)")]
-        public string Company { get; set; }
-
-        [Required]
-        [Display(Name = "Info")]
-        [DataType(DataType.MultilineText)]
-        public string Info { get; set; }
-
-        [Display(Name = "Categories")]
-        public ICollection<CategoryViewModel> Categories { get; set; }
-    }
-
     public class ResetPasswordViewModel
     {
         [Required]

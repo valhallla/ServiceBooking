@@ -20,9 +20,6 @@ namespace ServiceBooking.DAL.Migrations
             Sql(@"SET IDENTITY_INSERT dbo.AspNetUsers OFF");
 
             Sql(@"INSERT INTO dbo.AspNetUserRoles (UserId, RoleId) VALUES ('1', '1');");
-            Sql(@"INSERT INTO dbo.AspNetUserRoles (UserId, RoleId) VALUES ('1', '2');");
-
-
         }
 
         public override void Down()

@@ -1,6 +1,10 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
+using AuthFilterApp.Filters;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
@@ -16,23 +20,28 @@ namespace ServiceBooking.WEB.Controllers
     [Authorize]
     public class ManageController : Controller
     {
-        private  static IUserService _userService;
+        private static IUserService _userService;
+        private static ICategoryService _categoryService;
         private static IUnitOfWork _unitOfWork;
 
-        public ManageController() : this(_userService, _unitOfWork) { }
+        public ManageController() : this(_userService, _categoryService, _unitOfWork) { }
 
-        public ManageController(IUserService service, IUnitOfWork unitOfWork)
+        public ManageController(IUserService service, ICategoryService 
+            categoryService, IUnitOfWork unitOfWork)
         {
             _userService = service;
+            _categoryService = categoryService;
             _unitOfWork = unitOfWork;
         }
 
         //
         // GET: /Manage/Index
+        [Authorize(Roles = "user")]
+        [AdminAccessDenied]
         public ActionResult Index()
         {
-            Session["adminStatus"] = Global.AdminStatus;
-            Session["isPerformer"] = Global.IsPerformer;
+            //Session["adminStatus"] = Global.AdminStatus;
+            //Session["isPerformer"] = Global.IsPerformer;
             return View("Index");
         }
 
@@ -40,12 +49,12 @@ namespace ServiceBooking.WEB.Controllers
         // POST: /Manage/ChangePassword
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "user")]
+        [AdminAccessDenied]
         public async Task<ActionResult> ChangePassword(IndexManageViewModel model)
         {
             if (!ModelState.IsValid)
-            {
                 return View(model);
-            }
 
             Mapper.Initialize(cfg => cfg.CreateMap<IndexManageViewModel, ClientViewModelBLL>()
                 .ForMember("Id", opt => opt.MapFrom(c => User.Identity.GetUserId<int>()))
@@ -64,11 +73,52 @@ namespace ServiceBooking.WEB.Controllers
             return View(model);
         }
 
+        [Authorize(Roles = "user")]
+        [AdminAccessDenied]
         public ActionResult BecomePerformer()
         {
-            return View("BecomePerformer");
+            var categoriesDto = _categoryService.GetAll().ToList();
+            Mapper.Initialize(cfg => cfg.CreateMap<CategoryViewModelBLL, CategoryViewModel>());
+            var categories = Mapper.Map<List<CategoryViewModelBLL>, List<CategoryViewModel>>(categoriesDto);
+            ViewBag.Categories = categories;
+            return View("BecomePerformer", new BecomePerformerViewModel());
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "user")]
+        [AdminAccessDenied]
+        public ActionResult BecomePerformer(BecomePerformerViewModel model, int[] selectedCategories)
+        {
+            if (!ModelState.IsValid)
+                return View(model);
+
+            Mapper.Initialize(cfg => cfg.CreateMap<BecomePerformerViewModel, ClientViewModelBLL>()
+                .ForMember("Id", opt => opt.MapFrom(c => User.Identity.GetUserId<int>()))
+                .ForMember("RegistrationDate", opt => opt.MapFrom(c => DateTime.Today))
+                .ForMember("IsPerformer", opt => opt.MapFrom(c => true))
+                .ForMember("AdminStatus", opt => opt.MapFrom(c => false))
+                .ForMember("Rating", opt => opt.MapFrom(c => 0))
+                );
+            ClientViewModelBLL client = Mapper.Map<BecomePerformerViewModel, ClientViewModelBLL>(model);
+            client.Categories = new List<CategoryViewModelBLL>();
+
+            var categories = _categoryService.GetAll().ToList();
+            if (selectedCategories != null)
+            {
+                foreach (var c in categories.Where(c => selectedCategories.Contains(c.Id)))
+                {
+                    client.Categories.Add(c);
+                }
+            }
+            _userService.Update(client);
+
+            return RedirectToAction("Index");
+            
+        }
+
+        [Authorize(Roles = "user")]
+        [AdminAccessDenied]
         public ActionResult Close()
         {
             var userDto = _userService.FindById(User.Identity.GetUserId<int>());
@@ -76,8 +126,6 @@ namespace ServiceBooking.WEB.Controllers
             _userService.Update(userDto);
             return RedirectToAction("Index");
         }
-
-
 
         #region Helpers
         private IAuthenticationManager AuthenticationManager

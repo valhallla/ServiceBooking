@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
+using AuthFilterApp.Filters;
 using Microsoft.AspNet.Identity;
 using ServiceBooking.BLL.DTO;
 using ServiceBooking.BLL.Interfaces;
@@ -157,6 +158,8 @@ namespace ServiceBooking.WEB.Controllers
             return View(order);
         }
 
+        [Authorize(Roles = "user")]
+        [AdminAccessDenied]
         public ActionResult ChangeStatus(int orderId)
         {
             _orderService.ChangeStatus(orderId);
@@ -164,10 +167,9 @@ namespace ServiceBooking.WEB.Controllers
         }
 
         // GET: Orders/Create
+        [Authorize(Roles = "user")]
         public ActionResult Create()
         {
-            if (!Request.IsAuthenticated)
-                return Redirect("/Account/Login");
             ViewBag.Category = new SelectList(_categoryService.GetAll(), "Name", "Name");
             return View();
         }
@@ -175,6 +177,7 @@ namespace ServiceBooking.WEB.Controllers
         // POST: Orders/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "user")]
         public ActionResult Create(CreateOrderViewModel order)
         {
             Mapper.Initialize(cfg => cfg.CreateMap<CreateOrderViewModel, OrderViewModelBLL>()
@@ -195,6 +198,8 @@ namespace ServiceBooking.WEB.Controllers
             return View(order);
         }
 
+        [Authorize(Roles = "admin")]
+        [UserAccessDenied]
         public ActionResult Confirm(int id, int? currentCategoryId, OrderSorts ordersSort)
         {
             _orderService.ConfirmOrder(id);
@@ -206,6 +211,8 @@ namespace ServiceBooking.WEB.Controllers
             });
         }
 
+        [Authorize(Roles = "admin")]
+        [UserAccessDenied]
         public ActionResult Reject(int id, int? currentCategoryId, OrderSorts ordersSort)
         {
             _orderService.DeleteOrder(id);

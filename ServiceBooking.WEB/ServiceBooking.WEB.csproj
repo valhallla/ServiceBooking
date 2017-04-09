@@ -223,6 +223,8 @@
     <Compile Include="Controllers\OrdersController.cs" />
     <Compile Include="Controllers\PerformersController.cs" />
     <Compile Include="Controllers\ResponsesController.cs" />
+    <Compile Include="Filters\AdminAccessDenied.cs" />
+    <Compile Include="Filters\UserAccessDenied.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -306,7 +308,6 @@
     <Content Include="Views\Account\DisplayEmail.cshtml" />
     <Content Include="Views\Account\Login.cshtml" />
     <Content Include="Views\Account\Register.cshtml" />
-    <Content Include="Views\Manage\ChangeSettings.cshtml" />
     <Content Include="Views\Manage\Index.cshtml" />
     <Content Include="Views\Orders\Details.cshtml" />
     <Content Include="Views\Account\RegistrationSucceeded.cshtml" />

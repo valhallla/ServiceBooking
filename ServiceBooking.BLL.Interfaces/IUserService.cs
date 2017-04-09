@@ -17,5 +17,7 @@ namespace ServiceBooking.BLL.Interfaces
         IEnumerable<ClientViewModelBLL> GetAll();
         OperationDetails Update(ClientViewModelBLL userDto);
         Task<OperationDetails> DeleteAccount(ClientViewModelBLL userDto);
+        //OperationDetails BecomePerformer(ClientViewModelBLL userDto, List<bool> categoriesChecked);
+        //OperationDetails AddCategory(CategoryViewModelBLL categoryDto);
     }
 }

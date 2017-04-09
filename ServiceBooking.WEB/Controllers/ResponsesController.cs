@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using AuthFilterApp.Filters;
 using ServiceBooking.BLL.Interfaces;
 using ServiceBooking.DAL.Interfaces;
 using ServiceBooking.Util;
@@ -36,6 +37,8 @@ namespace ServiceBooking.WEB.Controllers
         // POST: Responses/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "user")]
+        [AdminAccessDenied]
         public ActionResult Send(CreateResponseViewModel response)
         {
             Mapper.Initialize(cfg => cfg.CreateMap<CreateResponseViewModel, ResponseViewModelBLL>()
