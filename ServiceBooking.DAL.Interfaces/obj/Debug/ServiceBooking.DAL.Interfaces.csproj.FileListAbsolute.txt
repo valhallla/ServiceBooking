@@ -4,3 +4,4 @@ C:\ServiceBooking\ServiceBooking.DAL.Interfaces\obj\Debug\ServiceBooking.DAL.Int
 C:\ServiceBooking\ServiceBooking.DAL.Interfaces\obj\Debug\ServiceBooking.DAL.Interfaces.pdb
 C:\ServiceBooking\ServiceBooking.DAL.Interfaces\bin\Debug\Microsoft.AspNet.Identity.Core.dll
 C:\ServiceBooking\ServiceBooking.DAL.Interfaces\bin\Debug\Microsoft.AspNet.Identity.Core.xml
+C:\ServiceBooking\ServiceBooking.DAL.Interfaces\obj\Debug\ServiceBooking.DAL.Interfaces.csprojResolveAssemblyReference.cache

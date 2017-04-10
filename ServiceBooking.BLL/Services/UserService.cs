@@ -20,6 +20,8 @@ namespace ServiceBooking.BLL.Services
     public class UserService : IUserService
     {
         private readonly IRepository<ApplicationUser> _clientRepository;
+       // private readonly IManyToManyResolver _manyToManyResolver
+
         public ApplicationUserRepository UserManager { get; }
         public ApplicationRoleRepository RoleManager { get; }
 
@@ -28,8 +30,8 @@ namespace ServiceBooking.BLL.Services
         {
             _clientRepository = clientRepository;
             ApplicationContext db = new ApplicationContext("DefaultConnection");
-            UserManager = new ApplicationUserRepository(new UserStore<ApplicationUser, 
-                CustomRole, int, CustomUserLogin, CustomUserRole, CustomUserClaim> (db));
+            UserManager = new ApplicationUserRepository(new UserStore<ApplicationUser,
+                CustomRole, int, CustomUserLogin, CustomUserRole, CustomUserClaim>(db));
             RoleManager = new ApplicationRoleRepository(new RoleStore<ApplicationRole>(db));
 
             var currentUser = _clientRepository.Get(HttpContext.Current.User.Identity.GetUserId<int>());
@@ -45,11 +47,7 @@ namespace ServiceBooking.BLL.Services
             ApplicationUser user = await UserManager.FindByEmailAsync(userDto.Email);
             if (user == null)
             {
-                Mapper.Initialize(cfg => cfg.CreateMap<ClientViewModelBLL, ApplicationUser>()
-                    .ForMember("Categories", opt => opt.MapFrom(c => new List<Category>()))
-                    .ForMember("Orders", opt => opt.MapFrom(c => new List<Order>()))
-                    .ForMember("Comments", opt => opt.MapFrom(c => new List<Comment>()))
-                );
+                Mapper.Initialize(cfg => cfg.CreateMap<ClientViewModelBLL, ApplicationUser>());
                 user = Mapper.Map<ClientViewModelBLL, ApplicationUser>(userDto);
 
                 var result = await UserManager.CreateAsync(user, userDto.Password);
@@ -103,10 +101,7 @@ namespace ServiceBooking.BLL.Services
             if (user != null)
             {
                 Mapper.Initialize(cfg => cfg.CreateMap<ApplicationUser, ClientViewModelBLL>());
-                var userDto = Mapper.Map<ApplicationUser, ClientViewModelBLL>(user);
-                Mapper.Initialize(cfg => cfg.CreateMap<Category, CategoryViewModelBLL>());
-                Mapper.Map(user.Categories, userDto.Categories);
-                return userDto;
+                return Mapper.Map<ApplicationUser, ClientViewModelBLL>(user);
             }
             return null;
         }
@@ -114,28 +109,8 @@ namespace ServiceBooking.BLL.Services
         public IEnumerable<ClientViewModelBLL> GetAll()
         {
             var users = _clientRepository.GetAll().ToList();
-            var usersDto = new List<ClientViewModelBLL>();
-
-            foreach (var user in users)
-            {
-                Mapper.Initialize(cfg => cfg.CreateMap<Category, CategoryViewModelBLL>());
-                var categories = Mapper.Map<IEnumerable<Category>, List<CategoryViewModelBLL>>(user.Categories);
-
-                Mapper.Initialize(cfg => cfg.CreateMap<Order, OrderViewModelBLL>());
-                var orders = Mapper.Map<IEnumerable<Order>, List<OrderViewModelBLL>>(user.Orders);
-
-                Mapper.Initialize(cfg => cfg.CreateMap<Comment, CommentViewModelBLL>());
-                var comments = Mapper.Map<IEnumerable<Comment>, List<CommentViewModelBLL>>(user.Comments);
-
-                Mapper.Initialize(cfg => cfg.CreateMap<ApplicationUser, ClientViewModelBLL>()
-                    .ForMember("Categories", opt => opt.MapFrom(c => categories))
-                    .ForMember("Orders", opt => opt.MapFrom(c => orders))
-                    .ForMember("Comments", opt => opt.MapFrom(c => comments))
-                );
-                usersDto.Add(Mapper.Map<ApplicationUser, ClientViewModelBLL>(user));
-            }
-
-            return usersDto;
+            Mapper.Initialize(cfg => cfg.CreateMap<ApplicationUser, ClientViewModelBLL>());
+            return Mapper.Map<List<ApplicationUser>, List<ClientViewModelBLL>>(users);
         }
 
         public OperationDetails Update(ClientViewModelBLL userDto)
@@ -143,26 +118,22 @@ namespace ServiceBooking.BLL.Services
             ApplicationUser user = _clientRepository.Get(userDto.Id);
             if (user != null)
             {
-                user.AdminStatus = userDto.AdminStatus;
-                user.IsPerformer = userDto.IsPerformer;
-
-                if (userDto.Categories != null)
-                {
-                    Mapper.Initialize(cfg => cfg.CreateMap<CategoryViewModelBLL, Category>());
-                    var categories = Mapper.Map<IEnumerable<CategoryViewModelBLL>, List<Category>>(userDto.Categories);
-                    foreach (var category in categories)
-                    {
-                        user.Categories.Add(category);   
-                    }
-                }
-
+                Mapper.Initialize(cfg => cfg.CreateMap<ClientViewModelBLL, ApplicationUser>());
+                Mapper.Map(userDto, user);
                 _clientRepository.Update(user);
-                HttpContext.Current.Session["isPerformer"] = userDto.IsPerformer;
+
                 HttpContext.Current.Session["adminStatus"] = userDto.AdminStatus;
+                HttpContext.Current.Session["isPerformer"] = userDto.IsPerformer;
 
                 return new OperationDetails(true, @"User information updated", string.Empty);
             }
             return new OperationDetails(false, @"User doesn't exist", "Id");
+        }
+
+        public OperationDetails Update(ClientViewModelBLL userDto, int[] selectedCategories)
+        {
+            (_clientRepository as IManyToManyResolver)?.Update(userDto.Id, selectedCategories);
+            return Update(userDto);
         }
 
         public async Task<OperationDetails> DeleteAccount(ClientViewModelBLL userDto)

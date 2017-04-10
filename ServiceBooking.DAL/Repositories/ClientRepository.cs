@@ -8,7 +8,7 @@ using ServiceBooking.DAL.Interfaces;
 
 namespace ServiceBooking.DAL.Repositories
 {
-    public class ClientRepository : IRepository<ApplicationUser>
+    public class ClientRepository : IRepository<ApplicationUser>, IManyToManyResolver
     {
         public ApplicationContext Db { get; set; }
 
@@ -35,7 +35,7 @@ namespace ServiceBooking.DAL.Repositories
 
         public IEnumerable<ApplicationUser> GetAll()
         {
-            return Db.Users;
+            return Db.Users.Include(u => u.Categories).Include(o => o.Comments).Include(o => o.Orders);
         }
 
         public ApplicationUser Get(int id)
@@ -60,6 +60,20 @@ namespace ServiceBooking.DAL.Repositories
             if (client != null)
                 Db.Users.Remove(client);
             Db.SaveChanges();
+        }
+
+        public void Update(int id, int[] selectedItems)
+        {
+            var user = Get(id);
+
+            if (user.Categories == null)
+                user.Categories = new List<Category>();
+            foreach (var category in Db.Categories.Where(c => selectedItems.Contains(c.Id)))
+            {
+                user.Categories.Add(category);
+            }
+
+            Update(user);
         }
     }
 }

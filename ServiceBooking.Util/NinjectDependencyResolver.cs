@@ -38,6 +38,7 @@ namespace ServiceBooking.Util
             _kernel.Bind<IUnitOfWork>().To<UnitOfWork>().InRequestScope().WithConstructorArgument(connectionName);
 
             _kernel.Bind<ApplicationContext>().ToConstructor(_ => new ApplicationContext(connectionName)).InRequestScope();
+            _kernel.Bind<IManyToManyResolver>().To<ClientRepository>();
             _kernel.Bind<IRepository<ApplicationUser>>().To<ClientRepository>();
             _kernel.Bind<IRepository<Order>>().To<OrderRepository>();
             _kernel.Bind<IRepository<Response>>().To<ResponseRepository>();

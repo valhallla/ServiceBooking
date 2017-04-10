@@ -24,11 +24,9 @@ namespace ServiceBooking.BLL.DTO
 
         public DateTime RegistrationDate { get; set; }
 
-        public ICollection<OrderViewModelBLL> Orders { get; set; }
+        public ICollection<Order> Orders { get; set; }
 
         public bool IsPerformer { get; set; }
-
-        public ICollection<CategoryViewModelBLL> Categories { get; set; }
 
         public string Info { get; set; }
 
@@ -36,15 +34,14 @@ namespace ServiceBooking.BLL.DTO
 
         public bool AdminStatus { get; set; }
 
-        public ICollection<CommentViewModelBLL> Comments { get; set; }
+        public ICollection<Comment> Comments { get; set; }
 
         public string Role { get; set; }
 
         public ClientViewModelBLL()
         {
-            Orders = new List<OrderViewModelBLL>();
-            Comments = new List<CommentViewModelBLL>();
-            Categories = new List<CategoryViewModelBLL>();
+            Orders = new List<Order>();
+            Comments = new List<Comment>();
         }
     }
 }

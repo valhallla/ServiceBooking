@@ -93,25 +93,15 @@ namespace ServiceBooking.WEB.Controllers
             if (!ModelState.IsValid)
                 return View(model);
 
+            ClientViewModelBLL client = _userService.FindById(User.Identity.GetUserId<int>());
             Mapper.Initialize(cfg => cfg.CreateMap<BecomePerformerViewModel, ClientViewModelBLL>()
-                .ForMember("Id", opt => opt.MapFrom(c => User.Identity.GetUserId<int>()))
                 .ForMember("RegistrationDate", opt => opt.MapFrom(c => DateTime.Today))
                 .ForMember("IsPerformer", opt => opt.MapFrom(c => true))
                 .ForMember("AdminStatus", opt => opt.MapFrom(c => false))
                 .ForMember("Rating", opt => opt.MapFrom(c => 0))
                 );
-            ClientViewModelBLL client = Mapper.Map<BecomePerformerViewModel, ClientViewModelBLL>(model);
-            client.Categories = new List<CategoryViewModelBLL>();
-
-            var categories = _categoryService.GetAll().ToList();
-            if (selectedCategories != null)
-            {
-                foreach (var c in categories.Where(c => selectedCategories.Contains(c.Id)))
-                {
-                    client.Categories.Add(c);
-                }
-            }
-            _userService.Update(client);
+            Mapper.Map(model, client);
+            _userService.Update(client, selectedCategories);
 
             return RedirectToAction("Index");
             

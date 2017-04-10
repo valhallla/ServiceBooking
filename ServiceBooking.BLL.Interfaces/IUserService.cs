@@ -11,13 +11,15 @@ namespace ServiceBooking.BLL.Interfaces
     public interface IUserService
     {
         Task<OperationDetails> Create(ClientViewModelBLL userDto);
-        Task<ClaimsIdentity> Authenticate(ClientViewModelBLL userDto);
-        Task<IdentityResult> ChangePassword(ClientViewModelBLL userDto);
+        OperationDetails Update(ClientViewModelBLL userDto);
+        OperationDetails Update(ClientViewModelBLL userDto, int[] selectedCategories);
+        Task<OperationDetails> DeleteAccount(ClientViewModelBLL userDto);
+
         ClientViewModelBLL FindById(int id);
         IEnumerable<ClientViewModelBLL> GetAll();
-        OperationDetails Update(ClientViewModelBLL userDto);
-        Task<OperationDetails> DeleteAccount(ClientViewModelBLL userDto);
-        //OperationDetails BecomePerformer(ClientViewModelBLL userDto, List<bool> categoriesChecked);
+
+        Task<ClaimsIdentity> Authenticate(ClientViewModelBLL userDto);
+        Task<IdentityResult> ChangePassword(ClientViewModelBLL userDto);
         //OperationDetails AddCategory(CategoryViewModelBLL categoryDto);
     }
 }
