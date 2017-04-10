@@ -218,6 +218,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\ErrorController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\OrdersController.cs" />
@@ -324,6 +325,12 @@
     <Content Include="Views\Shared\Search.cshtml" />
     <Content Include="Views\Shared\Sort.cshtml" />
     <Content Include="Views\Manage\BecomePerformer.cshtml" />
+    <Content Include="Views\Error\NotFound.cshtml" />
+    <Content Include="Views\Error\InternalServerError.cshtml" />
+    <Content Include="Views\Error\Forbidden.cshtml" />
+    <Content Include="Views\Error\ServiceTemporarilyUnavailable.cshtml" />
+    <Content Include="Views\Error\Default.cshtml" />
+    <Content Include="Views\Shared\ErrorLayout.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
