@@ -1,17 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Web;
 using System.Web.Mvc;
-using AuthFilterApp.Filters;
 using Microsoft.AspNet.Identity;
 using ServiceBooking.BLL.DTO;
 using ServiceBooking.BLL.Interfaces;
 using ServiceBooking.DAL.Interfaces;
-using ServiceBooking.Util;
 using ServiceBooking.WEB.Models;
 using AutoMapper;
 using ServiceBooking.BLL.Infrastructure;
-using PagedList.Mvc;
 using PagedList;
 
 namespace ServiceBooking.WEB.Controllers
@@ -26,8 +24,7 @@ namespace ServiceBooking.WEB.Controllers
         private static IUnitOfWork _unitOfWork;
 
         public OrdersController() : this(_orderService, _categoryService,
-            _statusService, _responseService, _userService, _unitOfWork)
-        { }
+            _statusService, _responseService, _userService, _unitOfWork) { }
 
         public OrdersController(IOrderService orderService, ICategoryService categoryService,
             IStatusService statusService, IResponseService responseService,
@@ -120,7 +117,7 @@ namespace ServiceBooking.WEB.Controllers
         }
 
         // GET: Orders/Details/5
-        public ActionResult Details(int id, int? categoryId, bool? newApplications, bool? myOrders)
+        public ActionResult Details(int id, int? categoryId, bool? newApplications, bool? myOrders, bool emptyResponse = false)
         {
             var responsesDto = _responseService.GetAllForOrder(id);
             Mapper.Initialize(cfg => cfg.CreateMap<ResponseViewModelBLL, IndexResponseViewModel>()
@@ -154,14 +151,17 @@ namespace ServiceBooking.WEB.Controllers
             ViewBag.CurrentCategoryId = categoryId;
             ViewBag.IsMyOrdersPage = myOrders;
             ViewBag.IsNewOrdersPage = newApplications;
+            ViewBag.ResponseIsEmpty = emptyResponse;
 
             return View(order);
         }
 
         [Authorize(Roles = "user")]
-        [AdminAccessDenied]
         public ActionResult ChangeStatus(int orderId)
         {
+            if (User.Identity.GetUserId<int>() != _orderService.Find(orderId).UserId)
+                return View("~/Views/Error/Forbidden.cshtml");
+
             _orderService.ChangeStatus(orderId);
             return RedirectToAction("Details", new { id = orderId });
         }
@@ -195,11 +195,11 @@ namespace ServiceBooking.WEB.Controllers
                     return RedirectToAction("Index");
                 ModelState.AddModelError(operationDetails.Property, operationDetails.Message);
             }
+            ViewBag.Category = new SelectList(_categoryService.GetAll(), "Name", "Name");
             return View(order);
         }
 
         [Authorize(Roles = "admin")]
-        [UserAccessDenied]
         public ActionResult Confirm(int id, int? currentCategoryId, OrderSorts ordersSort)
         {
             _orderService.ConfirmOrder(id);
@@ -212,7 +212,6 @@ namespace ServiceBooking.WEB.Controllers
         }
 
         [Authorize(Roles = "admin")]
-        [UserAccessDenied]
         public ActionResult Reject(int id, int? currentCategoryId, OrderSorts ordersSort)
         {
             _orderService.DeleteOrder(id);
@@ -225,11 +224,17 @@ namespace ServiceBooking.WEB.Controllers
         }
 
         // GET: Orders/Delete/5
+        [Authorize]
         public ActionResult Delete(int id, bool? isMyOrdersPage, bool? isNewOrdersPage, int? currentCategoryId)
         {
+            if (User.Identity.GetUserId<int>() != _orderService.Find(id).UserId)
+                return View("~/Views/Error/Forbidden.cshtml");
+
             var orderDto = _orderService.Find(id);
             if (orderDto == null)
                 return HttpNotFound();
+            if (orderDto.UserId != User.Identity.GetUserId<int>())
+                return RedirectToAction("Index");
             var clientUser = _userService.FindById(orderDto.UserId);
 
             Mapper.Initialize(cfg => cfg.CreateMap<OrderViewModelBLL, DeleteOrderViewModel>()
@@ -247,8 +252,12 @@ namespace ServiceBooking.WEB.Controllers
         // POST: Orders/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public ActionResult DeleteConfirmed(int id, bool? isMyOrdersPage, bool? isNewOrdersPage, int? currentCategoryId)
         {
+            if (User.Identity.GetUserId<int>() != _orderService.Find(id).UserId)
+                return View("~/Views/Error/Forbidden.cshtml");
+
             _orderService.DeleteOrder(id);
             return RedirectToAction("Index", new
             {

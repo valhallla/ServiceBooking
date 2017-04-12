@@ -6,80 +6,84 @@
     Model.Categories = new List<CategoryViewModel>();
     bool isPerformer = (bool)(Session["isPerformer"]);
     bool adminStatus = (bool)(Session["adminStatus"]);
+    string message = ViewBag.Message.ToString();
 
     ViewBag.Title = "Become a performer";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-@if (isPerformer && adminStatus)
+<h2>@ViewBag.Title</h2>
+
+@if (isPerformer && !adminStatus)
 {
-    <h1>Error.</h1>
-    <h2>An error occurred while processing your request.</h2>
+    <h3>Your request for becoming a performer is pending confirmation</h3>
 }
-else
+else if (adminStatus && !isPerformer)
 {
+    <h3>Your request for becoming a performer has been rejected</h3>
+}
 
-    <h2>@ViewBag.Title</h2>
+else if (!adminStatus && !isPerformer)
+{
+    using (Html.BeginForm("BecomePerformer", "Manage", FormMethod.Post, new {enctype = "multipart/form-data"}))
+    {
+        @Html.AntiForgeryToken()
+        <div class="form-horizontal">
+            <h4>Add some additional information about yourself</h4>
+            <hr/>
+            <div class="form-group">
+                @Html.LabelFor(model => model.Company, htmlAttributes: new {@class = "control-label col-md-2"})
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.Company, new {htmlAttributes = new {Value = Model.Company, @class = "form-control custo"}})
+                    @Html.ValidationMessageFor(model => model.Company, "", new {@class = "text-danger"})
+                </div>
+            </div>
+                 
+            <div class="form-group">
+                @Html.LabelFor(model => model.PhoneNumber, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.PhoneNumber, new { htmlAttributes = new { Value = Model.PhoneNumber, @class = "form-control custo" } })
+                    @Html.Label("Your phone number will be visible only for customers")<br />
+                    @Html.Label("which orders you have left a response to")<br/>
+                    @Html.ValidationMessageFor(model => model.PhoneNumber, "", new { @class = "text-danger" })
+                </div>
+            </div>
 
-    if (isPerformer && !adminStatus)
-     {
-         <h3>Your request for becoming a performer is pending confirmation</h3>
-     }
-     else if (adminStatus && !isPerformer)
-     {
-         <h3>Your request for becoming a performer has been rejected</h3>
-     }
+            <div class="form-group">
+                @Html.LabelFor(model => model.Info, htmlAttributes: new {@class = "control-label col-md-2"})
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.Info, new {htmlAttributes = new { Value = Model.Company, Style = "resize: none;", @class = "form-control"}})
+                    @Html.ValidationMessageFor(model => model.Info, "", new {@class = "text-danger"})
+                </div>
+            </div>
 
-     else if (!adminStatus && !isPerformer)
-     {
-         using (Html.BeginForm("BecomePerformer", "Manage", null, FormMethod.Post, new {enctype = "multipart/form-data"}))
-         {
-             @Html.AntiForgeryToken()
+            <div class="form-group">
+                @Html.LabelFor(model => model.Categories, htmlAttributes: new {@class = "control-label col-md-2"})
+                <div class="col-md-10">
+                    @{
+                        List<CategoryViewModel> categories = ViewBag.Categories;
+                    @Html.ValidationMessageFor(model => categories, message, new { @class = "text-danger" })
+                        <br/>
+                        foreach (CategoryViewModel c in categories)
+                        {
+                            <input type="checkbox" id="selectedCategories" name="selectedCategories" value="@c.Id"
+                                @(Model.Categories.Contains(c) ? "checked=\"checked\"" : "")/>
+                            @c.Name
+                            <br/>
 
-             <div class="form-horizontal">
-                 <h4>Add some additional information about yourself</h4>
-                 <hr/>
-                 @Html.ValidationSummary(true, "", new {@class = "text-danger"})
-                 <div class="form-group">
-                     @Html.LabelFor(model => model.Company, htmlAttributes: new {@class = "control-label col-md-2"})
-                     <div class="col-md-10">
-                         @Html.EditorFor(model => model.Company, new {htmlAttributes = new {@class = "form-control custo"}})
-                         @Html.ValidationMessageFor(model => model.Company, "", new {@class = "text-danger"})
-                     </div>
-                 </div>
+                        }
+                }
+                         
+                </div>
+            </div>
 
-                 <div class="form-group">
-                     @Html.LabelFor(model => model.Info, htmlAttributes: new {@class = "control-label col-md-2"})
-                     <div class="col-md-10">
-                         @Html.EditorFor(model => model.Info, new {htmlAttributes = new {@class = "form-control"}})
-                         @Html.ValidationMessageFor(model => model.Info, "", new {@class = "text-danger"})
-                     </div>
-                 </div>
-
-                 <div class="form-group">
-                     @Html.LabelFor(model => model.Categories, htmlAttributes: new {@class = "control-label col-md-2"})
-                     <div class="col-md-10">
-                         @{
-                             List<CategoryViewModel> categories = ViewBag.Categories;
-                             foreach (CategoryViewModel c in categories)
-                             {
-                                 <input type="checkbox" name="selectedCategories" value="@c.Id"
-                                        @(Model.Categories.Contains(c) ? "checked=\"checked\"" : "")/>
-                                 @c.Name
-                                 <br/>
-                             }
-                         }
-                     </div>
-                 </div>
-
-                 <div class="form-group">
-                     <div class="col-md-offset-2 col-md-10">
-                         <input type="submit" value="Send application" class="btn btn-default"/>
-                     </div>
-                 </div>
-             </div>
-         }
-     }
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <input type="submit" value="Send application" class="btn btn-default"/>
+                </div>
+            </div>
+        </div>
+    }
 }
 <div>
     @Html.ActionLink("Back to Performers", "Index", "Performers")

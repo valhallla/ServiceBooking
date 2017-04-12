@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using System.Web.Mvc;
-using AuthFilterApp.Filters;
 using ServiceBooking.BLL.Interfaces;
 using ServiceBooking.DAL.Interfaces;
 using ServiceBooking.Util;
@@ -38,9 +34,10 @@ namespace ServiceBooking.WEB.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "user")]
-        [AdminAccessDenied]
         public ActionResult Send(CreateResponseViewModel response)
         {
+            bool responseIsEmpty = response.Text == null || response.Text.Equals(string.Empty);
+
             Mapper.Initialize(cfg => cfg.CreateMap<CreateResponseViewModel, ResponseViewModelBLL>()
                .ForMember("Date", opt => opt.MapFrom(c => DateTime.Now))
                .ForMember("PerformerId", opt => opt.MapFrom(c => User.Identity.GetUserId<int>())));
@@ -49,11 +46,10 @@ namespace ServiceBooking.WEB.Controllers
             if (ModelState.IsValid)
             {
                 OperationDetails operationDetails = _responseService.Create(responseDto);
-                if (operationDetails.Succedeed)
-                    return RedirectToAction("Details", "Orders", new { id = response.OrderId });
-                ModelState.AddModelError(operationDetails.Property, operationDetails.Message);
+                if (!operationDetails.Succedeed)
+                    ModelState.AddModelError(operationDetails.Property, operationDetails.Message);
             }
-            return View("~/Views/Home/Index.cshtml");
+            return RedirectToAction("Details", "Orders", new { id = response.OrderId, emptyResponse = responseIsEmpty});
         }
     }
 }

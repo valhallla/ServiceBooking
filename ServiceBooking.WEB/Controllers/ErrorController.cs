@@ -19,5 +19,23 @@ namespace ServiceBooking.WEB.Controllers
             Response.StatusCode = 500;
             return View();
         }
+
+        public ActionResult Forbidden()
+        {
+            Response.StatusCode = 403;
+            return View();
+        }
+
+        public ActionResult ServiceTemporarilyUnavailable()
+        {
+            Response.StatusCode = 503;
+            return View();
+        }
+
+        public ActionResult Default()
+        {
+            Response.StatusCode = 500;
+            return View();
+        }
     }
 }

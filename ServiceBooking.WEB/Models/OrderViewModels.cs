@@ -8,15 +8,12 @@ namespace ServiceBooking.WEB.Models
     {
         public int Id { get; set; }
 
-        [Required]
-        [Display(Name = "Name")]
         public string Name { get; set; }
 
         public bool AdminStatus { get; set; }
 
         public int CustomerId { get; set; }
 
-        [Required]
         [DataType(DataType.DateTime), DisplayFormat(DataFormatString = "{0:dd.MM.yyyy}", ApplyFormatInEditMode = true)]
         public DateTime UploadDate { get; set; }
 
@@ -24,11 +21,9 @@ namespace ServiceBooking.WEB.Models
 
         public string Status { get; set; }
 
-        [Required]
         [DataType(DataType.Date), DisplayFormat(DataFormatString = "{0:dd.MM.yyyy}", ApplyFormatInEditMode = true)]
         public DateTime CompletionDate { get; set; }
 
-        [Required]
         public decimal Price { get; set; }
     }
 
@@ -36,11 +31,8 @@ namespace ServiceBooking.WEB.Models
     {
         public int Id { get; set; }
 
-        [Required]
-        [Display(Name = "Name")]
         public string Name { get; set; }
 
-        [Required]
         [DataType(DataType.MultilineText)]
         public string Description { get; set; }
 
@@ -52,15 +44,12 @@ namespace ServiceBooking.WEB.Models
 
         public bool AdminStatus { get; set; }
 
-        [Required]
         [DataType(DataType.DateTime), DisplayFormat(DataFormatString = "{0:dd.MM.yyyy}", ApplyFormatInEditMode = true)]
         public DateTime UploadDate { get; set; }
 
-        [Required]
         [DataType(DataType.Date), DisplayFormat(DataFormatString = "{0:dd.MM.yyyy}", ApplyFormatInEditMode = true)]
         public DateTime CompletionDate { get; set; }
 
-        [Required]
         public decimal Price { get; set; }  
         
         public int CustomerId { get; set; }
@@ -72,21 +61,27 @@ namespace ServiceBooking.WEB.Models
 
     public class CreateOrderViewModel
     {
-        [Required]
+        [Required(ErrorMessage = "Name is required")]
         [Display(Name = "Name")]
         public string Name { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Description is required")]
+        [Display(Name = "Description")]
         [DataType(DataType.MultilineText)]
         public string Description { get; set; }
 
+        [Required]
+        [Display(Name = "Category")]
         public string Category { get; set; }
 
-        [Required]
+
+        [Required(ErrorMessage = "Completion date is required")]
+        [Display(Name = "Completion date")]
         [DataType(DataType.Date), DisplayFormat(DataFormatString = "{0:dd.MM.yyyy}", ApplyFormatInEditMode = true)]
         public DateTime CompletionDate { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Price is required")]
+        [Display(Name = "Price")]
         public decimal Price { get; set; }
     }
 
@@ -94,11 +89,8 @@ namespace ServiceBooking.WEB.Models
     {
         public int Id { get; set; }
 
-        [Required]
-        [Display(Name = "Name")]
         public string Name { get; set; }
 
-        [Required]
         [DataType(DataType.DateTime), DisplayFormat(DataFormatString = "{0:dd.MM.yyyy}", ApplyFormatInEditMode = true)]
         public DateTime UploadDate { get; set; }
 

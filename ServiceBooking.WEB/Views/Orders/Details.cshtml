@@ -65,7 +65,7 @@ else
     if (ViewBag.IsPerformer & User.Identity.GetUserId<int>() != Model.CustomerId &&
          responses.Select(r => r.PerformerId).All(pid => pid != User.Identity.GetUserId<int>()))
      {
-         @Html.Partial(@"~/Views/Responses/Create.cshtml", new CreateResponseViewModel {OrderId = Model.Id})
+         @Html.Partial(@"~/Views/Responses/Create.cshtml", new CreateResponseViewModel {OrderId = Model.Id, Text = string.Empty})
      }
 
     if (!Model.Responses.Any())

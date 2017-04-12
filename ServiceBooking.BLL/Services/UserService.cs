@@ -118,7 +118,9 @@ namespace ServiceBooking.BLL.Services
             ApplicationUser user = _clientRepository.Get(userDto.Id);
             if (user != null)
             {
-                Mapper.Initialize(cfg => cfg.CreateMap<ClientViewModelBLL, ApplicationUser>());
+                Mapper.Initialize(cfg => cfg.CreateMap<ClientViewModelBLL, ApplicationUser>()
+                    .IgnoreAllSourcePropertiesWithAnInaccessibleSetter()
+                    .IgnoreAllPropertiesWithAnInaccessibleSetter());
                 Mapper.Map(userDto, user);
                 _clientRepository.Update(user);
 

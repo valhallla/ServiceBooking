@@ -224,8 +224,7 @@
     <Compile Include="Controllers\OrdersController.cs" />
     <Compile Include="Controllers\PerformersController.cs" />
     <Compile Include="Controllers\ResponsesController.cs" />
-    <Compile Include="Filters\AdminAccessDenied.cs" />
-    <Compile Include="Filters\UserAccessDenied.cs" />
+    <Compile Include="Filters\ForbiddenException.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -234,6 +233,7 @@
     <Compile Include="Models\Enums.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Models\OrderViewModels.cs" />
+    <Compile Include="Models\PerformerViewModels.cs" />
     <Compile Include="Models\ResponseViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -331,6 +331,7 @@
     <Content Include="Views\Error\ServiceTemporarilyUnavailable.cshtml" />
     <Content Include="Views\Error\Default.cshtml" />
     <Content Include="Views\Shared\ErrorLayout.cshtml" />
+    <Content Include="Views\Performers\Index.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -341,7 +342,6 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Scripts\Manage\" />
-    <Folder Include="Views\Performers\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />

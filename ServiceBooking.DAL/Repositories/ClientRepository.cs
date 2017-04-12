@@ -72,6 +72,10 @@ namespace ServiceBooking.DAL.Repositories
             {
                 user.Categories.Add(category);
             }
+            foreach (var category in user.Categories.Where(c => !selectedItems.Contains(c.Id)))
+            {
+                user.Categories.Remove(category);
+            }
 
             Update(user);
         }

@@ -7,11 +7,9 @@ namespace ServiceBooking.WEB.Models
     {
         public int Id { get; set; }
 
-        [Required]
         [DataType(DataType.MultilineText)]
         public string Text { get; set; }
 
-        [Required]
         [DataType(DataType.DateTime), DisplayFormat(DataFormatString = "{0:dd.MM.yyyy}", ApplyFormatInEditMode = true)]
         public DateTime Date { get; set; }
 
@@ -26,7 +24,7 @@ namespace ServiceBooking.WEB.Models
 
     public class CreateResponseViewModel
     {
-        [Required]
+        [Required(ErrorMessage = "Response cannot be empty")]
         [DataType(DataType.MultilineText)]
         public string Text { get; set; }
 

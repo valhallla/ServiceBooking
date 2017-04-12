@@ -4,13 +4,11 @@ using System.Web.Mvc;
 using Microsoft.Owin.Security;
 using System.Threading.Tasks;
 using System.Security.Claims;
-using AuthFilterApp.Filters;
 using Microsoft.AspNet.Identity;
 using ServiceBooking.BLL.DTO;
 using ServiceBooking.BLL.Infrastructure;
 using ServiceBooking.BLL.Interfaces;
 using ServiceBooking.WEB.Models;
-using ServiceBooking.Util;
 using ServiceBooking.DAL.Interfaces;
 using AutoMapper;
 
@@ -36,8 +34,11 @@ namespace ServiceBooking.WEB.Controllers
                 return HttpContext.GetOwinContext().Authentication;
             }
         }
+
         public ActionResult Login()
         {
+            if (Request.IsAuthenticated)
+                return View("~/Views/Error/Forbidden.cshtml");
             return View();
         }
 
@@ -45,6 +46,9 @@ namespace ServiceBooking.WEB.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Login(LoginViewModel model)
         {
+            if (Request.IsAuthenticated)
+                return View("~/Views/Error/Forbidden.cshtml");
+
             if (ModelState.IsValid)
             {
                 ClientViewModelBLL userViewModel = new ClientViewModelBLL { Email = model.Email, Password = model.Password };
@@ -64,14 +68,10 @@ namespace ServiceBooking.WEB.Controllers
             return View(model);
         }
 
-        public ActionResult Logout()
-        {
-            AuthenticationManager.SignOut();
-            return RedirectToAction("Index", "Home");
-        }
-
         public ActionResult Register()
         {
+            if (Request.IsAuthenticated)
+                return View("~/Views/Error/Forbidden.cshtml");
             return View();
         }
 
@@ -79,6 +79,9 @@ namespace ServiceBooking.WEB.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Register(RegisterViewModel model)
         {
+            if (Request.IsAuthenticated)
+                return View("~/Views/Error/Forbidden.cshtml");
+
             if (ModelState.IsValid)
             {
                 Mapper.Initialize(cfg => cfg.CreateMap<RegisterViewModel, ClientViewModelBLL>()
@@ -103,14 +106,13 @@ namespace ServiceBooking.WEB.Controllers
                     //return View("DisplayEmail");
                     return View("RegistrationSucceeded");
                 }
-                else
-                    ModelState.AddModelError(operationDetails.Property, operationDetails.Message);
+
+                ModelState.AddModelError(operationDetails.Property, operationDetails.Message);
             }
             return View(model);
         }
 
         [Authorize(Roles = "user")]
-        [AdminAccessDenied]
         public ActionResult DeleteAccount()
         {
             return View("DeleteAccount");
@@ -119,7 +121,6 @@ namespace ServiceBooking.WEB.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "user")]
-        [AdminAccessDenied]
         public async Task<ActionResult> DeleteAccount(DeleteAccountViewModel model)
         {
             if (ModelState.IsValid)
@@ -139,7 +140,6 @@ namespace ServiceBooking.WEB.Controllers
 
         [AllowAnonymous]
         [Authorize(Roles = "user")]
-        [AdminAccessDenied]
         public async Task<ActionResult> ConfirmEmail(string userId, string code)
         {
             if (userId == null || code == null)

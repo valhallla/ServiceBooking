@@ -4,16 +4,13 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
-using AuthFilterApp.Filters;
 using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using ServiceBooking.BLL.DTO;
 using ServiceBooking.BLL.Interfaces;
 using ServiceBooking.DAL.Interfaces;
 using ServiceBooking.WEB.Models;
 using AutoMapper;
-using ServiceBooking.BLL.Infrastructure;
 
 namespace ServiceBooking.WEB.Controllers
 {
@@ -37,11 +34,8 @@ namespace ServiceBooking.WEB.Controllers
         //
         // GET: /Manage/Index
         [Authorize(Roles = "user")]
-        [AdminAccessDenied]
         public ActionResult Index()
         {
-            //Session["adminStatus"] = Global.AdminStatus;
-            //Session["isPerformer"] = Global.IsPerformer;
             return View("Index");
         }
 
@@ -50,7 +44,6 @@ namespace ServiceBooking.WEB.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "user")]
-        [AdminAccessDenied]
         public async Task<ActionResult> ChangePassword(IndexManageViewModel model)
         {
             if (!ModelState.IsValid)
@@ -74,24 +67,47 @@ namespace ServiceBooking.WEB.Controllers
         }
 
         [Authorize(Roles = "user")]
-        [AdminAccessDenied]
-        public ActionResult BecomePerformer()
+        public ActionResult BecomePerformer(string message = "", string company = "",
+            string info = "", string phoneNumber = "")
         {
+            if ((bool)Session["isPerformer"] && (bool)Session["adminStatus"])
+                return View("~/Views/Error/Forbidden.cshtml");
+
             var categoriesDto = _categoryService.GetAll().ToList();
             Mapper.Initialize(cfg => cfg.CreateMap<CategoryViewModelBLL, CategoryViewModel>());
             var categories = Mapper.Map<List<CategoryViewModelBLL>, List<CategoryViewModel>>(categoriesDto);
             ViewBag.Categories = categories;
-            return View("BecomePerformer", new BecomePerformerViewModel());
+
+            var model = new BecomePerformerViewModel
+            {
+                Company = company,
+                Info = info,
+                PhoneNumber = phoneNumber
+            };
+            ViewBag.Message = message;
+
+            return View("BecomePerformer", model);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "user")]
-        [AdminAccessDenied]
         public ActionResult BecomePerformer(BecomePerformerViewModel model, int[] selectedCategories)
         {
+            if ((bool)Session["isPerformer"] && (bool)Session["adminStatus"])
+                return View("~/Views/Error/Forbidden.cshtml");
+
             if (!ModelState.IsValid)
                 return View(model);
+
+            if (selectedCategories == null)
+                return RedirectToAction("BecomePerformer", new
+                {
+                    message = "At least one category is required",
+                    company = model.Company,
+                    info = model.Info,
+                    phoneNumber = model.PhoneNumber
+                });
 
             ClientViewModelBLL client = _userService.FindById(User.Identity.GetUserId<int>());
             Mapper.Initialize(cfg => cfg.CreateMap<BecomePerformerViewModel, ClientViewModelBLL>()
@@ -108,10 +124,12 @@ namespace ServiceBooking.WEB.Controllers
         }
 
         [Authorize(Roles = "user")]
-        [AdminAccessDenied]
         public ActionResult Close()
         {
             var userDto = _userService.FindById(User.Identity.GetUserId<int>());
+            if(!(userDto.AdminStatus && !userDto.IsPerformer))
+                return View("~/Views/Error/Forbidden.cshtml");
+
             userDto.AdminStatus = false;
             _userService.Update(userDto);
             return RedirectToAction("Index");
