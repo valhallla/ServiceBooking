@@ -7,6 +7,7 @@ using ServiceBooking.BLL.Interfaces;
 using ServiceBooking.DAL.Interfaces;
 using ServiceBooking.Util;
 using AutoMapper;
+using Microsoft.AspNet.Identity;
 using PagedList.Mvc;
 using PagedList;
 using ServiceBooking.BLL.DTO;
@@ -17,17 +18,18 @@ namespace ServiceBooking.WEB.Controllers
     public class PerformersController : Controller
     {
         private static ICategoryService _categoryService;
+        private static ICommentService _commentService;
         private static IUserService _userService;
         private static IUnitOfWork _unitOfWork;
 
-        public PerformersController() : this(_categoryService, _userService, _unitOfWork)
-        {
-        }
+        public PerformersController() : this(_categoryService, 
+            _commentService, _userService, _unitOfWork) { }
 
-        public PerformersController(ICategoryService categoryService,
-            IUserService userService, IUnitOfWork unitOfWork)
+        public PerformersController(ICategoryService categoryService, 
+            ICommentService commentService, IUserService userService, IUnitOfWork unitOfWork)
         {
             _categoryService = categoryService;
+            _commentService = commentService;
             _userService = userService;
             _unitOfWork = unitOfWork;
         }
@@ -36,69 +38,135 @@ namespace ServiceBooking.WEB.Controllers
         public ActionResult Index(int? page, int? categoryId, string searchName,
             bool newApplications = false, PerformerSorts sort = PerformerSorts.New)
         {
-            var usersDto = _userService.GetAll();
-            if (usersDto == null)
-                return HttpNotFound();
+            var perfomersDto = _userService.GetAll().ToList().Where(p => p.IsPerformer);
+            if (newApplications && !perfomersDto.Any(o => !o.AdminStatus))
+                ViewBag.AdminMessage = "No new performers";
 
             ViewBag.NewPerformerssAmountString = string.Empty;
-            var newPerformersAmount = usersDto.Count(model => !model.AdminStatus && model.IsPerformer);
+            var newPerformersAmount = perfomersDto.Count(model => !model.AdminStatus);
             if (newPerformersAmount > 0)
                 ViewBag.NewPerformersAmountString = " + " + newPerformersAmount;
 
-            ViewBag.IsNewPerformersPage = false;
+            ViewBag.IsNewPage = false;
             if (newApplications)
             {
-                usersDto = usersDto.Where(model => !model.AdminStatus && model.IsPerformer);
-                ViewBag.IsNewPerformersPage = true;
+                perfomersDto = perfomersDto.Where(model => !model.AdminStatus);
+                ViewBag.IsNewPage = true;
             }
             else
-                usersDto = usersDto.Where(model => model.AdminStatus && model.IsPerformer);
+                perfomersDto = perfomersDto.Where(model => model.AdminStatus);
 
             if (categoryId != null)
             {
-                usersDto = usersDto.Where(o => o.Categories.Select(c => c.Id).Contains(categoryId.Value));
+                perfomersDto = perfomersDto.Where(o => o.CategoriesBll.Select(c => c.Id).Contains(categoryId.Value));
                 ViewBag.CurrentCategoryId = categoryId;
             }
 
-            //var categoriesDto = _categoryService.GetAll().ToList();
-            //Mapper.Initialize(cfg => cfg.CreateMap<CategoryViewModelBLL, CategoryViewModel>()
-            //    .ForMember("ItemsAmount", opt => opt.MapFrom(c => c.Performers.Count(o =>
-            //            newApplications ? o.AdminStatus != newApplications :
-            //            (myOrders ? o.UserId == User.Identity.GetUserId<int>() : o.AdminStatus)
-            //    )))
-            //);
-            //var categories = Mapper.Map<List<CategoryViewModelBLL>, List<CategoryViewModel>>(categoriesDto);
-            //ViewBag.CategoriesList = categories;
+            var categoriesDto = _categoryService.GetAll().ToList();
+            Mapper.Initialize(cfg => cfg.CreateMap<CategoryViewModelBLL, CategoryViewModel>()
+                .ForMember("ItemsAmount", opt => opt.MapFrom(c => c.Performers.Count(o =>
+                        o.IsPerformer && o.AdminStatus != newApplications
+                )))
+            );
+            var categories = Mapper.Map<List<CategoryViewModelBLL>, List<CategoryViewModel>>(categoriesDto);
+            ViewBag.CategoriesList = categories;
 
             if (searchName != null)
-                usersDto = usersDto.Where(o => o.Name.Contains(searchName));
+                perfomersDto = perfomersDto.Where(o => o.Name.Contains(searchName) || 
+                o.Surname.Contains(searchName) || o.Company.Contains(searchName));
             ViewBag.SearchName = searchName;
 
             switch (sort)
             {
                 case PerformerSorts.New:
-                    usersDto = usersDto.OrderByDescending(o => o.RegistrationDate);
+                    perfomersDto = perfomersDto.OrderByDescending(o => o.RegistrationDate);
                     break;
                 case PerformerSorts.Best:
-                    usersDto = usersDto.OrderBy(o => o.Rating);
+                    perfomersDto = perfomersDto.OrderBy(o => o.Rating);
                     break;
             }
             ViewBag.Sort = sort;
+            ViewBag.ItemsAmount = perfomersDto.Count();
 
-            //Mapper.Initialize(cfg => cfg.CreateMap<ClientViewModelBLL, IndexPerformerViewModel>()
-            //    .ForMember("Category", opt => opt.MapFrom(c => _categoryService.FindById(c.CategoryId).Name))
-            //    .ForMember("Status", opt => opt.MapFrom(c => _statusService.FindById(c.StatusId).Value)));
-            //var orders = Mapper.Map<IEnumerable<OrderViewModelBLL>, List<IndexOrderViewModel>>(usersDto);
+            Mapper.Initialize(cfg => cfg.CreateMap<ClientViewModelBLL, IndexPerformerViewModel>()
+                .ForMember("Name", opt => opt.MapFrom(c => c.Surname + " " + c.Name))
+                .ForMember("Category", opt => opt.MapFrom(c => c.CategoriesBll.First().Name + " + " + (c.CategoriesBll.Count - 1).ToString() + " more")));
+            var performers = Mapper.Map<IEnumerable<ClientViewModelBLL>, List<IndexPerformerViewModel>>(perfomersDto);
 
-            //var orderNames = _orderService.GetAll().Select(o => o.Name).ToArray();
-            //var filteredNames = orderNames.Where(o => o.IndexOf(searchName, StringComparison.InvariantCultureIgnoreCase) >= 0);
-            //ViewBag.Names = Json(filteredNames, JsonRequestBehavior.AllowGet);
+            var performerNames = performers.Select(o => o.Name).ToArray();
+            var filteredNames = performerNames.Where(o => o.IndexOf(searchName, StringComparison.InvariantCultureIgnoreCase) >= 0);
+            ViewBag.Names = Json(filteredNames, JsonRequestBehavior.AllowGet);
 
-            //    int pageSize = 3;
-            //    int pageNumber = (page ?? 1);
-            //    return View(orders.ToPagedList(pageNumber, pageSize));
-            //}
-            return View();
+            int pageSize = 3;
+            int pageNumber = (page ?? 1);
+            return View(performers.ToPagedList(pageNumber, pageSize));
         }
+
+        // GET: Performer/Details/5
+        public ActionResult Details(int id, int? categoryId, bool? newApplications, PerformerSorts sort = PerformerSorts.New, bool emptyComment = false)
+        {
+            var commentsDto = _commentService.GetAllForPerformer(id);
+            Mapper.Initialize(cfg => cfg.CreateMap<CommentViewModelBLL, IndexCommentViewModel>()
+                .ForMember("CustomerName", opt => opt.MapFrom(c => _userService.FindById(c.CustomerId).Surname
+                    + " " + _userService.FindById(c.CustomerId).Name))
+                );
+            var comments = Mapper.Map<IEnumerable<CommentViewModelBLL>, List<IndexCommentViewModel>>(commentsDto);
+
+            var performerDto = _userService.FindById(id);
+            if (performerDto == null)
+                return HttpNotFound();
+
+            var categoriesDto =
+                _categoryService.GetAll().Where(c => c.Performers.Select(p => p.Id).Contains(id)).ToList();
+            Mapper.Initialize(cfg => cfg.CreateMap<CategoryViewModelBLL, CategoryViewModel>()
+                .ForMember("ItemsAmount", opt => opt.MapFrom(c => c.Performers.Count(o =>
+                        o.IsPerformer && o.AdminStatus != newApplications
+                )))
+            );
+            var categories = Mapper.Map<List<CategoryViewModelBLL>, List<CategoryViewModel>>(categoriesDto);
+
+            Mapper.Initialize(cfg => cfg.CreateMap<ClientViewModelBLL, DetailsPerformerViewModel>()
+                .ForMember("Categories", opt => opt.MapFrom(c => categories))
+                .ForMember("Comments", opt => opt.MapFrom(c => comments))
+                .ForMember("Name", opt => opt.MapFrom(c => c.Surname + " " + c.Name))
+                .ForMember("CustomersId", opt => opt.MapFrom(c => c.CommentsBll.Select(m => m.CustomerId)))
+                );
+            DetailsPerformerViewModel performer = Mapper.Map<ClientViewModelBLL, DetailsPerformerViewModel>(performerDto);
+
+            ViewBag.CurrentCategoryId = categoryId;
+            ViewBag.IsNewPage = newApplications;
+            ViewBag.CommentIsEmpty = emptyComment;
+            ViewBag.Sort = sort;
+            ViewBag.ShowContacts = _userService.FindById(User.Identity.GetUserId<int>()).OrdersBll.SelectMany(o => o.Responses).Count(o => o.UserId == id) != 0;
+            ViewBag.Rating = new SelectList(new List<string>() { "☆☆☆☆☆", "★☆☆☆☆", "★★☆☆☆", "★★★☆☆", "★★★★☆", "★★★★★" });
+
+            return View(performer);
+        }
+
+        [Authorize(Roles = "admin")]
+        public ActionResult Confirm(int id, int? currentCategoryId, PerformerSorts performersSort)
+        {
+            _userService.ConfirmPerformer(id);
+            return RedirectToAction("Index", new
+            {
+                newApplications = _userService.GetAll().Count(u => !u.AdminStatus && u.IsPerformer) > 0,
+                categoryId = currentCategoryId,
+                sort = performersSort
+            });
+        }
+
+        [Authorize(Roles = "admin")]
+        public ActionResult Reject(int id, int? currentCategoryId, PerformerSorts performersSort)
+        {
+            _userService.RejectPerformer(id);
+            return RedirectToAction("Index", new
+            {
+                newApplications = _userService.GetAll().Count(u => !u.AdminStatus && u.IsPerformer) > 0,
+                categoryId = currentCategoryId,
+                sort = performersSort
+            });
+        }
+
+
     }
 }

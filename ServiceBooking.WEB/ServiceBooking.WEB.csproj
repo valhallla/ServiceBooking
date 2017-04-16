@@ -218,6 +218,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\CommentsController.cs" />
     <Compile Include="Controllers\ErrorController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
@@ -230,11 +231,12 @@
     </Compile>
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\CategoryViewModel.cs" />
+    <Compile Include="Models\CommentViewModels.cs" />
     <Compile Include="Models\Enums.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Models\OrderViewModels.cs" />
     <Compile Include="Models\PerformerViewModels.cs" />
-    <Compile Include="Models\ResponseViewModel.cs" />
+    <Compile Include="Models\ResponseViewModels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -312,7 +314,7 @@
     <Content Include="Views\Manage\Index.cshtml" />
     <Content Include="Views\Orders\Details.cshtml" />
     <Content Include="Views\Account\RegistrationSucceeded.cshtml" />
-    <Content Include="Web.config">
+    <Content Include="Views\Responses\Web.config">
       <SubType>Designer</SubType>
     </Content>
     <Content Include="Views\Home\Contact.cshtml" />
@@ -323,15 +325,28 @@
     <Content Include="Views\Responses\Index.cshtml" />
     <Content Include="Views\Categories\Index.cshtml" />
     <Content Include="Views\Shared\Search.cshtml" />
-    <Content Include="Views\Shared\Sort.cshtml" />
+    <Content Include="Views\Orders\Sort.cshtml" />
     <Content Include="Views\Manage\BecomePerformer.cshtml" />
     <Content Include="Views\Error\NotFound.cshtml" />
     <Content Include="Views\Error\InternalServerError.cshtml" />
     <Content Include="Views\Error\Forbidden.cshtml" />
     <Content Include="Views\Error\ServiceTemporarilyUnavailable.cshtml" />
     <Content Include="Views\Error\Default.cshtml" />
-    <Content Include="Views\Shared\ErrorLayout.cshtml" />
     <Content Include="Views\Performers\Index.cshtml" />
+    <Content Include="Views\Shared\Rating.cshtml" />
+    <Content Include="Views\Performers\Sort.cshtml" />
+    <Content Include="Views\Error\BadRequest.cshtml" />
+    <Content Include="Views\Performers\Details.cshtml" />
+    <Content Include="Views\Comments\Create.cshtml" />
+    <Content Include="Views\Comments\Index.cshtml" />
+    <Content Include="Views\Performers\Edit.cshtml" />
+    <None Include="Views\Responses\Web.Debug.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </None>
+    <None Include="Views\Responses\Web.Release.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </None>
+    <Content Include="Web.config" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

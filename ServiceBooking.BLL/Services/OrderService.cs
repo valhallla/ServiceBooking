@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using Ninject;
 using ServiceBooking.BLL.DTO;
@@ -23,9 +24,11 @@ namespace ServiceBooking.BLL.Services
 
         public IEnumerable<OrderViewModelBLL> GetAll()
         {
-            var orders = _orderRepository.GetAll().ToList();
+            var orders = _orderRepository.GetAll();
             Mapper.Initialize(cfg => cfg.CreateMap<Order, OrderViewModelBLL>());
-            return Mapper.Map<List<Order>, List<OrderViewModelBLL>>(orders);
+            var ordersDto = new List<OrderViewModelBLL>();
+            ordersDto = Mapper.Map<IEnumerable<Order>, List<OrderViewModelBLL>>(orders);
+            return ordersDto;
         }
 
         public OperationDetails Create(OrderViewModelBLL order)
@@ -41,6 +44,7 @@ namespace ServiceBooking.BLL.Services
             if (order != null)
             {
                 order.AdminStatus = true;
+                order.StatusId = 2;
                 order.UploadDate = DateTime.Now;
                 _orderRepository.Update(order);
                 return new OperationDetails(true, @"Order confirmed", string.Empty);

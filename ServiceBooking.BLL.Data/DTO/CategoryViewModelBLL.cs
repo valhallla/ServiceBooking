@@ -12,5 +12,11 @@ namespace ServiceBooking.BLL.DTO
         public virtual ICollection<Order> Orders { get; set; }
 
         public virtual ICollection<ApplicationUser> Performers { get; set; }
+
+        public CategoryViewModelBLL()
+        {
+            Orders = new List<Order>();
+            Performers = new List<ApplicationUser>();
+        }
     }
 }

@@ -1,4 +1,5 @@
-﻿@{
+﻿@using Microsoft.AspNet.Identity
+@{
     string newOrders = string.Empty;
     string newPerformers = string.Empty;
 
@@ -28,7 +29,14 @@
     {
         <p>
             @Html.ActionLink("Place an order", "Create", "Orders", null, new { @class = "btn btn-primary btn-lg" })
-            @Html.ActionLink("Become a performer", "BecomePerformer", "Manage", null, new { @class = "btn btn-primary btn-lg" })
+            @if ((bool) (Session["adminStatus"] ?? false) && (bool) (Session["isPerformer"] ?? false))
+            {
+                @Html.ActionLink("My performer profile", "Details", "Performers", new {id = User.Identity.GetUserId<int>()}, new {@class = "btn btn-primary btn-lg"})
+            }
+            else
+            {
+                @Html.ActionLink("Become a performer", "BecomePerformer", "Manage", null, new {@class = "btn btn-primary btn-lg"})
+            }
         </p>
     }
 </div>
@@ -81,7 +89,16 @@
             and wait until the moderator checks the application.
             Now you can respond to orders!
         </h3>
-        <p><a href="/Home/Index" class="btn btn-primary btn-lg">Become a performer</a></p>
+        <p>
+                 @if ((bool)(Session["adminStatus"] ?? false) && (bool)(Session["isPerformer"] ?? false))
+                 {
+                     @Html.ActionLink("My performer profile", "Details", "Performers", new {id = User.Identity.GetUserId<int>()}, new {@class = "btn btn-primary btn-lg"})
+                 }
+                 else
+                 {
+                     @Html.ActionLink("Become a performer", "BecomePerformer", "Manage", null, new {@class = "btn btn-primary btn-lg"})
+                 }
+        </p>
     </div>
     <div class="col-md-6">
         <img style="height: 300px; float: right; margin-left: 20px" src="@Url.Content(@"~/Content/images.jpg")" alt="" />

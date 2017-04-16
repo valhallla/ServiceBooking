@@ -15,6 +15,10 @@ namespace ServiceBooking.BLL.DTO
 
         public int Rating { get; set; }
 
-        public int UserId { get; set; }
+        public int PerformerId { get; set; }
+
+        public int CustomerId { get; set; }
+
+        public DateTime Date { get; set; }
     }
 }

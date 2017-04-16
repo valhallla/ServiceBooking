@@ -8,6 +8,7 @@ namespace ServiceBooking.WEB.Models
     public enum OrderSorts
     {
         New,
+        Urgent,
         Expensive,
         Active
     }

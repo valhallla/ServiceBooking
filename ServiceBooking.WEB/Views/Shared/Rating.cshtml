@@ -1,0 +1,10 @@
+﻿@model int
+
+@for (int i = 0; i < Model; i++)
+{
+    <img style="height: 30px; float: none; margin-left: 7px; margin-right: 7px" src="@Url.Content(@ViewBag.StarPath)" alt="" />
+}
+@for (int i = Model; i < 5; i++)
+{
+    <img style="height: 30px; float: none; margin-left: 7px; margin-right: 7px" src="@Url.Content(@ViewBag.EmptystarPath)" alt="" />
+}

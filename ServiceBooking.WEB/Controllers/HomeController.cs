@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿using System.Linq;
 using System.Web.Mvc;
-using Microsoft.AspNet.Identity;
 using ServiceBooking.BLL.Interfaces;
-using ServiceBooking.DAL.Interfaces;
-using ServiceBooking.Util;
 
 namespace ServiceBooking.WEB.Controllers
 {
@@ -26,23 +20,27 @@ namespace ServiceBooking.WEB.Controllers
         
         public ActionResult Index()
         {
-            var orders = _orderService.GetAll();
-            if (orders == null)
-                return HttpNotFound();
-
             ViewBag.NewOrdersAmountString = string.Empty;
-            var newOrdersAmount = orders.Count(model => !model.AdminStatus);
-            if (newOrdersAmount > 0)
-                ViewBag.NewOrdersAmountString = " + " + newOrdersAmount;
-
-            var users = _userService.GetAll();
-            if (users == null)
-                return HttpNotFound();
-
             ViewBag.NewPerformersAmountString = string.Empty;
-            var newPerformersAmount = users.Count(model => !model.AdminStatus && model.IsPerformer);
-            if (newPerformersAmount > 0)
-                ViewBag.NewPerformersAmountString = " + " + newPerformersAmount;
+
+            if (Request.IsAuthenticated && User.IsInRole("admin"))
+            {
+                var orders = _orderService.GetAll();
+                if (orders == null)
+                    return HttpNotFound();
+
+                var newOrdersAmount = orders.Count(model => !model.AdminStatus);
+                if (newOrdersAmount > 0)
+                    ViewBag.NewOrdersAmountString = " + " + newOrdersAmount;
+
+                var users = _userService.GetAll();
+                if (users == null)
+                    return HttpNotFound();
+
+                var newPerformersAmount = users.Count(model => !model.AdminStatus && model.IsPerformer);
+                if (newPerformersAmount > 0)
+                    ViewBag.NewPerformersAmountString = " + " + newPerformersAmount;
+            }
 
             return View();
         }

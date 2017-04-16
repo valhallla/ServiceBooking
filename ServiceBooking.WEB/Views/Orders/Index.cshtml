@@ -9,7 +9,7 @@
     var names = ViewBag.Names;
 
     int? currentCategoryId = ViewBag.CurrentCategoryId;
-    bool newApplications = ViewBag.IsNewOrdersPage;
+    bool newApplications = ViewBag.IsNewPage;
     bool myOrders = ViewBag.IsMyOrdersPage;
     OrderSorts orderSort = ViewBag.Sort;
 
@@ -34,13 +34,7 @@
             }
         </h2>
 
-        @if (!Request.IsAuthenticated)
-        {
-            <h4>@Html.ActionLink("Place an order", "Create")</h4>
-            ViewBag.IsAuthorized = false;
-        }
-
-        @if (Request.IsAuthenticated && !User.IsInRole("admin"))
+        @if ((!Request.IsAuthenticated) || (Request.IsAuthenticated && !User.IsInRole("admin")))
         {
             <h4>
                 @Html.ActionLink("Place an order", "Create") |
@@ -55,7 +49,7 @@
             </h4>
             ViewBag.IsAuthorized = true;
         }
-        else if (Request.IsAuthenticated && User.IsInRole("admin") && ViewBag.IsNewOrdersPage)
+        else if (Request.IsAuthenticated && User.IsInRole("admin") && ViewBag.IsNewPage)
         {
             <h4>
                 @Html.ActionLink("Back to confirmed orders", "Index", new { categoryId = ViewBag.CurrentCategoryId, sort = orderSort })
@@ -66,7 +60,7 @@
         <br />
         @using (Html.BeginForm("Index", "Orders", null, FormMethod.Get, new { enctype = "multipart/form-data" }))
         {
-            <input type="text"  class="search-control" id="searchName" name="searchName" data-autocomplete-source='@names' />
+            <input type="text"  class="search-control" id="searchName" value="@ViewBag.SearchName" name="searchName" data-autocomplete-source='@names' />
             @Html.Hidden("currentCategoryId", currentCategoryId)
             @Html.Hidden("newApplications", newApplications)
             @Html.Hidden("myOrders", myOrders)
@@ -92,7 +86,7 @@
         </script>*@
     </div>
     <div class="col-sm-3">
-        @Html.Partial("~/Views/Shared/Sort.cshtml", orderSort)
+        @Html.Partial("Sort", orderSort)
     </div>
 </div>
 
@@ -103,23 +97,33 @@
             <hr />
             <h3>@ViewBag.Message</h3>
         }
+        else if (ViewBag.AdminMessage != null)
+        {
+            <hr />
+            <h3>@ViewBag.AdminMessage</h3>
+        }
+        else if (ViewBag.SearchMessage != null)
+        {
+            <hr />
+            <h3>@ViewBag.SearchMessage</h3>
+        }
         else
         {
             foreach (var item in Model)
             {
-                <hr />
+                <hr/>
                 <div class="row">
                     <div class="col-sm-9">
                         <b style="font-size: 20pt">
-                            @Html.ActionLink(item.Name, "Details", new { id = item.Id })
-                        </b><br />
+                            @Html.ActionLink(item.Name, "Details", new {id = item.Id})
+                        </b><br/>
                         Published @Html.DisplayFor(modelItem => item.UploadDate)
-                        <br />
+                        <br/>
                         <h5>
                             To finish by @Html.DisplayFor(modelItem => item.CompletionDate) &emsp;
                             <b>@Html.DisplayFor(modelItem => item.Category)</b>
                         </h5>
-                        @if (Request.IsAuthenticated && ((User.IsInRole("admin") && !ViewBag.IsNewOrdersPage) 
+                        @if (Request.IsAuthenticated && ((User.IsInRole("admin") && !ViewBag.IsNewPage)
                                                          || item.CustomerId == User.Identity.GetUserId<int>()))
                         {
                             <h5>
@@ -127,7 +131,7 @@
                                 {
                                     id = item.Id,
                                     isMyOrdersPage = ViewBag.IsMyOrdersPage,
-                                    isNewOrdersPage = ViewBag.IsNewOrdersPage,
+                                    isNewOrdersPage = ViewBag.IsNewPage,
                                     currentCategoryId = ViewBag.CurrentCategoryId,
                                     sort = orderSort
                                 }, null)
@@ -136,20 +140,11 @@
                     </div>
                     <div class="col-sm-3">
                         <h4>@Html.DisplayFor(modelItem => item.Price) $</h4>
-                        @if (!ViewBag.IsNewOrdersPage)
+                        @if (!ViewBag.IsNewPage)
                         {
-                            <h4>
-                                @if (!item.AdminStatus)
-                                {
-                                    @Html.DisplayName("Pending confirmation")
-                                }
-                                else
-                                {
-                                    @Html.DisplayFor(modelItem => item.Status)
-                                }
-                            </h4>
+                            <h4>@Html.DisplayFor(modelItem => item.Status)</h4>
                         }
-                        @if (Request.IsAuthenticated && User.IsInRole("admin") && ViewBag.IsNewOrdersPage)
+                        @if (Request.IsAuthenticated && User.IsInRole("admin") && ViewBag.IsNewPage)
                         {
                             <p>
                                 @if (Model.Count() == 1)
@@ -185,9 +180,9 @@ Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.Page
 @Html.PagedListPager(Model, page => Url.Action("Index", new
 {
     page,
-    isMyOrdersPage = ViewBag.IsMyOrdersPage,
-    isNewOrdersPage = ViewBag.IsNewOrdersPage,
-    currentCategoryId = ViewBag.CurrentCategoryId,
-    ordersSort = ViewBag.Sort,
+    myOrders = ViewBag.IsMyOrdersPage,
+    newApplications = ViewBag.IsNewPage,
+    categoryId = ViewBag.CurrentCategoryId,
+    sort = ViewBag.Sort,
     searchName = ViewBag.SearchName
 }))

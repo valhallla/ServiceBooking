@@ -21,11 +21,13 @@
 else if (adminStatus && !isPerformer)
 {
     <h3>Your request for becoming a performer has been rejected</h3>
+    @Html.ActionLink("Try once again", "Close", "Manage", new {tryOnceAgain = true}, new { @class = "btn btn-default close" })
+
 }
 
 else if (!adminStatus && !isPerformer)
 {
-    using (Html.BeginForm("BecomePerformer", "Manage", FormMethod.Post, new {enctype = "multipart/form-data"}))
+    using (Html.BeginForm("BecomePerformer", "Manage", FormMethod.Post, new { enctype = "multipart/form-data" }))
     {
         @Html.AntiForgeryToken()
         <div class="form-horizontal">

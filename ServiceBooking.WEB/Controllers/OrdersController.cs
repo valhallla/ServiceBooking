@@ -45,17 +45,19 @@ namespace ServiceBooking.WEB.Controllers
             var ordersDto = _orderService.GetAll();
             if (ordersDto == null)
                 return HttpNotFound();
+            if (newApplications && !ordersDto.Any(o => !o.AdminStatus))
+                ViewBag.AdminMessage = "No new orders";
 
             ViewBag.NewOrdersAmountString = string.Empty;
             var newOrdersAmount = ordersDto.Count(model => !model.AdminStatus);
             if (newOrdersAmount > 0)
                 ViewBag.NewOrdersAmountString = " + " + newOrdersAmount;
 
-            ViewBag.IsNewOrdersPage = false;
+            ViewBag.IsNewPage = false;
             if (newApplications)
             {
                 ordersDto = ordersDto.Where(model => !model.AdminStatus);
-                ViewBag.IsNewOrdersPage = true;
+                ViewBag.IsNewPage = true;
             }
             else
                 ordersDto = ordersDto.Where(model => model.AdminStatus);
@@ -90,17 +92,22 @@ namespace ServiceBooking.WEB.Controllers
             if (searchName != null)
                 ordersDto = ordersDto.Where(o => o.Name.Contains(searchName));
             ViewBag.SearchName = searchName;
+            if (!ordersDto.Any())
+                ViewBag.SearchMessage = "No orders found";
 
             switch (sort)
             {
                 case OrderSorts.New:
                     ordersDto = ordersDto.OrderByDescending(o => o.UploadDate); break;
+                case OrderSorts.Urgent:
+                    ordersDto = ordersDto.OrderBy(o => o.CompletionDate); break;
                 case OrderSorts.Expensive:
                     ordersDto = ordersDto.OrderByDescending(o => o.Price); break;
                 case OrderSorts.Active:
                     ordersDto = ordersDto.OrderBy(o => o.StatusId); break;
             }
             ViewBag.Sort = sort;
+            ViewBag.ItemsAmount = ordersDto.Count();
 
             Mapper.Initialize(cfg => cfg.CreateMap<OrderViewModelBLL, IndexOrderViewModel>()
                 .ForMember("Category", opt => opt.MapFrom(c => _categoryService.FindById(c.CategoryId).Name))
@@ -117,7 +124,7 @@ namespace ServiceBooking.WEB.Controllers
         }
 
         // GET: Orders/Details/5
-        public ActionResult Details(int id, int? categoryId, bool? newApplications, bool? myOrders, bool emptyResponse = false)
+        public ActionResult Details(int id, int? categoryId, bool? newApplications, bool? myOrders, OrderSorts sort = OrderSorts.New, bool emptyResponse = false)
         {
             var responsesDto = _responseService.GetAllForOrder(id);
             Mapper.Initialize(cfg => cfg.CreateMap<ResponseViewModelBLL, IndexResponseViewModel>()
@@ -143,15 +150,15 @@ namespace ServiceBooking.WEB.Controllers
             DetailsOrderViewModel order = Mapper.Map<OrderViewModelBLL, DetailsOrderViewModel>(orderDto);
 
             var currentUser = _userService.FindById(User.Identity.GetUserId<int>());
-            ViewBag.IsPerformer = currentUser.IsPerformer;
             ViewBag.Rating = currentUser.Rating;
             if (order.StatusId < 3)
                 ViewBag.StatusMessage = "Mark as" + _statusService.FindById(order.StatusId + 1).Value;
 
             ViewBag.CurrentCategoryId = categoryId;
             ViewBag.IsMyOrdersPage = myOrders;
-            ViewBag.IsNewOrdersPage = newApplications;
+            ViewBag.IsNewPage = newApplications;
             ViewBag.ResponseIsEmpty = emptyResponse;
+            ViewBag.Sort = sort;
 
             return View(order);
         }
@@ -253,7 +260,7 @@ namespace ServiceBooking.WEB.Controllers
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         [Authorize]
-        public ActionResult DeleteConfirmed(int id, bool? isMyOrdersPage, bool? isNewOrdersPage, int? currentCategoryId)
+        public ActionResult DeleteConfirmed(int id, bool? isMyOrdersPage, bool? isNewOrdersPage, OrderSorts ordersSort, int? currentCategoryId)
         {
             if (User.Identity.GetUserId<int>() != _orderService.Find(id).UserId)
                 return View("~/Views/Error/Forbidden.cshtml");
@@ -263,7 +270,8 @@ namespace ServiceBooking.WEB.Controllers
             {
                 newApplications = isNewOrdersPage,
                 myOrders = isMyOrdersPage,
-                categoryId = currentCategoryId
+                categoryId = currentCategoryId,
+                sort = ordersSort
             });
         }
 

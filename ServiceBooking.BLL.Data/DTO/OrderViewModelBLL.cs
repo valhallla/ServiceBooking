@@ -28,5 +28,12 @@ namespace ServiceBooking.BLL.DTO
         public int Price { get; set; }
 
         public virtual int UserId { get; set; }
+
+        public ICollection<Response> Responses { get; set; }
+
+        public OrderViewModelBLL()
+        {
+            Responses = new List<Response>();
+        }
     }
 }

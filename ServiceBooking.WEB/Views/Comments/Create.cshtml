@@ -1,0 +1,32 @@
+﻿@using ServiceBooking.WEB.Models
+@model ServiceBooking.WEB.Models.CreateCommentViewModel
+
+@using (Html.BeginForm("Send", "Comments", null, FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="well" style="padding-bottom: 5px; padding-top: 5px;">
+        <div class="form-group">
+            <h3>Leave your comment!</h3>
+            <br />
+            <div class="row" style="margin-bottom: 0;">
+                <div class="col-sm-9">
+                    @Html.EditorFor(model => model.Text, new { htmlAttributes = new { Style = "max-width: 100%; width: 100%; height: 100px; resize: none; margin-bottom: 0;", @class = "form-control" } })
+                </div>
+                <div class="col-sm-3" style="text-align:center">
+                    <h4>Rate the performer</h4>
+                    @Html.DropDownList("Rating", null, htmlAttributes: new { Style = "text-align: center; width: 110px; margin-left: 100px;", @class = "form-control" })
+                </div>
+            </div>
+            @Html.HiddenFor(model => model.PerformerId)
+        </div>
+
+        <div class="form-group">
+            <input type="submit" value="Send" style="width: 120px; margin-top: 0" class="btn btn-default" />
+            @if ((bool)ViewBag.CommentIsEmpty)
+            {
+                @Html.ValidationMessageFor(model => model.Text, "Comment can't be empty", new { @class = "text-danger" })
+            }
+        </div>
+    </div>
+}

@@ -1,0 +1,24 @@
+﻿@model IEnumerable<ServiceBooking.WEB.Models.IndexCommentViewModel>
+
+@foreach (var item in Model)
+{
+    <div class="well">
+        <div class="row">
+            <div class="col-sm-9">
+                <h4>@Html.DisplayFor(modelItem => item.Text)</h4>
+                <br />
+                @Html.DisplayFor(modelItem => item.Date)
+            </div>
+            <div class="col-sm-3" style="text-align:center">
+                <h4>by @item.CustomerName</h4>
+                <br />
+                @{
+                    ViewBag.StarPath = @"~/Content/star.png";
+                    ViewBag.EmptystarPath = @"~/Content/emptystar.png";
+                }
+                @Html.Partial("Rating", item.Rating)
+            </div>
+        </div>
+
+    </div>
+}

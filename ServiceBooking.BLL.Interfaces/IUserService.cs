@@ -20,6 +20,8 @@ namespace ServiceBooking.BLL.Interfaces
 
         Task<ClaimsIdentity> Authenticate(ClientViewModelBLL userDto);
         Task<IdentityResult> ChangePassword(ClientViewModelBLL userDto);
-        //OperationDetails AddCategory(CategoryViewModelBLL categoryDto);
+
+        OperationDetails ConfirmPerformer(int id);
+        OperationDetails RejectPerformer(int id);
     }
 }

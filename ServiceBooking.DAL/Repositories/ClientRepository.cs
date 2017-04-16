@@ -68,13 +68,27 @@ namespace ServiceBooking.DAL.Repositories
 
             if (user.Categories == null)
                 user.Categories = new List<Category>();
-            foreach (var category in Db.Categories.Where(c => selectedItems.Contains(c.Id)))
+
+            if (selectedItems == null)
             {
-                user.Categories.Add(category);
+                foreach (var category in Db.Categories)
+                {
+                    if(user.Categories.Contains(category))
+                        user.Categories.Remove(category);
+                }
             }
-            foreach (var category in user.Categories.Where(c => !selectedItems.Contains(c.Id)))
+            else
             {
-                user.Categories.Remove(category);
+                foreach (var category in Db.Categories.Where(c => !selectedItems.Contains(c.Id)))
+                {
+                    if (user.Categories.Contains(category))
+                        user.Categories.Remove(category);   
+                }
+                foreach (var category in Db.Categories.Where(c => selectedItems.Contains(c.Id)))
+                {
+                    if (!user.Categories.Contains(category))
+                        user.Categories.Add(category);
+                }
             }
 
             Update(user);

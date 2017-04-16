@@ -124,7 +124,7 @@ namespace ServiceBooking.WEB.Controllers
         }
 
         [Authorize(Roles = "user")]
-        public ActionResult Close()
+        public ActionResult Close(bool tryOnceAgain)
         {
             var userDto = _userService.FindById(User.Identity.GetUserId<int>());
             if(!(userDto.AdminStatus && !userDto.IsPerformer))
@@ -132,6 +132,9 @@ namespace ServiceBooking.WEB.Controllers
 
             userDto.AdminStatus = false;
             _userService.Update(userDto);
+
+            if (tryOnceAgain)
+                return RedirectToAction("BecomePerformer");
             return RedirectToAction("Index");
         }
 

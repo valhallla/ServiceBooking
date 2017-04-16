@@ -19,7 +19,7 @@ namespace ServiceBooking.DAL.Repositories
 
         public IEnumerable<Order> GetAll()
         {
-            return Db.Orders.Include(o => o.Category).Include(o => o.Status);
+            return Db.Orders.Include(o => o.Responses);
         }
 
         public Order Get(int id)

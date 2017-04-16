@@ -11,7 +11,7 @@
 <hr />
 <div class="row">
     <div class="col-sm-7">
-        @using (Html.BeginForm("ChangePassword", "Manage", FormMethod.Post, null, new { @class = "form-horizontal", role = "form" }}))
+        @using (Html.BeginForm("ChangePassword", "Manage", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
         {
             @Html.AntiForgeryToken()
             <div class="form-group">
@@ -56,7 +56,7 @@
             if (adminStatus && !isPerformer)
             {
                 <h3>
-                    @Html.ActionLink("X", "Close", "Manage", null, new { Style = "border: none;", @class = "btn btn-default close" })
+                    @Html.ActionLink("X", "Close", "Manage", new {tryOnceAgain = false}, new { Style = "border: none;", @class = "btn btn-default close" })
                     Your request for becoming a performer has been rejected
                 </h3>
             }

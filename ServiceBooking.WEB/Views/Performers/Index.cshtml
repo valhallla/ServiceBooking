@@ -1,9 +1,155 @@
-﻿@model ServiceBooking.WEB.Models.IndexPerformerViewModel
+﻿@using Microsoft.AspNet.Identity
+@using PagedList.Mvc;
+@using ServiceBooking.WEB.Models
+@model PagedList.IPagedList<IndexPerformerViewModel>
+<link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
 
 @{
+    string newPerformers = string.Empty;
+    var names = ViewBag.Names;
+
+    int? currentCategoryId = ViewBag.CurrentCategoryId;
+    bool newApplications = ViewBag.IsNewPage;
+    PerformerSorts performerSort = ViewBag.Sort;
+
+    if (ViewBag.NewPerformersAmountString != null)
+    {
+        newPerformers = ViewBag.NewPerformersAmountString;
+    }
+
+    IEnumerable<CategoryViewModel> categories = ViewBag.CategoriesList;
+
     ViewBag.Title = "Performers";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Index</h2>
+<div class="row">
+    <div class="col-sm-3">
+        <h2>
+            @ViewBag.Title
+            @if (Request.IsAuthenticated && User.IsInRole("admin") && !newPerformers.Equals(string.Empty))
+            {
+                @Html.ActionLink(newPerformers, "Index", new { categoryId = ViewBag.CurrentCategoryId, newApplications = true, sort = performerSort })
+            }
+            @if (Request.IsAuthenticated && User.IsInRole("user") && (bool)(Session["adminStatus"] ?? false) && (bool)(Session["isPerformer"] ?? false))
+            {
+                @Html.ActionLink("Me", "Details", new { id = User.Identity.GetUserId<int>() })
+            }
+        </h2>
 
+        @if (Request.IsAuthenticated && User.IsInRole("admin") && ViewBag.IsNewPage)
+        {
+            <h4>
+                @Html.ActionLink("Back to confirmed performers", "Index", new { categoryId = ViewBag.CurrentCategoryId, sort = performerSort })
+            </h4>
+        }
+    </div>
+    <div class="col-sm-6">
+        <br />
+        @using (Html.BeginForm("Index", "Performers", null, FormMethod.Get, new { enctype = "multipart/form-data" }))
+        {
+            <input type="text" class="search-control" id="searchName" name="searchName" data-autocomplete-source='@names' />
+            @Html.Hidden("currentCategoryId", currentCategoryId)
+            @Html.Hidden("newApplications", newApplications)
+            @Html.Hidden("sort", performerSort)
+            <input type="submit" value="Search" class="btn btn-default" />
+        }
+
+        <script type=”text/javascript” language=”javascript”>
+            $(document).ready(function () {
+                $(‘#searchName’).autocomplete({
+                    source: @names
+                });
+            })
+        </script>
+
+        @*<script type="text/javascript">
+                $(function() {
+                    $("[data-autocomplete-source]").each(function() {
+                        var target = $(this);
+                        target.autocomplete({ source: target.attr("data-autocomplete-source") });
+                    });
+                });
+            </script>*@
+    </div>
+    <div class="col-sm-3">
+        @Html.Partial("Sort", performerSort)
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-sm-9">
+        @if (ViewBag.AdminMessage != null)
+        {
+            <hr/>
+            <h3>@ViewBag.AdminMessage</h3>
+        }
+        else
+        {
+            foreach (var item in Model)
+             {
+                 <hr/>
+                 <div class="row">
+                     <div class="col-sm-9">
+                         <b style="font-size: 20pt">
+                             @Html.ActionLink(item.Name, "Details", new {id = item.Id, categoryId = ViewBag.CurrentCategoryId, sort = performerSort})
+                             @if (item.Company != null)
+                             {
+                                 @Html.Display(", ")
+                                 @Html.DisplayFor(modelItem => item.Company)
+                             }
+                         </b><br/>
+                         @if (!newApplications)
+                         {
+                             <p>since @Html.DisplayFor(modelItem => item.RegistrationDate)</p>
+                         }
+                         @{
+                             ViewBag.StarPath = @"~/Content/star_white.png";
+                             ViewBag.EmptystarPath = @"~/Content/emptystar_white.png";
+                         }
+                         @Html.Partial("Rating", item.Rating ?? 0)
+
+                         &emsp; <b>@Html.DisplayFor(modelItem => item.Category)</b>
+                     </div>
+                     <div class="col-sm-3">
+                         @if (Request.IsAuthenticated && User.IsInRole("admin") && ViewBag.IsNewPage)
+                         {
+                             <p>
+                                 @if (Model.Count() == 1)
+                                 {
+                                     ViewBag.CurrentCategoryId = null;
+                                 }
+                                 @Html.ActionLink("Confirm", "Confirm", "Performers", new
+                                 {
+                                     id = item.Id,
+                                     currentCategoryId = ViewBag.CurrentCategoryId,
+                                     performersSort = performerSort
+                                 }, new {@class = "btn btn-primary btn-lg"})
+                                 @Html.ActionLink("Reject", "Reject", "Performers", new
+                                 {
+                                     id = item.Id,
+                                     currentCategoryId = ViewBag.CurrentCategoryId,
+                                     performersSort = performerSort
+                                 }, new {@class = "btn btn-primary btn-lg"})
+                             </p>
+                         }
+                     </div>
+                 </div>
+             }
+        }
+    </div>
+    <div class="col-sm-3">
+        @Html.Partial("~/Views/Categories/Index.cshtml", categories)
+    </div>
+</div>
+<br />
+Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+
+@Html.PagedListPager(Model, page => Url.Action("Index", new
+{
+    page,
+    newApplications = ViewBag.IsNewPage,
+    categoryId = ViewBag.CurrentCategoryId,
+    sort = ViewBag.Sort,
+    searchName = ViewBag.SearchName
+}))

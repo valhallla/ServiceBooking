@@ -55,11 +55,6 @@ C:\ServiceBooking\ServiceBooking.Util\bin\Debug\Microsoft.AspNet.Identity.Entity
 C:\ServiceBooking\ServiceBooking.Util\bin\Debug\Ninject.xml
 C:\ServiceBooking\ServiceBooking.Util\bin\Debug\Ninject.Web.Common.xml
 C:\ServiceBooking\ServiceBooking.Util\bin\Debug\Ninject.Web.Mvc.xml
-C:\ServiceBooking\ServiceBooking.Util\bin\Debug\System.Web.Mvc.xml
-C:\ServiceBooking\ServiceBooking.Util\bin\Debug\System.Web.Razor.xml
-C:\ServiceBooking\ServiceBooking.Util\bin\Debug\System.Web.WebPages.Razor.xml
-C:\ServiceBooking\ServiceBooking.Util\bin\Debug\System.Web.WebPages.xml
-C:\ServiceBooking\ServiceBooking.Util\bin\Debug\System.Web.WebPages.Deployment.xml
 C:\ServiceBooking\ServiceBooking.Util\obj\Debug\ServiceBooking.Util.csprojResolveAssemblyReference.cache
 C:\ServiceBooking\ServiceBooking.Util\obj\Debug\ServiceBooking.Util.dll
 C:\ServiceBooking\ServiceBooking.Util\obj\Debug\ServiceBooking.Util.pdb
@@ -84,3 +79,8 @@ C:\ServiceBooking\ServiceBooking.Util\bin\Debug\Microsoft.Owin.Security.Cookies.
 C:\ServiceBooking\ServiceBooking.Util\bin\Debug\Newtonsoft.Json.xml
 C:\ServiceBooking\ServiceBooking.Util\bin\Debug\AutoMapper.dll
 C:\ServiceBooking\ServiceBooking.Util\bin\Debug\AutoMapper.xml
+C:\ServiceBooking\ServiceBooking.Util\bin\Debug\System.Web.Mvc.xml
+C:\ServiceBooking\ServiceBooking.Util\bin\Debug\System.Web.Razor.xml
+C:\ServiceBooking\ServiceBooking.Util\bin\Debug\System.Web.WebPages.Razor.xml
+C:\ServiceBooking\ServiceBooking.Util\bin\Debug\System.Web.WebPages.xml
+C:\ServiceBooking\ServiceBooking.Util\bin\Debug\System.Web.WebPages.Deployment.xml

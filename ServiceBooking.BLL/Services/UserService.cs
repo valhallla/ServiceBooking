@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ServiceBooking.BLL.DTO;
@@ -20,7 +21,6 @@ namespace ServiceBooking.BLL.Services
     public class UserService : IUserService
     {
         private readonly IRepository<ApplicationUser> _clientRepository;
-       // private readonly IManyToManyResolver _manyToManyResolver
 
         public ApplicationUserRepository UserManager { get; }
         public ApplicationRoleRepository RoleManager { get; }
@@ -56,11 +56,6 @@ namespace ServiceBooking.BLL.Services
 
                 await UserManager.AddToRoleAsync(user.Id, userDto.Role);
 
-                //Mapper.Initialize(cfg => cfg.CreateMap<ClientViewModel, ClientUser>()
-                //    .ForMember("ApplicationUserId", opt => opt.MapFrom(c => user.Id)));
-                //ClientUser clientUser = Mapper.Map<ClientViewModel, ClientUser>(userDto);
-
-                //_clientRepository.Create(clientUser);
                 return new OperationDetails(true, "Registration succeeded", string.Empty);
             }
 
@@ -100,7 +95,11 @@ namespace ServiceBooking.BLL.Services
             ApplicationUser user = UserManager.FindById(id);
             if (user != null)
             {
-                Mapper.Initialize(cfg => cfg.CreateMap<ApplicationUser, ClientViewModelBLL>());
+                Mapper.Initialize(cfg => cfg.CreateMap<ApplicationUser, ClientViewModelBLL>()
+                    .ForMember("OrdersBll", opt => opt.MapFrom(c => c.Orders))
+                    .ForMember("CommentsBll", opt => opt.MapFrom(c => c.Comments))
+                    .ForMember("CategoriesBll", opt => opt.MapFrom(c => c.Categories))
+                );
                 return Mapper.Map<ApplicationUser, ClientViewModelBLL>(user);
             }
             return null;
@@ -109,7 +108,10 @@ namespace ServiceBooking.BLL.Services
         public IEnumerable<ClientViewModelBLL> GetAll()
         {
             var users = _clientRepository.GetAll().ToList();
-            Mapper.Initialize(cfg => cfg.CreateMap<ApplicationUser, ClientViewModelBLL>());
+            Mapper.Initialize(cfg => cfg.CreateMap<ApplicationUser, ClientViewModelBLL>()
+                .ForMember("OrdersBll", opt => opt.MapFrom(c => c.Orders))
+                .ForMember("CommentsBll", opt => opt.MapFrom(c => c.Comments))
+                .ForMember("CategoriesBll", opt => opt.MapFrom(c => c.Categories)));
             return Mapper.Map<List<ApplicationUser>, List<ClientViewModelBLL>>(users);
         }
 
@@ -147,6 +149,40 @@ namespace ServiceBooking.BLL.Services
                 return new OperationDetails(true, "Deleting account succeeded", string.Empty);
             }
             return new OperationDetails(false, "Incorrect password", "Password");
+        }
+
+        public OperationDetails ConfirmPerformer(int id)
+        {
+            ApplicationUser user = _clientRepository.Get(id);
+            if (user != null)
+            {
+                user.AdminStatus = true;
+                user.RegistrationDate = DateTime.Now;
+                _clientRepository.Update(user);
+
+                HttpContext.Current.Session["adminStatus"] = true;
+                HttpContext.Current.Session["isPerformer"] = true;
+
+                return new OperationDetails(true, @"Performer confirmed", string.Empty);
+            }
+            return new OperationDetails(false, @"User doesn't exist", "Id");
+        }
+
+        public OperationDetails RejectPerformer(int id)
+        {
+            ApplicationUser user = _clientRepository.Get(id);
+            if (user != null)
+            {
+                user.AdminStatus = true;
+                user.IsPerformer = false;
+                (_clientRepository as IManyToManyResolver).Update(user.Id, null);
+
+                HttpContext.Current.Session["adminStatus"] = true;
+                HttpContext.Current.Session["isPerformer"] = false;
+
+                return new OperationDetails(true, @"Performer rejected", string.Empty);
+            }
+            return new OperationDetails(false, @"User doesn't exist", "Id");
         }
     }
 }

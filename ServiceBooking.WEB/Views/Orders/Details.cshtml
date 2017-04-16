@@ -28,8 +28,9 @@
        {
            id = Model.Id,
            isMyOrdersPage = ViewBag.IsMyOrdersPage,
-           isNewOrdersPage = ViewBag.IsNewOrdersPage,
-           currentCategoryId = ViewBag.CurrentCategoryId
+           isNewOrdersPage = ViewBag.IsNewPage,
+           currentCategoryId = ViewBag.CurrentCategoryId,
+           ordersSort = (OrderSorts)ViewBag.Sort
        }, new { @class = "btn btn-primary" })
             }
         }
@@ -55,14 +56,26 @@
 @if (Request.IsAuthenticated && User.IsInRole("admin") && !Model.AdminStatus)
 {
     <p>
-        @Html.ActionLink("Confirm", "Confirm", "Orders", new {id = Model.Id}, new {@class = "btn btn-primary btn-lg"})
-        @Html.ActionLink("Reject", "Reject", "Orders", new {id = Model.Id}, new {@class = "btn btn-primary btn-lg"})
+        @Html.ActionLink("Confirm", "Confirm", "Orders", new
+       {
+           id = Model.Id,
+           newApplications = true,
+           categoryId = ViewBag.CurrentCategoryId,
+           ordersSort = (OrderSorts)ViewBag.Sort
+       }, new {@class = "btn btn-primary btn-lg"})
+        @Html.ActionLink("Reject", "Reject", "Orders", new
+       {
+           id = Model.Id,
+           newApplications = true,
+           categoryId = ViewBag.CurrentCategoryId,
+           ordersSort = (OrderSorts)ViewBag.Sort
+       }, new {@class = "btn btn-primary btn-lg"})
     </p>
 }
-else
+else if (Model.AdminStatus)
 {
     <h2>Responses</h2>
-    if (ViewBag.IsPerformer & User.Identity.GetUserId<int>() != Model.CustomerId &&
+    if ((bool)Session["isPerformer"] && User.Identity.GetUserId<int>() != Model.CustomerId &&
          responses.Select(r => r.PerformerId).All(pid => pid != User.Identity.GetUserId<int>()))
      {
          @Html.Partial(@"~/Views/Responses/Create.cshtml", new CreateResponseViewModel {OrderId = Model.Id, Text = string.Empty})

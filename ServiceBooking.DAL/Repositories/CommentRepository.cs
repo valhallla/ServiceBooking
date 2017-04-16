@@ -29,14 +29,15 @@ namespace ServiceBooking.DAL.Repositories
             return Db.Comments.Find(id);
         }
 
-        public void Create(Comment book)
+        public void Create(Comment comment)
         {
-            Db.Comments.Add(book);
+            Db.Comments.Add(comment);
+            Db.SaveChanges();
         }
 
-        public void Update(Comment book)
+        public void Update(Comment comment)
         {
-            Db.Entry(book).State = EntityState.Modified;
+            Db.Entry(comment).State = EntityState.Modified;
         }
 
         public IEnumerable<Comment> Find(Func<Comment, bool> predicate)
@@ -46,9 +47,9 @@ namespace ServiceBooking.DAL.Repositories
 
         public void Delete(int id)
         {
-            Comment book = Db.Comments.Find(id);
-            if (book != null)
-                Db.Comments.Remove(book);
+            Comment comment = Db.Comments.Find(id);
+            if (comment != null)
+                Db.Comments.Remove(comment);
         }
     }
 }

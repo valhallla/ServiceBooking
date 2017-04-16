@@ -15,14 +15,11 @@
                 <div class="col-sm-3" style="text-align:center">
                     <h4>Your rating</h4>
                     <br />
-                    @for (int i = 0; i < ViewBag.Rating; i++)
-                    {
-                        <img style="height: 30px; float: none; margin-left: 7px; margin-right: 7px" src="@Url.Content(@"~/Content/star.png")" alt="" />
+                    @{
+                        ViewBag.StarPath = @"~/Content/star.png";
+                        ViewBag.EmptystarPath = @"~/Content/emptystar.png";
                     }
-                    @for (int i = ViewBag.Rating; i < 5; i++)
-                    {
-                        <img style="height: 30px; float: none; margin-left: 7px; margin-right: 7px" src="@Url.Content(@"~/Content/emptystar.png")" alt="" />
-                    }
+                   @Html.Partial("Rating", (int)ViewBag.Rating) 
                 </div>
             </div>
             @Html.HiddenFor(model => model.OrderId)

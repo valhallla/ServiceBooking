@@ -19,7 +19,7 @@
 @using (Html.BeginForm("Delete", "Orders", new
     {
         isMyOrdersPage = ViewBag.IsMyOrdersPage,
-        isNewOrdersPage = ViewBag.IsNewOrdersPage,
+        isNewOrdersPage = ViewBag.IsNewPage,
         currentCategoryId = ViewBag.CurrentCategoryId
     }, FormMethod.Post, new { enctype = "multipart/form-data" }))
 {
@@ -31,7 +31,7 @@
         @Html.ActionLink("Cancel", "Index", "Orders", new
        {
            myOrders = ViewBag.IsMyOrdersPage,
-           newApplications = ViewBag.IsNewOrdersPage,
+           newApplications = ViewBag.IsNewPage,
            currentCategoryId = ViewBag.CurrentCategoryId
        }, new { @class = "btn btn-default" })
     </div>

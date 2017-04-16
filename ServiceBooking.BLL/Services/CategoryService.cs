@@ -21,8 +21,9 @@ namespace ServiceBooking.BLL.Services
 
         public IEnumerable<CategoryViewModelBLL> GetAll()
         {
-            Mapper.Initialize(cfg => cfg.CreateMap<Category, CategoryViewModelBLL>());
-            return Mapper.Map<List<Category>, List<CategoryViewModelBLL>>(_categoryRepository.GetAll().ToList());
+            Mapper.Initialize(cfg => cfg.CreateMap<Category, CategoryViewModelBLL>()
+                .ForMember("Performers", opt => opt.MapFrom(c => c.ApplicationUsers)));
+            return Mapper.Map<IEnumerable<Category>, List<CategoryViewModelBLL>>(_categoryRepository.GetAll());
         }
 
         public CategoryViewModelBLL FindById(int id)

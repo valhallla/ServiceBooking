@@ -122,17 +122,17 @@
     <Compile Include="Identity\ApplicationRoleRepository.cs" />
     <Compile Include="Identity\ApplicationUserRepository.cs" />
     <Compile Include="Identity\CustomIdentity.cs" />
-    <Compile Include="Migrations\201704080210405_Version1.cs" />
-    <Compile Include="Migrations\201704080210405_Version1.Designer.cs">
-      <DependentUpon>201704080210405_Version1.cs</DependentUpon>
+    <Compile Include="Migrations\201704151138286_Version1.cs" />
+    <Compile Include="Migrations\201704151138286_Version1.Designer.cs">
+      <DependentUpon>201704151138286_Version1.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201704080211314_Version2.cs" />
-    <Compile Include="Migrations\201704080211314_Version2.Designer.cs">
-      <DependentUpon>201704080211314_Version2.cs</DependentUpon>
+    <Compile Include="Migrations\201704151144469_Version2.cs" />
+    <Compile Include="Migrations\201704151144469_Version2.Designer.cs">
+      <DependentUpon>201704151144469_Version2.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201704080214120_Version3.cs" />
-    <Compile Include="Migrations\201704080214120_Version3.Designer.cs">
-      <DependentUpon>201704080214120_Version3.cs</DependentUpon>
+    <Compile Include="Migrations\201704151146415_Version3.cs" />
+    <Compile Include="Migrations\201704151146415_Version3.Designer.cs">
+      <DependentUpon>201704151146415_Version3.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -172,14 +172,14 @@
     <Folder Include="DB\" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201704080210405_Version1.resx">
-      <DependentUpon>201704080210405_Version1.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201704151138286_Version1.resx">
+      <DependentUpon>201704151138286_Version1.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201704080211314_Version2.resx">
-      <DependentUpon>201704080211314_Version2.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201704151144469_Version2.resx">
+      <DependentUpon>201704151144469_Version2.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201704080214120_Version3.resx">
-      <DependentUpon>201704080214120_Version3.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201704151146415_Version3.resx">
+      <DependentUpon>201704151146415_Version3.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

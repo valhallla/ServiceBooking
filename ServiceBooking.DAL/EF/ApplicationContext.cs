@@ -40,6 +40,5 @@ namespace ServiceBooking.DAL.EF
         //        .MapRightKey("ApplicationUserId")
         //        .ToTable("CategoryUser"));
         //}
-
     }
 }

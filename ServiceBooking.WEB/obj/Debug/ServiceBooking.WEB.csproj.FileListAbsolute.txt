@@ -11,8 +11,12 @@ C:\ServiceBooking\ServiceBooking.WEB\bin\roslyn\System.Reflection.Metadata.dll
 C:\ServiceBooking\ServiceBooking.WEB\bin\roslyn\vbc.exe
 C:\ServiceBooking\ServiceBooking.WEB\bin\roslyn\VBCSCompiler.exe
 C:\ServiceBooking\ServiceBooking.WEB\bin\roslyn\VBCSCompiler.exe.config
+C:\ServiceBooking\ServiceBooking.WEB\bin\ServiceBooking.WEB.dll.config
 C:\ServiceBooking\ServiceBooking.WEB\bin\ServiceBooking.WEB.dll
 C:\ServiceBooking\ServiceBooking.WEB\bin\ServiceBooking.WEB.pdb
+C:\ServiceBooking\ServiceBooking.WEB\bin\AutoMapper.dll
+C:\ServiceBooking\ServiceBooking.WEB\bin\EntityFramework.dll
+C:\ServiceBooking\ServiceBooking.WEB\bin\EntityFramework.SqlServer.dll
 C:\ServiceBooking\ServiceBooking.WEB\bin\Microsoft.AI.DependencyCollector.dll
 C:\ServiceBooking\ServiceBooking.WEB\bin\Microsoft.AI.PerfCounterCollector.dll
 C:\ServiceBooking\ServiceBooking.WEB\bin\Microsoft.AI.ServerTelemetryChannel.dll
@@ -20,32 +24,53 @@ C:\ServiceBooking\ServiceBooking.WEB\bin\Microsoft.AI.Web.dll
 C:\ServiceBooking\ServiceBooking.WEB\bin\Microsoft.AI.WindowsServer.dll
 C:\ServiceBooking\ServiceBooking.WEB\bin\Microsoft.ApplicationInsights.dll
 C:\ServiceBooking\ServiceBooking.WEB\bin\Microsoft.AspNet.Identity.Core.dll
+C:\ServiceBooking\ServiceBooking.WEB\bin\Microsoft.AspNet.Identity.EntityFramework.dll
 C:\ServiceBooking\ServiceBooking.WEB\bin\Microsoft.AspNet.Identity.Owin.dll
 C:\ServiceBooking\ServiceBooking.WEB\bin\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll
+C:\ServiceBooking\ServiceBooking.WEB\bin\Microsoft.Owin.dll
 C:\ServiceBooking\ServiceBooking.WEB\bin\Microsoft.Owin.Host.SystemWeb.dll
 C:\ServiceBooking\ServiceBooking.WEB\bin\Microsoft.Owin.Security.Cookies.dll
 C:\ServiceBooking\ServiceBooking.WEB\bin\Microsoft.Owin.Security.dll
 C:\ServiceBooking\ServiceBooking.WEB\bin\Microsoft.Owin.Security.OAuth.dll
 C:\ServiceBooking\ServiceBooking.WEB\bin\Microsoft.Web.Infrastructure.dll
+C:\ServiceBooking\ServiceBooking.WEB\bin\Ninject.dll
 C:\ServiceBooking\ServiceBooking.WEB\bin\Owin.dll
-C:\ServiceBooking\ServiceBooking.WEB\bin\ServiceBooking.BLL.dll
+C:\ServiceBooking\ServiceBooking.WEB\bin\PagedList.dll
+C:\ServiceBooking\ServiceBooking.WEB\bin\PagedList.Mvc.dll
+C:\ServiceBooking\ServiceBooking.WEB\bin\ServiceBooking.BLL.Interfaces.dll
+C:\ServiceBooking\ServiceBooking.WEB\bin\ServiceBooking.DAL.dll
+C:\ServiceBooking\ServiceBooking.WEB\bin\ServiceBooking.DAL.Interfaces.dll
+C:\ServiceBooking\ServiceBooking.WEB\bin\ServiceBooking.DAL.UnitOfWork.dll
+C:\ServiceBooking\ServiceBooking.WEB\bin\ServiceBooking.Util.dll
+C:\ServiceBooking\ServiceBooking.WEB\bin\System.Net.Http.Formatting.dll
 C:\ServiceBooking\ServiceBooking.WEB\bin\System.Web.Helpers.dll
+C:\ServiceBooking\ServiceBooking.WEB\bin\System.Web.Http.dll
+C:\ServiceBooking\ServiceBooking.WEB\bin\System.Web.Http.Owin.dll
 C:\ServiceBooking\ServiceBooking.WEB\bin\System.Web.Mvc.dll
 C:\ServiceBooking\ServiceBooking.WEB\bin\System.Web.Optimization.dll
 C:\ServiceBooking\ServiceBooking.WEB\bin\System.Web.Razor.dll
 C:\ServiceBooking\ServiceBooking.WEB\bin\System.Web.WebPages.Deployment.dll
 C:\ServiceBooking\ServiceBooking.WEB\bin\System.Web.WebPages.dll
 C:\ServiceBooking\ServiceBooking.WEB\bin\System.Web.WebPages.Razor.dll
-C:\ServiceBooking\ServiceBooking.WEB\bin\ServiceBooking.DAL.dll
-C:\ServiceBooking\ServiceBooking.WEB\bin\Microsoft.AspNet.Identity.EntityFramework.dll
-C:\ServiceBooking\ServiceBooking.WEB\bin\EntityFramework.dll
-C:\ServiceBooking\ServiceBooking.WEB\bin\ServiceBooking.BLL.pdb
+C:\ServiceBooking\ServiceBooking.WEB\bin\WebGrease.dll
+C:\ServiceBooking\ServiceBooking.WEB\bin\WebActivatorEx.dll
+C:\ServiceBooking\ServiceBooking.WEB\bin\Ninject.Web.Common.dll
+C:\ServiceBooking\ServiceBooking.WEB\bin\ServiceBooking.BLL.dll
+C:\ServiceBooking\ServiceBooking.WEB\bin\ServiceBooking.DAL.UnitOfWork.pdb
+C:\ServiceBooking\ServiceBooking.WEB\bin\ServiceBooking.BLL.Interfaces.pdb
+C:\ServiceBooking\ServiceBooking.WEB\bin\ServiceBooking.DAL.Interfaces.pdb
+C:\ServiceBooking\ServiceBooking.WEB\bin\ServiceBooking.DAL.pdb
+C:\ServiceBooking\ServiceBooking.WEB\bin\ServiceBooking.Util.pdb
+C:\ServiceBooking\ServiceBooking.WEB\bin\AutoMapper.xml
+C:\ServiceBooking\ServiceBooking.WEB\bin\EntityFramework.xml
+C:\ServiceBooking\ServiceBooking.WEB\bin\EntityFramework.SqlServer.xml
 C:\ServiceBooking\ServiceBooking.WEB\bin\Microsoft.AI.DependencyCollector.xml
 C:\ServiceBooking\ServiceBooking.WEB\bin\Microsoft.AI.ServerTelemetryChannel.xml
 C:\ServiceBooking\ServiceBooking.WEB\bin\Microsoft.AI.Web.xml
 C:\ServiceBooking\ServiceBooking.WEB\bin\Microsoft.AI.WindowsServer.xml
 C:\ServiceBooking\ServiceBooking.WEB\bin\Microsoft.ApplicationInsights.xml
 C:\ServiceBooking\ServiceBooking.WEB\bin\Microsoft.AspNet.Identity.Core.xml
+C:\ServiceBooking\ServiceBooking.WEB\bin\Microsoft.AspNet.Identity.EntityFramework.xml
 C:\ServiceBooking\ServiceBooking.WEB\bin\Microsoft.AspNet.Identity.Owin.xml
 C:\ServiceBooking\ServiceBooking.WEB\bin\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.xml
 C:\ServiceBooking\ServiceBooking.WEB\bin\Microsoft.Owin.xml
@@ -53,6 +78,12 @@ C:\ServiceBooking\ServiceBooking.WEB\bin\Microsoft.Owin.Host.SystemWeb.xml
 C:\ServiceBooking\ServiceBooking.WEB\bin\Microsoft.Owin.Security.xml
 C:\ServiceBooking\ServiceBooking.WEB\bin\Microsoft.Owin.Security.Cookies.xml
 C:\ServiceBooking\ServiceBooking.WEB\bin\Microsoft.Owin.Security.OAuth.xml
+C:\ServiceBooking\ServiceBooking.WEB\bin\Ninject.xml
+C:\ServiceBooking\ServiceBooking.WEB\bin\PagedList.xml
+C:\ServiceBooking\ServiceBooking.WEB\bin\PagedList.Mvc.xml
+C:\ServiceBooking\ServiceBooking.WEB\bin\System.Net.Http.Formatting.xml
+C:\ServiceBooking\ServiceBooking.WEB\bin\System.Web.Http.xml
+C:\ServiceBooking\ServiceBooking.WEB\bin\System.Web.Http.Owin.xml
 C:\ServiceBooking\ServiceBooking.WEB\bin\System.Web.Helpers.xml
 C:\ServiceBooking\ServiceBooking.WEB\bin\System.Web.Mvc.xml
 C:\ServiceBooking\ServiceBooking.WEB\bin\System.Web.Optimization.xml
@@ -60,126 +91,8 @@ C:\ServiceBooking\ServiceBooking.WEB\bin\System.Web.Razor.xml
 C:\ServiceBooking\ServiceBooking.WEB\bin\System.Web.WebPages.xml
 C:\ServiceBooking\ServiceBooking.WEB\bin\System.Web.WebPages.Deployment.xml
 C:\ServiceBooking\ServiceBooking.WEB\bin\System.Web.WebPages.Razor.xml
-C:\ServiceBooking\ServiceBooking.WEB\bin\ServiceBooking.DAL.pdb
-C:\ServiceBooking\ServiceBooking.WEB\bin\Microsoft.AspNet.Identity.EntityFramework.xml
-C:\ServiceBooking\ServiceBooking.WEB\bin\EntityFramework.xml
+C:\ServiceBooking\ServiceBooking.WEB\bin\Ninject.Web.Common.xml
+C:\ServiceBooking\ServiceBooking.WEB\bin\ServiceBooking.BLL.pdb
 C:\ServiceBooking\ServiceBooking.WEB\obj\Debug\ServiceBooking.WEB.csprojResolveAssemblyReference.cache
 C:\ServiceBooking\ServiceBooking.WEB\obj\Debug\ServiceBooking.WEB.dll
 C:\ServiceBooking\ServiceBooking.WEB\obj\Debug\ServiceBooking.WEB.pdb
-C:\ServiceBooking\ServiceBooking.WEB\bin\Ninject.dll
-C:\ServiceBooking\ServiceBooking.WEB\bin\Ninject.Web.Common.dll
-C:\ServiceBooking\ServiceBooking.WEB\bin\WebActivatorEx.dll
-C:\ServiceBooking\ServiceBooking.WEB\bin\Ninject.xml
-C:\ServiceBooking\ServiceBooking.WEB\bin\Ninject.Web.Common.xml
-C:\ServiceBooking — копия\ServiceBooking.WEB\obj\Debug\ServiceBooking.WEB.dll
-C:\ServiceBooking — копия\ServiceBooking.WEB\obj\Debug\ServiceBooking.WEB.pdb
-C:\ServiceBooking — копия\ServiceBooking.WEB\obj\Debug\ServiceBooking.WEB.csprojResolveAssemblyReference.cache
-C:\ServiceBooking — копия\ServiceBooking.WEB\bin\ApplicationInsights.config
-C:\ServiceBooking — копия\ServiceBooking.WEB\bin\roslyn\csc.exe
-C:\ServiceBooking — копия\ServiceBooking.WEB\bin\roslyn\Microsoft.Build.Tasks.CodeAnalysis.dll
-C:\ServiceBooking — копия\ServiceBooking.WEB\bin\roslyn\Microsoft.CodeAnalysis.CSharp.dll
-C:\ServiceBooking — копия\ServiceBooking.WEB\bin\roslyn\Microsoft.CodeAnalysis.dll
-C:\ServiceBooking — копия\ServiceBooking.WEB\bin\roslyn\Microsoft.CodeAnalysis.VisualBasic.dll
-C:\ServiceBooking — копия\ServiceBooking.WEB\bin\roslyn\Microsoft.CSharp.Core.targets
-C:\ServiceBooking — копия\ServiceBooking.WEB\bin\roslyn\Microsoft.VisualBasic.Core.targets
-C:\ServiceBooking — копия\ServiceBooking.WEB\bin\roslyn\System.Collections.Immutable.dll
-C:\ServiceBooking — копия\ServiceBooking.WEB\bin\roslyn\System.Reflection.Metadata.dll
-C:\ServiceBooking — копия\ServiceBooking.WEB\bin\roslyn\vbc.exe
-C:\ServiceBooking — копия\ServiceBooking.WEB\bin\roslyn\VBCSCompiler.exe
-C:\ServiceBooking — копия\ServiceBooking.WEB\bin\roslyn\VBCSCompiler.exe.config
-C:\ServiceBooking — копия\ServiceBooking.WEB\bin\ServiceBooking.WEB.dll.config
-C:\ServiceBooking — копия\ServiceBooking.WEB\bin\ServiceBooking.WEB.dll
-C:\ServiceBooking — копия\ServiceBooking.WEB\bin\ServiceBooking.WEB.pdb
-C:\ServiceBooking — копия\ServiceBooking.WEB\bin\EntityFramework.dll
-C:\ServiceBooking — копия\ServiceBooking.WEB\bin\EntityFramework.SqlServer.dll
-C:\ServiceBooking — копия\ServiceBooking.WEB\bin\Microsoft.AI.DependencyCollector.dll
-C:\ServiceBooking — копия\ServiceBooking.WEB\bin\Microsoft.AI.PerfCounterCollector.dll
-C:\ServiceBooking — копия\ServiceBooking.WEB\bin\Microsoft.AI.ServerTelemetryChannel.dll
-C:\ServiceBooking — копия\ServiceBooking.WEB\bin\Microsoft.AI.Web.dll
-C:\ServiceBooking — копия\ServiceBooking.WEB\bin\Microsoft.AI.WindowsServer.dll
-C:\ServiceBooking — копия\ServiceBooking.WEB\bin\Microsoft.ApplicationInsights.dll
-C:\ServiceBooking — копия\ServiceBooking.WEB\bin\Microsoft.AspNet.Identity.Core.dll
-C:\ServiceBooking — копия\ServiceBooking.WEB\bin\Microsoft.AspNet.Identity.EntityFramework.dll
-C:\ServiceBooking — копия\ServiceBooking.WEB\bin\Microsoft.AspNet.Identity.Owin.dll
-C:\ServiceBooking — копия\ServiceBooking.WEB\bin\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll
-C:\ServiceBooking — копия\ServiceBooking.WEB\bin\Microsoft.Owin.Host.SystemWeb.dll
-C:\ServiceBooking — копия\ServiceBooking.WEB\bin\Microsoft.Owin.Security.Cookies.dll
-C:\ServiceBooking — копия\ServiceBooking.WEB\bin\Microsoft.Owin.Security.dll
-C:\ServiceBooking — копия\ServiceBooking.WEB\bin\Microsoft.Owin.Security.OAuth.dll
-C:\ServiceBooking — копия\ServiceBooking.WEB\bin\Microsoft.Web.Infrastructure.dll
-C:\ServiceBooking — копия\ServiceBooking.WEB\bin\Owin.dll
-C:\ServiceBooking — копия\ServiceBooking.WEB\bin\ServiceBooking.BLL.dll
-C:\ServiceBooking — копия\ServiceBooking.WEB\bin\ServiceBooking.Util.dll
-C:\ServiceBooking — копия\ServiceBooking.WEB\bin\System.Net.Http.Formatting.dll
-C:\ServiceBooking — копия\ServiceBooking.WEB\bin\System.Web.Helpers.dll
-C:\ServiceBooking — копия\ServiceBooking.WEB\bin\System.Web.Http.dll
-C:\ServiceBooking — копия\ServiceBooking.WEB\bin\System.Web.Http.Owin.dll
-C:\ServiceBooking — копия\ServiceBooking.WEB\bin\System.Web.Mvc.dll
-C:\ServiceBooking — копия\ServiceBooking.WEB\bin\System.Web.Optimization.dll
-C:\ServiceBooking — копия\ServiceBooking.WEB\bin\System.Web.Razor.dll
-C:\ServiceBooking — копия\ServiceBooking.WEB\bin\System.Web.WebPages.Deployment.dll
-C:\ServiceBooking — копия\ServiceBooking.WEB\bin\System.Web.WebPages.dll
-C:\ServiceBooking — копия\ServiceBooking.WEB\bin\System.Web.WebPages.Razor.dll
-C:\ServiceBooking — копия\ServiceBooking.WEB\bin\ServiceBooking.DAL.dll
-C:\ServiceBooking — копия\ServiceBooking.WEB\bin\WebActivatorEx.dll
-C:\ServiceBooking — копия\ServiceBooking.WEB\bin\Ninject.dll
-C:\ServiceBooking — копия\ServiceBooking.WEB\bin\Ninject.Web.Common.dll
-C:\ServiceBooking — копия\ServiceBooking.WEB\bin\Newtonsoft.Json.dll
-C:\ServiceBooking — копия\ServiceBooking.WEB\bin\ServiceBooking.BLL.pdb
-C:\ServiceBooking — копия\ServiceBooking.WEB\bin\ServiceBooking.Util.pdb
-C:\ServiceBooking — копия\ServiceBooking.WEB\bin\EntityFramework.xml
-C:\ServiceBooking — копия\ServiceBooking.WEB\bin\EntityFramework.SqlServer.xml
-C:\ServiceBooking — копия\ServiceBooking.WEB\bin\Microsoft.AI.DependencyCollector.xml
-C:\ServiceBooking — копия\ServiceBooking.WEB\bin\Microsoft.AI.ServerTelemetryChannel.xml
-C:\ServiceBooking — копия\ServiceBooking.WEB\bin\Microsoft.AI.Web.xml
-C:\ServiceBooking — копия\ServiceBooking.WEB\bin\Microsoft.AI.WindowsServer.xml
-C:\ServiceBooking — копия\ServiceBooking.WEB\bin\Microsoft.ApplicationInsights.xml
-C:\ServiceBooking — копия\ServiceBooking.WEB\bin\Microsoft.AspNet.Identity.Core.xml
-C:\ServiceBooking — копия\ServiceBooking.WEB\bin\Microsoft.AspNet.Identity.EntityFramework.xml
-C:\ServiceBooking — копия\ServiceBooking.WEB\bin\Microsoft.AspNet.Identity.Owin.xml
-C:\ServiceBooking — копия\ServiceBooking.WEB\bin\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.xml
-C:\ServiceBooking — копия\ServiceBooking.WEB\bin\Microsoft.Owin.xml
-C:\ServiceBooking — копия\ServiceBooking.WEB\bin\Microsoft.Owin.Host.SystemWeb.xml
-C:\ServiceBooking — копия\ServiceBooking.WEB\bin\Microsoft.Owin.Security.xml
-C:\ServiceBooking — копия\ServiceBooking.WEB\bin\Microsoft.Owin.Security.Cookies.xml
-C:\ServiceBooking — копия\ServiceBooking.WEB\bin\Microsoft.Owin.Security.OAuth.xml
-C:\ServiceBooking — копия\ServiceBooking.WEB\bin\System.Net.Http.Formatting.xml
-C:\ServiceBooking — копия\ServiceBooking.WEB\bin\System.Web.Http.xml
-C:\ServiceBooking — копия\ServiceBooking.WEB\bin\System.Web.Http.Owin.xml
-C:\ServiceBooking — копия\ServiceBooking.WEB\bin\System.Web.Helpers.xml
-C:\ServiceBooking — копия\ServiceBooking.WEB\bin\System.Web.Mvc.xml
-C:\ServiceBooking — копия\ServiceBooking.WEB\bin\System.Web.Optimization.xml
-C:\ServiceBooking — копия\ServiceBooking.WEB\bin\System.Web.Razor.xml
-C:\ServiceBooking — копия\ServiceBooking.WEB\bin\System.Web.WebPages.xml
-C:\ServiceBooking — копия\ServiceBooking.WEB\bin\System.Web.WebPages.Deployment.xml
-C:\ServiceBooking — копия\ServiceBooking.WEB\bin\System.Web.WebPages.Razor.xml
-C:\ServiceBooking — копия\ServiceBooking.WEB\bin\Antlr3.Runtime.pdb
-C:\ServiceBooking — копия\ServiceBooking.WEB\bin\ServiceBooking.DAL.pdb
-C:\ServiceBooking — копия\ServiceBooking.WEB\bin\Ninject.xml
-C:\ServiceBooking — копия\ServiceBooking.WEB\bin\Ninject.Web.Common.xml
-C:\ServiceBooking — копия\ServiceBooking.WEB\bin\Newtonsoft.Json.xml
-C:\ServiceBooking\ServiceBooking.WEB\bin\ServiceBooking.Util.dll
-C:\ServiceBooking\ServiceBooking.WEB\bin\System.Net.Http.Formatting.dll
-C:\ServiceBooking\ServiceBooking.WEB\bin\System.Web.Http.dll
-C:\ServiceBooking\ServiceBooking.WEB\bin\System.Web.Http.Owin.dll
-C:\ServiceBooking\ServiceBooking.WEB\bin\ServiceBooking.Util.pdb
-C:\ServiceBooking\ServiceBooking.WEB\bin\System.Net.Http.Formatting.xml
-C:\ServiceBooking\ServiceBooking.WEB\bin\System.Web.Http.xml
-C:\ServiceBooking\ServiceBooking.WEB\bin\System.Web.Http.Owin.xml
-C:\ServiceBooking\ServiceBooking.WEB\bin\ServiceBooking.BLL.Interfaces.dll
-C:\ServiceBooking\ServiceBooking.WEB\bin\ServiceBooking.DAL.UnitOfWork.dll
-C:\ServiceBooking\ServiceBooking.WEB\bin\ServiceBooking.DAL.Interfaces.dll
-C:\ServiceBooking\ServiceBooking.WEB\bin\ServiceBooking.BLL.Interfaces.pdb
-C:\ServiceBooking\ServiceBooking.WEB\bin\ServiceBooking.DAL.UnitOfWork.pdb
-C:\ServiceBooking\ServiceBooking.WEB\bin\ServiceBooking.DAL.Interfaces.pdb
-C:\ServiceBooking\ServiceBooking.WEB\bin\EntityFramework.SqlServer.dll
-C:\ServiceBooking\ServiceBooking.WEB\bin\EntityFramework.SqlServer.xml
-C:\ServiceBooking\ServiceBooking.WEB\bin\ServiceBooking.WEB.dll.config
-C:\ServiceBooking\ServiceBooking.WEB\bin\Microsoft.Owin.dll
-C:\ServiceBooking\ServiceBooking.WEB\bin\WebGrease.dll
-C:\ServiceBooking\ServiceBooking.WEB\bin\AutoMapper.dll
-C:\ServiceBooking\ServiceBooking.WEB\bin\AutoMapper.xml
-C:\ServiceBooking\ServiceBooking.WEB\bin\PagedList.dll
-C:\ServiceBooking\ServiceBooking.WEB\bin\PagedList.Mvc.dll
-C:\ServiceBooking\ServiceBooking.WEB\bin\PagedList.xml
-C:\ServiceBooking\ServiceBooking.WEB\bin\PagedList.Mvc.xml

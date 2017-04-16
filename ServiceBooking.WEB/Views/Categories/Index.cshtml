@@ -1,11 +1,7 @@
 ﻿@model IEnumerable<ServiceBooking.WEB.Models.CategoryViewModel>
 
 @{
-    int itemsAmount = 0;
-    foreach (var item in Model)
-    {
-        itemsAmount += item.ItemsAmount;
-    }
+    int itemsAmount = ViewBag.ItemsAmount;
     string className = string.Empty;
 }
 
@@ -15,9 +11,9 @@
     {
         className = "active";
     }
-    <a href="@Url.Action("Index", "Orders", new
+    <a href="@Url.Action("Index", ViewBag.Title, new
         {
-            newApplications = ViewBag.IsNewOrdersPage,
+            newApplications = ViewBag.IsNewPage,
             myOrders = ViewBag.IsMyOrdersPage,
             sort = ViewBag.Sort
         })" class="list-group-item @className">All &emsp;<span><b>@itemsAmount</b></span></a>
@@ -32,10 +28,10 @@
         {
             className = string.Empty;
         }
-        <a href="@Url.Action("Index", "Orders", new
+        <a href="@Url.Action("Index", ViewBag.Title, new
                      {
                          categoryId = item.Id,
-                         newApplications = ViewBag.IsNewOrdersPage,
+                         newApplications = ViewBag.IsNewPage,
                          myOrders = ViewBag.IsMyOrdersPage,
                          sort = ViewBag.Sort
                      })" class="list-group-item @className">@item.Name&emsp;<span><b>@item.ItemsAmount</b></span></a>
