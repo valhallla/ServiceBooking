@@ -137,7 +137,10 @@ namespace ServiceBooking.WEB.Controllers
             ViewBag.IsNewPage = newApplications;
             ViewBag.CommentIsEmpty = emptyComment;
             ViewBag.Sort = sort;
-            ViewBag.ShowContacts = _userService.FindById(User.Identity.GetUserId<int>()).OrdersBll.SelectMany(o => o.Responses).Count(o => o.UserId == id) != 0;
+            ViewBag.ShowContacts = _userService.FindById(User.Identity.GetUserId<int>())
+                .OrdersBll.SelectMany(o => o.Responses)
+                .Count(o => o.UserId == id) != 0 ||
+                User.Identity.GetUserId<int>() == id;
             ViewBag.Rating = new SelectList(new List<string>() { "☆☆☆☆☆", "★☆☆☆☆", "★★☆☆☆", "★★★☆☆", "★★★★☆", "★★★★★" });
 
             return View(performer);
@@ -167,6 +170,69 @@ namespace ServiceBooking.WEB.Controllers
             });
         }
 
+        [Authorize(Roles = "user")]
+        public ActionResult Edit(string message = "", string company = null,
+            string info = null, string phoneNumber = null)
+        {
+            if (!(bool)Session["isPerformer"] || !(bool)Session["adminStatus"])
+                return View("~/Views/Error/Forbidden.cshtml");
 
+            var allCategoriesDto = _categoryService.GetAll().ToList();
+            Mapper.Initialize(cfg => cfg.CreateMap<CategoryViewModelBLL, CategoryViewModel>());
+            var allCategories = Mapper.Map<List<CategoryViewModelBLL>, List<CategoryViewModel>>(allCategoriesDto);
+            ViewBag.Categories = allCategories;
+
+            var performerCategoriesDto =
+                allCategoriesDto.Where(c => c.Performers.Select(p => p.Id).Contains(User.Identity.GetUserId<int>())).ToList();
+            Mapper.Initialize(cfg => cfg.CreateMap<CategoryViewModelBLL, CategoryViewModel>()
+                .ForMember("ItemsAmount", opt => opt.MapFrom(c => c.Performers.Count(o => o.IsPerformer && o.AdminStatus
+                )))
+            );
+            var performerCategories = Mapper.Map<List<CategoryViewModelBLL>, List<CategoryViewModel>>(performerCategoriesDto);
+
+            var performerDto = _userService.FindById(User.Identity.GetUserId<int>());
+            Mapper.Initialize(cfg => cfg.CreateMap<ClientViewModelBLL, EditPerformerViewModel>()
+                .ForMember("Name", opt => opt.MapFrom(c => c.Surname + " " + c.Name))
+                .ForMember("Categories", opt => opt.MapFrom(c => performerCategories))
+                .ForMember("Company", opt => opt.MapFrom(c => company ?? c.Company))
+                .ForMember("PhoneNumber", opt => opt.MapFrom(c => phoneNumber ?? c.PhoneNumber))
+                .ForMember("Info", opt => opt.MapFrom(c => info ?? c.Info))
+                );
+            var performer = Mapper.Map<ClientViewModelBLL, EditPerformerViewModel>(performerDto);
+            ViewBag.Message = message;
+
+            return View("Edit", performer);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "user")]
+        public ActionResult Edit(EditPerformerViewModel model, int[] selectedCategories)
+        {
+            if (!(bool)Session["isPerformer"] || !(bool)Session["adminStatus"])
+                return View("~/Views/Error/Forbidden.cshtml");
+
+            if (!ModelState.IsValid)
+                return View(model);
+
+            if (ReferenceEquals(selectedCategories, null))
+                return RedirectToAction("Edit", new
+                {
+                    message = "At least one category is required",
+                    company = model.Company,
+                    info = model.Info,
+                    phoneNumber = model.PhoneNumber
+                });
+
+            ClientViewModelBLL client = _userService.FindById(User.Identity.GetUserId<int>());
+            Mapper.Initialize(cfg => cfg.CreateMap<EditPerformerViewModel, ClientViewModelBLL>()
+                .ForMember("Name", opt => opt.MapFrom(c => client.Name))
+                .ForMember("CategoriesBll", opt => opt.MapFrom(c => c.Categories))
+                );
+            Mapper.Map(model, client);
+            _userService.Update(client, selectedCategories);
+
+            return RedirectToAction("Details", new {id = client.Id});
+        }
     }
 }

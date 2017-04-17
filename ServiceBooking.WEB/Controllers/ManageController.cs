@@ -57,11 +57,9 @@ namespace ServiceBooking.WEB.Controllers
             ClientViewModelBLL client = Mapper.Map<IndexManageViewModel, ClientViewModelBLL>(model);
 
             var result = await _userService.ChangePassword(client);
-            
             if (result.Succeeded)
-            {
                 return RedirectToAction("Index", "Home", new { Message = ManageMessageId.ChangePasswordSuccess });
-            }
+
             AddErrors(result);
             return View(model);
         }

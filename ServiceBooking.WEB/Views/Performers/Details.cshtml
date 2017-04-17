@@ -22,10 +22,11 @@
         Since @Html.DisplayFor(model => model.RegistrationDate)
     </div>
     <div class="col-sm-2">
+        <br />
         @Html.ActionLink("Edit account information", "Edit", "Performers", new
-           {
-               id = Model.Id
-           }, new { @class = "btn btn-primary btn-lg" })
+        {
+            id = Model.Id
+        }, new {@class = "btn btn-primary btn-lg"})
     </div>
 </div>
 <hr />

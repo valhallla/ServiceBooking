@@ -1,4 +1,5 @@
-﻿@model ServiceBooking.WEB.Models.IndexManageViewModel
+﻿@using Microsoft.AspNet.Identity
+@model ServiceBooking.WEB.Models.IndexManageViewModel
 @{
     ViewBag.Title = "Manage account";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -59,6 +60,10 @@
                     @Html.ActionLink("X", "Close", "Manage", new {tryOnceAgain = false}, new { Style = "border: none;", @class = "btn btn-default close" })
                     Your request for becoming a performer has been rejected
                 </h3>
+            }
+            if (adminStatus && isPerformer)
+            {
+                @Html.ActionLink("My performer profile", "Details", "Performers", new {id = User.Identity.GetUserId<int>()}, new { @class = "btn btn-primary btn-lg" })
             }
             <br/><br/>
             @Html.ActionLink("Delete account", "DeleteAccount", "Account", null, new { @class = "btn btn-primary btn-lg" })

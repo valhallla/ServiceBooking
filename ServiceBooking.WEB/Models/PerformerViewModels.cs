@@ -51,4 +51,34 @@ namespace ServiceBooking.WEB.Models
 
         public IEnumerable<IndexCommentViewModel> Comments { get; set; }
     }
+
+    public class EditPerformerViewModel
+    {
+        public int Id { get; set; }
+
+        public string Name { get; set; }
+
+        [Required(ErrorMessage = "Company is required")]
+        [Display(Name = "Company")]
+        public string Company { get; set; }
+
+        [Required(ErrorMessage = "Phone number is required")]
+        [Display(Name = "Phone Number")]
+        [DataType(DataType.PhoneNumber)]
+        public string PhoneNumber { get; set; }
+
+        [Required(ErrorMessage = "At least one category is required")]
+        [Display(Name = "Categories")]
+        public IEnumerable<CategoryViewModel> Categories { get; set; }
+
+        [Required(ErrorMessage = "Activity information is required")]
+        [Display(Name = "Activity information")]
+        [DataType(DataType.MultilineText)]
+        public string Info { get; set; }
+
+        public EditPerformerViewModel()
+        {
+            Categories = new List<CategoryViewModel>();
+        }
+    }
 }
