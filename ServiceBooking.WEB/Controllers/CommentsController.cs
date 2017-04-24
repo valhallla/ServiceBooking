@@ -47,6 +47,7 @@ namespace ServiceBooking.WEB.Controllers
             if (ModelState.IsValid)
             {
                 OperationDetails operationDetails = _commentService.Create(commentDto);
+                _unitOfWork.Save();
                 if (!operationDetails.Succedeed)
                     ModelState.AddModelError(operationDetails.Property, operationDetails.Message);
 

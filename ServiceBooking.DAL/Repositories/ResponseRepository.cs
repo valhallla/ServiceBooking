@@ -14,39 +14,24 @@ namespace ServiceBooking.DAL.Repositories
 
         public ResponseRepository(ApplicationContext context)
         {
-            this.Db = context;
+            Db = context;
         }
 
-        public IEnumerable<Response> GetAll()
-        {
-            return Db.Responses.Include(o => o.Order);
-        }
+        public IEnumerable<Response> GetAll() => Db.Responses.Include(o => o.Order);
 
-        public Response Get(int id)
-        {
-            return Db.Responses.Find(id);
-        }
+        public Response Get(int id) => Db.Responses.Find(id);
 
-        public void Create(Response response)
-        {
-            Db.Responses.Add(response);
-            Db.SaveChanges();
-        }
+        public void Create(Response response) => Db.Responses.Add(response);
 
-        public void Update(Response response)
-        {
-            Db.Entry(response).State = EntityState.Modified;
-        }
+        public void Update(Response response) => Db.Entry(response).State = EntityState.Modified;
 
         public IEnumerable<Response> Find(Func<Response, bool> predicate)
-        {
-            return Db.Responses.Include(o => o.Order).Where(predicate).ToList();
-        }
+            => Db.Responses.Include(o => o.Order).Where(predicate).ToList();
 
         public void Delete(int id)
         {
             Response response = Db.Responses.Find(id);
-            if (response != null)
+            if (!ReferenceEquals(response, null))
                 Db.Responses.Remove(response);
         }
     }

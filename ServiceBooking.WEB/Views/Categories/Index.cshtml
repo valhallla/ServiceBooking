@@ -16,7 +16,7 @@
             newApplications = ViewBag.IsNewPage,
             myOrders = ViewBag.IsMyOrdersPage,
             sort = ViewBag.Sort
-        })" class="list-group-item @className">All &emsp;<span><b>@itemsAmount</b></span></a>
+        })" class="list-group-item @className">All &emsp;<span class="badge"><b>@itemsAmount</b></span></a>
 
     @foreach (var item in Model)
     {
@@ -34,7 +34,7 @@
                          newApplications = ViewBag.IsNewPage,
                          myOrders = ViewBag.IsMyOrdersPage,
                          sort = ViewBag.Sort
-                     })" class="list-group-item @className">@item.Name&emsp;<span><b>@item.ItemsAmount</b></span></a>
+                     })" class="list-group-item @className">@item.Name&emsp;<span class="badge"><b>@item.ItemsAmount</b></span></a>
     }
 </div>
 

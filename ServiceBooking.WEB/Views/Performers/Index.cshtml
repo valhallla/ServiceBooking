@@ -19,6 +19,12 @@
 
     IEnumerable<CategoryViewModel> categories = ViewBag.CategoriesList;
 
+    var offset = "col-sm-12";
+    if (Request.IsAuthenticated && User.IsInRole("admin") && ViewBag.IsNewPage)
+    {
+        offset = "col-sm-9";
+    }
+
     ViewBag.Title = "Performers";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
@@ -33,7 +39,7 @@
             }
             @if (Request.IsAuthenticated && User.IsInRole("user") && (bool)(Session["adminStatus"] ?? false) && (bool)(Session["isPerformer"] ?? false))
             {
-                @Html.ActionLink("Me", "Details", new { id = User.Identity.GetUserId<int>() })
+                @Html.ActionLink("Me", "Details", new { id = User.Identity.GetUserId<int>() }, new { Style = "margin-left: 20px;"})
             }
         </h2>
 
@@ -90,52 +96,65 @@
              {
                  <hr/>
                  <div class="row">
-                     <div class="col-sm-9">
-                         <b style="font-size: 20pt">
-                             @Html.ActionLink(item.Name, "Details", new {id = item.Id, categoryId = ViewBag.CurrentCategoryId, sort = performerSort})
-                             @if (item.Company != null)
+                     <div class=@offset>
+                         
+                         <div class="col-sm-2">
+                             @Html.Raw("<a class=\"img_link\" href=\"" + @Url.Action("Details", new
                              {
-                                 @Html.Display(", ")
-                                 @Html.DisplayFor(modelItem => item.Company)
+                                 id = item.Id,
+                                 categoryId = ViewBag.CurrentCategoryId,
+                                 sort = performerSort
+                             }) + "\" ><img style='width:100px; height:100px;' src=\"data:image/jpeg;base64,"
+                                       + Convert.ToBase64String(item.Image) + "\" /></a>")
+                         </div>
+                         <div class="col-sm-10">
+                             <b style="font-size: 20pt">
+                                 @Html.ActionLink(item.Name, "Details", new {id = item.Id, categoryId = ViewBag.CurrentCategoryId, sort = performerSort})
+                                 @if (item.Company != null)
+                                 {
+                                     @Html.Display(", ")
+                                     @Html.DisplayFor(modelItem => item.Company)
+                                 }
+                             </b><br/>
+                             @if (!newApplications)
+                             {
+                                 <p>since @Html.DisplayFor(modelItem => item.RegistrationDate)</p>
                              }
-                         </b><br/>
-                         @if (!newApplications)
-                         {
-                             <p>since @Html.DisplayFor(modelItem => item.RegistrationDate)</p>
-                         }
-                         @{
-                             ViewBag.StarPath = @"~/Content/star_white.png";
-                             ViewBag.EmptystarPath = @"~/Content/emptystar_white.png";
-                         }
-                         @Html.Partial("Rating", item.Rating ?? 0)
+                             @{
+                                 ViewBag.StarPath = @"~/Content/star_white.png";
+                                 ViewBag.EmptystarPath = @"~/Content/emptystar_white.png";
+                             }
+                             @Html.Partial("Rating", item.Rating ?? 0)
 
-                         &emsp; <b>@Html.DisplayFor(modelItem => item.Category)</b>
+                             &emsp; <b>@Html.DisplayFor(modelItem => item.Category)</b>
+                         </div>
                      </div>
-                     <div class="col-sm-3">
+
                          @if (Request.IsAuthenticated && User.IsInRole("admin") && ViewBag.IsNewPage)
                          {
-                             <p>
-                                 @if (Model.Count() == 1)
-                                 {
-                                     ViewBag.CurrentCategoryId = null;
-                                 }
-                                 @Html.ActionLink("Confirm", "Confirm", "Performers", new
-                                 {
-                                     id = item.Id,
-                                     currentCategoryId = ViewBag.CurrentCategoryId,
-                                     performersSort = performerSort
-                                 }, new {@class = "btn btn-primary btn-lg"})
-                                 @Html.ActionLink("Reject", "Reject", "Performers", new
-                                 {
-                                     id = item.Id,
-                                     currentCategoryId = ViewBag.CurrentCategoryId,
-                                     performersSort = performerSort
-                                 }, new {@class = "btn btn-primary btn-lg"})
-                             </p>
-                         }
-                     </div>
-                 </div>
-             }
+                            <div class="col-sm-3">
+                                <p>
+                                    @if (Model.Count() == 1)
+                                    {
+                                        ViewBag.CurrentCategoryId = null;
+                                    }
+                                    @Html.ActionLink("Confirm", "Confirm", "Performers", new
+                                    {
+                                        id = item.Id,
+                                        currentCategoryId = ViewBag.CurrentCategoryId,
+                                        performersSort = performerSort
+                                    }, new { @class = "btn btn-primary btn-lg" })
+                                    @Html.ActionLink("Reject", "Reject", "Performers", new
+                                    {
+                                        id = item.Id,
+                                        currentCategoryId = ViewBag.CurrentCategoryId,
+                                        performersSort = performerSort
+                                    }, new { @class = "btn btn-primary btn-lg" })
+                                </p>
+                            </div>
+                        }
+                    </div>
+               }
         }
     </div>
     <div class="col-sm-3">

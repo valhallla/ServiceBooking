@@ -75,6 +75,7 @@
     <Compile Include="ICategoryService.cs" />
     <Compile Include="ICommentService.cs" />
     <Compile Include="IOrderService.cs" />
+    <Compile Include="IPictureService.cs" />
     <Compile Include="IResponseService.cs" />
     <Compile Include="IStatusService.cs" />
     <Compile Include="IUserService.cs" />

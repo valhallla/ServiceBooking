@@ -17,59 +17,33 @@ namespace ServiceBooking.DAL.Repositories
             Db = db;
         }
 
-        public void Create(ApplicationUser item)
-        {
-            Db.Users.Add(item);
-        }
+        public IEnumerable<ApplicationUser> GetAll() 
+            => Db.Users.Include(u => u.Categories).Include(o => o.Comments).Include(o => o.Orders);
 
-        public void Delete(ApplicationUser item)
-        {
-            Db.Users.Remove(item);
-            Db.SaveChanges();
-        }
+        public ApplicationUser Get(int id) => Db.Users.Find(id);
 
-        public void Dispose()
-        {
-            Db.Dispose();
-        }
+        public void Create(ApplicationUser item) => Db.Users.Add(item);
 
-        public IEnumerable<ApplicationUser> GetAll()
-        {
-            return Db.Users.Include(u => u.Categories).Include(o => o.Comments).Include(o => o.Orders);
-        }
+        public IEnumerable<ApplicationUser> Find(Func<ApplicationUser, bool> predicate) 
+            => Db.Users.Where(predicate).ToList();
 
-        public ApplicationUser Get(int id)
-        {
-            return Db.Users.Find(id);
-        }
-
-        public IEnumerable<ApplicationUser> Find(Func<ApplicationUser, bool> predicate)
-        {
-            return Db.Users.Where(predicate).ToList();
-        }
-
-        public void Update(ApplicationUser item)
-        {
-            Db.Entry(item).State = EntityState.Modified;
-            Db.SaveChanges();
-        }
+        public void Update(ApplicationUser item) => Db.Entry(item).State = EntityState.Modified;
 
         public void Delete(int id)
         {
             ApplicationUser client = Db.Users.Find(id);
-            if (client != null)
+            if (!ReferenceEquals(client, null))
                 Db.Users.Remove(client);
-            Db.SaveChanges();
         }
 
         public void Update(int id, int[] selectedItems)
         {
             var user = Get(id);
 
-            if (user.Categories == null)
+            if (!ReferenceEquals(user.Categories, null))
                 user.Categories = new List<Category>();
 
-            if (selectedItems == null)
+            if (ReferenceEquals(selectedItems, null))
             {
                 foreach (var category in Db.Categories)
                 {

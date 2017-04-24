@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using ServiceBooking.DAL.Entities;
 using ServiceBooking.DAL.EF;
 using ServiceBooking.DAL.Interfaces;
@@ -16,39 +14,26 @@ namespace ServiceBooking.DAL.Repositories
 
         public CategoryRepository(ApplicationContext context)
         {
-            this.Db = context;
+            Db = context;
         }
 
-        public IEnumerable<Category> GetAll()
-        {
-            return Db.Categories.Include(c => c.Orders).Include(c => c.ApplicationUsers);
-        }
+        public IEnumerable<Category> GetAll() 
+            => Db.Categories.Include(c => c.Orders).Include(c => c.ApplicationUsers);
 
-        public Category Get(int id)
-        {
-            return Db.Categories.Find(id);
-        }
+        public Category Get(int id) => Db.Categories.Find(id);
 
-        public void Create(Category book)
-        {
-            Db.Categories.Add(book);
-        }
+        public void Create(Category category) => Db.Categories.Add(category);
 
-        public void Update(Category book)
-        {
-            Db.Entry(book).State = EntityState.Modified;
-        }
+        public void Update(Category category) => Db.Entry(category).State = EntityState.Modified;
 
         public IEnumerable<Category> Find(Func<Category, bool> predicate)
-        {
-            return Db.Categories.Where(predicate).ToList();
-        }
+            => Db.Categories.Where(predicate).ToList();
 
         public void Delete(int id)
         {
-            Category book = Db.Categories.Find(id);
-            if (book != null)
-                Db.Categories.Remove(book);
+            Category category = Db.Categories.Find(id);
+            if (!ReferenceEquals(category, null))
+                Db.Categories.Remove(category);
         }
     }
 }

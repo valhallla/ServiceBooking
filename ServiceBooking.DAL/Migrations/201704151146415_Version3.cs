@@ -14,10 +14,11 @@ namespace ServiceBooking.DAL.Migrations
             Sql(@"SET IDENTITY_INSERT dbo.Categories OFF");
 
             Sql(@"SET IDENTITY_INSERT dbo.Status ON");
-            Sql(@"INSERT INTO dbo.Status (Id, Value) VALUES ('1', 'Active');");
-            Sql(@"INSERT INTO dbo.Status (Id, Value) VALUES ('2', 'Confirmed');");
-            Sql(@"INSERT INTO dbo.Status (Id, Value) VALUES ('3', 'Completed');");
-            Sql(@"INSERT INTO dbo.Status (Id, Value) VALUES ('4', 'Outstanding');");
+            Sql(@"INSERT INTO dbo.Status (Id, Value) VALUES ('1', 'Pending confirmation');");
+            Sql(@"INSERT INTO dbo.Status (Id, Value) VALUES ('2', 'Active');");
+            Sql(@"INSERT INTO dbo.Status (Id, Value) VALUES ('3', 'Confirmed');");
+            Sql(@"INSERT INTO dbo.Status (Id, Value) VALUES ('4', 'Completed');");
+            Sql(@"INSERT INTO dbo.Status (Id, Value) VALUES ('5', 'Outstanding');");
             Sql(@"SET IDENTITY_INSERT dbo.Status OFF");
 
         }

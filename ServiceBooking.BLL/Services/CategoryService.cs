@@ -26,11 +26,11 @@ namespace ServiceBooking.BLL.Services
             return Mapper.Map<IEnumerable<Category>, List<CategoryViewModelBLL>>(_categoryRepository.GetAll());
         }
 
-        public CategoryViewModelBLL FindById(int id)
+        public CategoryViewModelBLL FindById(int id) 
         {
             Category category = _categoryRepository.Get(id);
 
-            if (category != null)
+            if (!ReferenceEquals(category, null))
                 return new CategoryViewModelBLL { Id = category.Id, Name = category.Name};
 
             return null;
@@ -40,7 +40,7 @@ namespace ServiceBooking.BLL.Services
         {
             Category category = _categoryRepository.GetAll().FirstOrDefault(c => c.Name.Equals(name));
 
-            if (category != null)
+            if (!ReferenceEquals(category, null))
                 return new CategoryViewModelBLL { Id = category.Id, Name = category.Name };
 
             return null;

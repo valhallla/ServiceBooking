@@ -5,23 +5,9 @@ using ServiceBooking.DAL.Identity;
 
 namespace ServiceBooking.DAL.EF
 {
-    public class ApplicationContext : IdentityDbContext<ApplicationUser, CustomRole, int, CustomUserLogin, CustomUserRole, CustomUserClaim>
+    public class ApplicationContext : IdentityDbContext<ApplicationUser, 
+        CustomRole, int, CustomUserLogin, CustomUserRole, CustomUserClaim>
     {
-        //static ApplicationContext()
-        //{
-        //    Database.SetInitializer(new DropCreateDatabaseIfModelChanges<ApplicationContext>());
-        //}
-
-        //public void FixEfProviderServicesProblem()
-        //{
-        //    //The Entity Framework provider type 'System.Data.Entity.SqlServer.SqlProviderServices, EntityFramework.SqlServer'
-        //    //for the 'System.Data.SqlClient' ADO.NET provider could not be loaded.
-        //    //Make sure the provider assembly is available to the running application.
-        //    //See http://go.microsoft.com/fwlink/?LinkId=260882 for more information.
-
-        //    var instance = System.Data.Entity.SqlServer.SqlProviderServices.Instance;
-        //}
-
         public ApplicationContext() { }
 
         public ApplicationContext(string conectionString) : base(conectionString) { }
@@ -31,14 +17,6 @@ namespace ServiceBooking.DAL.EF
         public DbSet<Response> Responses { get; set; }
         public DbSet<Category> Categories { get; set; }
         public DbSet<Status> Status { get; set; }
-
-        //protected override void OnModelCreating(DbModelBuilder modelBuilder)
-        //{
-        //    modelBuilder.Entity<Category>().HasMany(c => c.ApplicationUsers)
-        //        .WithMany(u => u.Categories)
-        //        .Map(t => t.MapLeftKey("CategoryId")
-        //        .MapRightKey("ApplicationUserId")
-        //        .ToTable("CategoryUser"));
-        //}
+        public DbSet<Picture> Pictures { get; set; }
     }
 }

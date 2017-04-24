@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using ServiceBooking.DAL.EF;
 using ServiceBooking.DAL.Entities;
 using ServiceBooking.DAL.Interfaces;
@@ -16,39 +14,24 @@ namespace ServiceBooking.DAL.Repositories
 
         public StatusRepository(ApplicationContext context)
         {
-            this.Db = context;
+            Db = context;
         }
 
-        public IEnumerable<Status> GetAll()
-        {
-            return Db.Status;
-        }
+        public IEnumerable<Status> GetAll() => Db.Status;
 
-        public Status Get(int id)
-        {
-            return Db.Status.Find(id);
-        }
+        public Status Get(int id) => Db.Status.Find(id);
 
-        public void Create(Status book)
-        {
-            Db.Status.Add(book);
-        }
+        public void Create(Status status) => Db.Status.Add(status);
 
-        public void Update(Status book)
-        {
-            Db.Entry(book).State = EntityState.Modified;
-        }
+        public void Update(Status status) => Db.Entry(status).State = EntityState.Modified;
 
-        public IEnumerable<Status> Find(Func<Status, bool> predicate)
-        {
-            return Db.Status.Where(predicate).ToList();
-        }
+        public IEnumerable<Status> Find(Func<Status, bool> predicate) => Db.Status.Where(predicate).ToList();
 
         public void Delete(int id)
         {
-            Status book = Db.Status.Find(id);
-            if (book != null)
-                Db.Status.Remove(book);
+            Status status = Db.Status.Find(id);
+            if (!ReferenceEquals(status, null))
+                Db.Status.Remove(status);
         }
     }
 }

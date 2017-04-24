@@ -20,6 +20,8 @@ namespace ServiceBooking.WEB.Models
         public string PerformerName { get; set; }
 
         public int PerformerRating { get; set; }
+
+        public byte[] Picture { get; set; }
     }
 
     public class CreateResponseViewModel
@@ -29,5 +31,7 @@ namespace ServiceBooking.WEB.Models
         public string Text { get; set; }
 
         public int OrderId { get; set; }
+
+        public byte[] Picture { get; set; }
     }
 }

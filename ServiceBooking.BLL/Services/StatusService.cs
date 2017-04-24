@@ -1,13 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using AutoMapper;
 using Ninject;
 using ServiceBooking.BLL.DTO;
 using ServiceBooking.BLL.Interfaces;
 using ServiceBooking.DAL.Entities;
 using ServiceBooking.DAL.Interfaces;
-using AutoMapper;
 
-namespace ServiceBooking.BLL
+namespace ServiceBooking.BLL.Services
 {
     public class StatusService : IStatusService
     {
@@ -23,7 +23,7 @@ namespace ServiceBooking.BLL
         {
             Status status = _statusRepository.Get(id);
 
-            if (status != null)
+            if (!ReferenceEquals(status, null))
                 return new StatusViewModelBLL { Id = status.Id, Value = status.Value };
 
             return null;

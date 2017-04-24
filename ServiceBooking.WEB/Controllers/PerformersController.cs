@@ -1,14 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 using ServiceBooking.BLL.Interfaces;
 using ServiceBooking.DAL.Interfaces;
-using ServiceBooking.Util;
 using AutoMapper;
 using Microsoft.AspNet.Identity;
-using PagedList.Mvc;
 using PagedList;
 using ServiceBooking.BLL.DTO;
 using ServiceBooking.WEB.Models;
@@ -20,21 +17,24 @@ namespace ServiceBooking.WEB.Controllers
         private static ICategoryService _categoryService;
         private static ICommentService _commentService;
         private static IUserService _userService;
+        private static IPictureService _pictureService;
         private static IUnitOfWork _unitOfWork;
 
-        public PerformersController() : this(_categoryService, 
-            _commentService, _userService, _unitOfWork) { }
+        private const string DefaultImageName = @"~/Content/default-user.png";
 
-        public PerformersController(ICategoryService categoryService, 
-            ICommentService commentService, IUserService userService, IUnitOfWork unitOfWork)
+        public PerformersController() : this(_categoryService, 
+            _commentService, _userService, _pictureService, _unitOfWork) { }
+
+        public PerformersController(ICategoryService categoryService, ICommentService commentService, 
+            IUserService userService, IPictureService pictureService, IUnitOfWork unitOfWork)
         {
             _categoryService = categoryService;
             _commentService = commentService;
             _userService = userService;
+            _pictureService = pictureService;
             _unitOfWork = unitOfWork;
         }
 
-        // GET: Performers
         public ActionResult Index(int? page, int? categoryId, string searchName,
             bool newApplications = false, PerformerSorts sort = PerformerSorts.New)
         {
@@ -88,9 +88,16 @@ namespace ServiceBooking.WEB.Controllers
             ViewBag.Sort = sort;
             ViewBag.ItemsAmount = perfomersDto.Count();
 
+            
+
             Mapper.Initialize(cfg => cfg.CreateMap<ClientViewModelBLL, IndexPerformerViewModel>()
                 .ForMember("Name", opt => opt.MapFrom(c => c.Surname + " " + c.Name))
-                .ForMember("Category", opt => opt.MapFrom(c => c.CategoriesBll.First().Name + " + " + (c.CategoriesBll.Count - 1).ToString() + " more")));
+                .ForMember("Category", opt => opt.MapFrom(c => c.CategoriesBll.First().Name + 
+                    (c.CategoriesBll.Count > 1 ? " + " + (c.CategoriesBll.Count - 1).ToString() + " more" : string.Empty)))
+                .ForMember("Image", opt => opt.MapFrom(c => c.PictureId == null
+                    ? System.IO.File.ReadAllBytes(Server.MapPath(DefaultImageName))
+                    : _pictureService.FindById(c.PictureId.Value).Image))
+            );
             var performers = Mapper.Map<IEnumerable<ClientViewModelBLL>, List<IndexPerformerViewModel>>(perfomersDto);
 
             var performerNames = performers.Select(o => o.Name).ToArray();
@@ -102,8 +109,8 @@ namespace ServiceBooking.WEB.Controllers
             return View(performers.ToPagedList(pageNumber, pageSize));
         }
 
-        // GET: Performer/Details/5
-        public ActionResult Details(int id, int? categoryId, bool? newApplications, PerformerSorts sort = PerformerSorts.New, bool emptyComment = false)
+        public ActionResult Details(int id, int? categoryId, bool? newApplications, 
+            PerformerSorts sort = PerformerSorts.New, bool emptyComment = false)
         {
             var commentsDto = _commentService.GetAllForPerformer(id);
             Mapper.Initialize(cfg => cfg.CreateMap<CommentViewModelBLL, IndexCommentViewModel>()
@@ -130,17 +137,20 @@ namespace ServiceBooking.WEB.Controllers
                 .ForMember("Comments", opt => opt.MapFrom(c => comments))
                 .ForMember("Name", opt => opt.MapFrom(c => c.Surname + " " + c.Name))
                 .ForMember("CustomersId", opt => opt.MapFrom(c => c.CommentsBll.Select(m => m.CustomerId)))
-                );
+                .ForMember("Image", opt => opt.MapFrom(c => c.PictureId == null 
+                    ? System.IO.File.ReadAllBytes(Server.MapPath(DefaultImageName))
+                    : _pictureService.FindById(c.PictureId.Value).Image))
+            );
             DetailsPerformerViewModel performer = Mapper.Map<ClientViewModelBLL, DetailsPerformerViewModel>(performerDto);
 
             ViewBag.CurrentCategoryId = categoryId;
             ViewBag.IsNewPage = newApplications;
             ViewBag.CommentIsEmpty = emptyComment;
             ViewBag.Sort = sort;
-            ViewBag.ShowContacts = _userService.FindById(User.Identity.GetUserId<int>())
+            ViewBag.ShowContacts = Request.IsAuthenticated && (_userService.FindById(User.Identity.GetUserId<int>())
                 .OrdersBll.SelectMany(o => o.Responses)
                 .Count(o => o.UserId == id) != 0 ||
-                User.Identity.GetUserId<int>() == id;
+                User.Identity.GetUserId<int>() == id);
             ViewBag.Rating = new SelectList(new List<string>() { "☆☆☆☆☆", "★☆☆☆☆", "★★☆☆☆", "★★★☆☆", "★★★★☆", "★★★★★" });
 
             return View(performer);
@@ -150,6 +160,7 @@ namespace ServiceBooking.WEB.Controllers
         public ActionResult Confirm(int id, int? currentCategoryId, PerformerSorts performersSort)
         {
             _userService.ConfirmPerformer(id);
+            _unitOfWork.Save();
             return RedirectToAction("Index", new
             {
                 newApplications = _userService.GetAll().Count(u => !u.AdminStatus && u.IsPerformer) > 0,
@@ -161,7 +172,10 @@ namespace ServiceBooking.WEB.Controllers
         [Authorize(Roles = "admin")]
         public ActionResult Reject(int id, int? currentCategoryId, PerformerSorts performersSort)
         {
+            var pictureId = _userService.FindById(id).PictureId;
             _userService.RejectPerformer(id);
+            _pictureService.Delete(pictureId);
+            _unitOfWork.Save();
             return RedirectToAction("Index", new
             {
                 newApplications = _userService.GetAll().Count(u => !u.AdminStatus && u.IsPerformer) > 0,
@@ -197,9 +211,16 @@ namespace ServiceBooking.WEB.Controllers
                 .ForMember("Company", opt => opt.MapFrom(c => company ?? c.Company))
                 .ForMember("PhoneNumber", opt => opt.MapFrom(c => phoneNumber ?? c.PhoneNumber))
                 .ForMember("Info", opt => opt.MapFrom(c => info ?? c.Info))
-                );
+                .ForMember("Image", opt => opt.MapFrom(c => c.PictureId == null
+                    ? System.IO.File.ReadAllBytes(Server.MapPath(DefaultImageName))
+                    : _pictureService.FindById(c.PictureId.Value).Image))
+            );
             var performer = Mapper.Map<ClientViewModelBLL, EditPerformerViewModel>(performerDto);
             ViewBag.Message = message;
+            ViewBag.IsDefault = performerDto.PictureId == null;
+            ViewBag.DefaultPath = $"data: image/png; base64, {Convert.ToBase64String(System.IO.File.ReadAllBytes(Server.MapPath(DefaultImageName)))}";
+            if (!ReferenceEquals(performerDto.PictureId, null))
+                ViewBag.CloseButtonStyle = string.Empty;
 
             return View("Edit", performer);
         }
@@ -231,6 +252,7 @@ namespace ServiceBooking.WEB.Controllers
                 );
             Mapper.Map(model, client);
             _userService.Update(client, selectedCategories);
+            _unitOfWork.Save();
 
             return RedirectToAction("Details", new {id = client.Id});
         }

@@ -30,7 +30,6 @@ namespace ServiceBooking.WEB.Controllers
             _unitOfWork = unitOfWork;
         }
 
-        // POST: Responses/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "user")]
@@ -46,6 +45,7 @@ namespace ServiceBooking.WEB.Controllers
             if (ModelState.IsValid)
             {
                 OperationDetails operationDetails = _responseService.Create(responseDto);
+                _unitOfWork.Save();
                 if (!operationDetails.Succedeed)
                     ModelState.AddModelError(operationDetails.Property, operationDetails.Message);
             }

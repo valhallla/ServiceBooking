@@ -11,24 +11,19 @@ namespace ServiceBooking.DAL.Repositories
         private readonly ApplicationContext _db;
 
         [Inject]
-        public UnitOfWork(string connectionString)
+        public UnitOfWork(ApplicationContext context)
         {
-            _db = new ApplicationContext(connectionString);
+            _db = context;
         }
         
-        public void Save()
-        {
-            _db.SaveChangesAsync();
-        }
+        public void Save() => _db.SaveChanges();
 
         public virtual void Dispose(bool disposing)
         {
             if (!_disposed)
             {
                 if (disposing)
-                {
                     _db.Dispose();
-                }
                 _disposed = true;
             }
         }

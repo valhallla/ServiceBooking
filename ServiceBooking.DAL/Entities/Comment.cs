@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Web;
 
 namespace ServiceBooking.DAL.Entities
 {
@@ -14,9 +11,9 @@ namespace ServiceBooking.DAL.Entities
         [Required]
         public string Text { get; set; }
 
-        [Required]
         public int Rating { get; set; }
 
+        [Required]
         [DataType(DataType.DateTime), DisplayFormat(DataFormatString = "{0:dd.MM.yyyy}", ApplyFormatInEditMode = true)]
         public DateTime Date { get; set; }
 

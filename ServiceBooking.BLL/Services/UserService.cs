@@ -35,7 +35,7 @@ namespace ServiceBooking.BLL.Services
             RoleManager = new ApplicationRoleRepository(new RoleStore<ApplicationRole>(db));
 
             var currentUser = _clientRepository.Get(HttpContext.Current.User.Identity.GetUserId<int>());
-            if (currentUser != null)
+            if (!ReferenceEquals(currentUser, null))
             {
                 HttpContext.Current.Session["isPerformer"] = currentUser.IsPerformer;
                 HttpContext.Current.Session["adminStatus"] = currentUser.AdminStatus;
@@ -45,7 +45,7 @@ namespace ServiceBooking.BLL.Services
         public async Task<OperationDetails> Create(ClientViewModelBLL userDto)
         {
             ApplicationUser user = await UserManager.FindByEmailAsync(userDto.Email);
-            if (user == null)
+            if (ReferenceEquals(user, null))
             {
                 Mapper.Initialize(cfg => cfg.CreateMap<ClientViewModelBLL, ApplicationUser>());
                 user = Mapper.Map<ClientViewModelBLL, ApplicationUser>(userDto);
@@ -67,7 +67,7 @@ namespace ServiceBooking.BLL.Services
             ClaimsIdentity claim = null;
             ApplicationUser user = await UserManager.FindByEmailAsync(userDto.Email);
 
-            if (user != null)
+            if (!ReferenceEquals(user, null))
             {
                 if (user.IsPasswordClear && user.PasswordHash.Equals(userDto.Password)) ;
                 else if (!user.IsPasswordClear)
@@ -75,7 +75,7 @@ namespace ServiceBooking.BLL.Services
                 else user = null;
             }
 
-            if (user != null)
+            if (!ReferenceEquals(user, null))
             {
                 claim = await UserManager.CreateIdentityAsync(user,
                     DefaultAuthenticationTypes.ApplicationCookie);
@@ -93,7 +93,22 @@ namespace ServiceBooking.BLL.Services
         public ClientViewModelBLL FindById(int id)
         {
             ApplicationUser user = UserManager.FindById(id);
-            if (user != null)
+            if (!ReferenceEquals(user, null))
+            {
+                Mapper.Initialize(cfg => cfg.CreateMap<ApplicationUser, ClientViewModelBLL>()
+                    .ForMember("OrdersBll", opt => opt.MapFrom(c => c.Orders))
+                    .ForMember("CommentsBll", opt => opt.MapFrom(c => c.Comments))
+                    .ForMember("CategoriesBll", opt => opt.MapFrom(c => c.Categories))
+                );
+                return Mapper.Map<ApplicationUser, ClientViewModelBLL>(user);
+            }
+            return null;
+        }
+
+        public ClientViewModelBLL FindByUserName(string name)
+        {
+            ApplicationUser user = UserManager.FindByName(name);
+            if (!ReferenceEquals(user, null))
             {
                 Mapper.Initialize(cfg => cfg.CreateMap<ApplicationUser, ClientViewModelBLL>()
                     .ForMember("OrdersBll", opt => opt.MapFrom(c => c.Orders))
@@ -118,7 +133,7 @@ namespace ServiceBooking.BLL.Services
         public OperationDetails Update(ClientViewModelBLL userDto)
         {
             ApplicationUser user = _clientRepository.Get(userDto.Id);
-            if (user != null)
+            if (!ReferenceEquals(user, null))
             {
                 Mapper.Initialize(cfg => cfg.CreateMap<ClientViewModelBLL, ApplicationUser>()
                     .IgnoreAllSourcePropertiesWithAnInaccessibleSetter()
@@ -143,7 +158,7 @@ namespace ServiceBooking.BLL.Services
         public async Task<OperationDetails> DeleteAccount(ClientViewModelBLL userDto)
         {
             var user = await UserManager.FindAsync(userDto.Email, userDto.Password);
-            if (user != null)
+            if (!ReferenceEquals(user, null))
             {
                 _clientRepository.Delete(user.Id);
                 return new OperationDetails(true, "Deleting account succeeded", string.Empty);
@@ -154,7 +169,7 @@ namespace ServiceBooking.BLL.Services
         public OperationDetails ConfirmPerformer(int id)
         {
             ApplicationUser user = _clientRepository.Get(id);
-            if (user != null)
+            if (!ReferenceEquals(user, null))
             {
                 user.AdminStatus = true;
                 user.RegistrationDate = DateTime.Now;
@@ -171,10 +186,14 @@ namespace ServiceBooking.BLL.Services
         public OperationDetails RejectPerformer(int id)
         {
             ApplicationUser user = _clientRepository.Get(id);
-            if (user != null)
+            if (!ReferenceEquals(user, null))
             {
                 user.AdminStatus = true;
                 user.IsPerformer = false;
+                user.PictureId = null;
+                user.Company = null;
+                user.Info = null;
+                user.PhoneNumber = null;
                 (_clientRepository as IManyToManyResolver).Update(user.Id, null);
 
                 HttpContext.Current.Session["adminStatus"] = true;

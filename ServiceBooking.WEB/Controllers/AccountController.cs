@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using Microsoft.Owin.Security;
@@ -17,23 +18,28 @@ namespace ServiceBooking.WEB.Controllers
     public class AccountController : Controller
     {
         private static IUserService _userService;
+        private static IPictureService _pictureService;
+        private static IResponseService _responseService;
+        private static IOrderService _orderService;
+        private static ICommentService _commentService;
         private static IUnitOfWork _unitOfWork;
 
-        public AccountController() : this(_userService, _unitOfWork) { }
+        public AccountController() : this(_userService, _pictureService, 
+            _responseService, _orderService, _commentService, _unitOfWork) { }
 
-        public AccountController(IUserService service, IUnitOfWork unitOfWork) 
+        public AccountController(IUserService userService, IPictureService pictureService, 
+            IResponseService responseService, IOrderService orderService, 
+            ICommentService commentService, IUnitOfWork unitOfWork) 
         {
-            _userService = service;
+            _userService = userService;
+            _pictureService = pictureService;
+            _responseService = responseService;
+            _orderService = orderService;
+            _commentService = commentService;
             _unitOfWork = unitOfWork;
         }
 
-        private IAuthenticationManager AuthenticationManager
-        {
-            get
-            {
-                return HttpContext.GetOwinContext().Authentication;
-            }
-        }
+        private IAuthenticationManager AuthenticationManager => HttpContext.GetOwinContext().Authentication;
 
         public ActionResult Login()
         {
@@ -96,6 +102,7 @@ namespace ServiceBooking.WEB.Controllers
                 ClientViewModelBLL userViewModel = Mapper.Map<RegisterViewModel, ClientViewModelBLL>(model);
 
                 OperationDetails operationDetails = await _userService.Create(userViewModel);
+                _unitOfWork.Save();
                 if (operationDetails.Succedeed)
                 {
                     //HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>(
@@ -125,10 +132,41 @@ namespace ServiceBooking.WEB.Controllers
         {
             if (ModelState.IsValid)
             {
-                ClientViewModelBLL user = new ClientViewModelBLL {Password = model.Password, Email = User.Identity.Name};
-                var operationDetails = await _userService.DeleteAccount(user);
+                var user = _userService.FindById(User.Identity.GetUserId<int>());
+
+                var picture = _userService.FindById(user.Id).PictureId;
+                if (picture.HasValue)
+                    _pictureService.Delete(picture.Value);
+
+                var ordersId = _orderService.GetAll().Where(o => o.UserId == user.Id).Select(o => o.Id).ToList();
+                if (ordersId.Any())
+                {
+                    var responses = _responseService.GetAll()
+                        .Select(r => r.OrderId.Value)
+                        .Where(r => ordersId.Contains(r)).ToList();
+                    if (responses.Any())
+                    {
+                        foreach (var response in responses)
+                        {
+                            _responseService.Delete(response);
+                        }
+                    }
+                }
+
+                var comments = _commentService.GetAll().Where(c => c.CustomerId == user.Id).ToList();
+                if (comments.Any())
+                {
+                    foreach (var comment in comments)
+                    {
+                        _commentService.Delete(comment.Id);
+                    }
+                }
+
+                ClientViewModelBLL userDto = new ClientViewModelBLL {Password = model.Password, Email = User.Identity.Name};
+                var operationDetails = await _userService.DeleteAccount(userDto);
                 if (operationDetails.Succedeed)
                 {
+                    _unitOfWork.Save();
                     LogOff();
                     return RedirectToAction("Index", "Home");
                 }
@@ -166,6 +204,7 @@ namespace ServiceBooking.WEB.Controllers
         public ActionResult LogOff()
         {
             AuthenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
+            Session["adminStatus"] = Session["isPerformer"] = false;
             return RedirectToAction("Index", "Home");
         }
     }

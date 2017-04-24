@@ -44,6 +44,7 @@
     <Compile Include="DTO\ClientViewModelBLL.cs" />
     <Compile Include="DTO\CommentViewModelBLL.cs" />
     <Compile Include="DTO\OrderViewModelBLL.cs" />
+    <Compile Include="DTO\PictureViewModelBLL.cs" />
     <Compile Include="DTO\ResponseViewModelBLL.cs" />
     <Compile Include="DTO\StatusViewModelBLL.cs" />
     <Compile Include="Infrastructure\OperationDetails.cs" />

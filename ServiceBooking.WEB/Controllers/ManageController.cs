@@ -1,16 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
-using Microsoft.Owin.Security;
 using ServiceBooking.BLL.DTO;
 using ServiceBooking.BLL.Interfaces;
 using ServiceBooking.DAL.Interfaces;
 using ServiceBooking.WEB.Models;
 using AutoMapper;
+using ServiceBooking.DAL.UnitOfWork.DTO;
 
 namespace ServiceBooking.WEB.Controllers
 {
@@ -19,28 +20,28 @@ namespace ServiceBooking.WEB.Controllers
     {
         private static IUserService _userService;
         private static ICategoryService _categoryService;
+        private static IPictureService _pictureService;
         private static IUnitOfWork _unitOfWork;
 
-        public ManageController() : this(_userService, _categoryService, _unitOfWork) { }
+        private const string DefaultImageName = @"~/Content/default-user.png";
+
+        public ManageController() : this(_userService, _categoryService, _pictureService, _unitOfWork) { }
 
         public ManageController(IUserService service, ICategoryService 
-            categoryService, IUnitOfWork unitOfWork)
+            categoryService, IPictureService pictureService, IUnitOfWork unitOfWork)
         {
             _userService = service;
             _categoryService = categoryService;
+            _pictureService = pictureService;
             _unitOfWork = unitOfWork;
         }
 
-        //
-        // GET: /Manage/Index
         [Authorize(Roles = "user")]
         public ActionResult Index()
         {
             return View("Index");
         }
 
-        //
-        // POST: /Manage/ChangePassword
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "user")]
@@ -71,18 +72,16 @@ namespace ServiceBooking.WEB.Controllers
             if ((bool)Session["isPerformer"] && (bool)Session["adminStatus"])
                 return View("~/Views/Error/Forbidden.cshtml");
 
-            var categoriesDto = _categoryService.GetAll().ToList();
-            Mapper.Initialize(cfg => cfg.CreateMap<CategoryViewModelBLL, CategoryViewModel>());
-            var categories = Mapper.Map<List<CategoryViewModelBLL>, List<CategoryViewModel>>(categoriesDto);
-            ViewBag.Categories = categories;
-
+           GetCategoriesList();
             var model = new BecomePerformerViewModel
             {
                 Company = company,
                 Info = info,
                 PhoneNumber = phoneNumber
             };
-            ViewBag.Message = message;
+
+            ViewBag.DefaultPath =
+                $"data: image/png; base64, {Convert.ToBase64String(System.IO.File.ReadAllBytes(Server.MapPath(DefaultImageName)))}";
 
             return View("BecomePerformer", model);
         }
@@ -90,7 +89,7 @@ namespace ServiceBooking.WEB.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "user")]
-        public ActionResult BecomePerformer(BecomePerformerViewModel model, int[] selectedCategories)
+        public ActionResult BecomePerformer(BecomePerformerViewModel model, int[] selectedCategories, HttpPostedFileBase loadImage)
         {
             if ((bool)Session["isPerformer"] && (bool)Session["adminStatus"])
                 return View("~/Views/Error/Forbidden.cshtml");
@@ -99,13 +98,25 @@ namespace ServiceBooking.WEB.Controllers
                 return View(model);
 
             if (selectedCategories == null)
-                return RedirectToAction("BecomePerformer", new
+            {
+                ModelState.AddModelError("", "At least one category is required");
+                GetCategoriesList();
+                return View(model);
+            }
+
+            PictureViewModelBLL picture = null;
+            if (!ReferenceEquals(loadImage, null))
+            {
+                byte[] image;
+                using (var binaryReader = new BinaryReader(loadImage.InputStream))
                 {
-                    message = "At least one category is required",
-                    company = model.Company,
-                    info = model.Info,
-                    phoneNumber = model.PhoneNumber
-                });
+                    image = binaryReader.ReadBytes(loadImage.ContentLength);
+                }
+                picture = new PictureViewModelBLL { Image = image };
+
+                _pictureService.Create(image);
+                _unitOfWork.Save();
+            }
 
             ClientViewModelBLL client = _userService.FindById(User.Identity.GetUserId<int>());
             Mapper.Initialize(cfg => cfg.CreateMap<BecomePerformerViewModel, ClientViewModelBLL>()
@@ -113,12 +124,13 @@ namespace ServiceBooking.WEB.Controllers
                 .ForMember("IsPerformer", opt => opt.MapFrom(c => true))
                 .ForMember("AdminStatus", opt => opt.MapFrom(c => false))
                 .ForMember("Rating", opt => opt.MapFrom(c => 0))
+                .ForMember("PictureId", opt => opt.MapFrom(c => _pictureService.FindByBytes(picture.Image).Value))
                 );
             Mapper.Map(model, client);
             _userService.Update(client, selectedCategories);
+            _unitOfWork.Save();
 
-            return RedirectToAction("Index");
-            
+            return RedirectToAction("Index");    
         }
 
         [Authorize(Roles = "user")]
@@ -130,6 +142,7 @@ namespace ServiceBooking.WEB.Controllers
 
             userDto.AdminStatus = false;
             _userService.Update(userDto);
+            _unitOfWork.Save();
 
             if (tryOnceAgain)
                 return RedirectToAction("BecomePerformer");
@@ -137,13 +150,6 @@ namespace ServiceBooking.WEB.Controllers
         }
 
         #region Helpers
-        private IAuthenticationManager AuthenticationManager
-        {
-            get
-            {
-                return HttpContext.GetOwinContext().Authentication;
-            }
-        }
 
         private void AddErrors(IdentityResult result)
         {
@@ -151,6 +157,14 @@ namespace ServiceBooking.WEB.Controllers
             {
                 ModelState.AddModelError("", error);
             }
+        }
+
+        private void GetCategoriesList()
+        {
+            var categoriesDto = _categoryService.GetAll().ToList();
+            Mapper.Initialize(cfg => cfg.CreateMap<CategoryViewModelBLL, CategoryViewModel>());
+            var categories = Mapper.Map<List<CategoryViewModelBLL>, List<CategoryViewModel>>(categoriesDto);
+            ViewBag.Categories = categories;
         }
 
         public enum ManageMessageId

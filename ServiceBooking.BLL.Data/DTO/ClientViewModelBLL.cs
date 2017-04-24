@@ -26,6 +26,8 @@ namespace ServiceBooking.BLL.DTO
 
         public DateTime RegistrationDate { get; set; }
 
+        public int? PictureId { get; set; }
+
         public ICollection<Category> CategoriesBll { get; set; }
 
         public ICollection<Order> OrdersBll { get; set; }

@@ -1,6 +1,6 @@
 ﻿@using Microsoft.AspNet.Identity
 @using ServiceBooking.WEB.Models
-@model ServiceBooking.WEB.Models.DetailsOrderViewModel
+@model DetailsOrderViewModel
 
 @{
     ViewBag.Title = "Details";
@@ -9,84 +9,88 @@
     IEnumerable<IndexResponseViewModel> responses = Model.Responses;
 }
 
-<div class="row">
-    <div class="col-sm-9">
-        <h2>@Html.DisplayFor(model => model.Name)</h2>
-    </div>
-    <div class="col-sm-3" style="float: right">
-        @if (Request.IsAuthenticated)
+<div class="row" style="margin-top: 20px;">
+    <div class="col-sm-4" style="text-align: center">
+        @Html.Raw("<img style='width:330px; height:330px;' src=\"data:image/jpeg;base64,"
+                    + Convert.ToBase64String(Model.Image) + "\" />")
+        @if (Request.IsAuthenticated && Model.CustomerId == User.Identity.GetUserId<int>())
         {
             <br />
-            if (Model.CustomerId == User.Identity.GetUserId<int>() && Model.AdminStatus && ViewBag.StatusMessage != null)
+            if (Model.AdminStatus && ViewBag.StatusMessage != null)
             {
                 string statusMessage = ViewBag.StatusMessage;
-                @Html.ActionLink(statusMessage, "ChangeStatus", "Orders", new { orderId = Model.Id }, new { Style = "margin-right: 10px;", @class = "btn btn-primary" })
+                @Html.ActionLink(statusMessage, "ChangeStatus", "Orders", new {orderId = Model.Id},
+                    new {Style = "margin-right: 10px; margin-top: 20px;", @class = "btn btn-primary btn-lg"})
             }
-            if ((Model.CustomerId == User.Identity.GetUserId<int>() && Model.AdminStatus) || User.IsInRole("admin"))
+            if (Model.AdminStatus || User.IsInRole("admin"))
             {
                 @Html.ActionLink("Delete", "Delete", "Orders", new
-       {
-           id = Model.Id,
-           isMyOrdersPage = ViewBag.IsMyOrdersPage,
-           isNewOrdersPage = ViewBag.IsNewPage,
-           currentCategoryId = ViewBag.CurrentCategoryId,
-           ordersSort = (OrderSorts)ViewBag.Sort
-       }, new { @class = "btn btn-primary" })
+               {
+                   id = Model.Id,
+                   isMyOrdersPage = ViewBag.IsMyOrdersPage,
+                   isNewOrdersPage = ViewBag.IsNewPage,
+                   currentCategoryId = ViewBag.CurrentCategoryId,
+                   ordersSort = (OrderSorts)ViewBag.Sort
+               }, new { @class = "btn btn-primary" })
             }
         }
     </div>
-</div>
-<hr/>
-<div class="row">
-    <div class="col-sm-9">
-        Published @Html.DisplayFor(model => model.UploadDate) by <b style="font-size: 18px;"><u>@Html.DisplayFor(model => model.CustomerName)</u></b>
-        <br />
-        <h4>@Html.DisplayTextFor(model => model.Description)</h4>
-        <h5>
-            To finish by @Html.DisplayFor(model => model.CompletionDate) &emsp;
-            <b>@Html.DisplayFor(model => model.Category)</b>
-        </h5>
-    </div>
-    <div class="col-sm-3">
-        <h4>@Html.DisplayFor(model => model.Price) $</h4>
-        <h4>@Html.DisplayFor(model => model.Status)</h4>
+
+    <div class="col-sm-8">
+        <div class="row">
+            <h2>@Html.DisplayFor(model => model.Name)</h2>
+            Published @Html.DisplayFor(model => model.UploadDate) by <b style="font-size: 18px;"><u>@Html.DisplayFor(model => model.CustomerName)</u></b>
+        </div>
+        
+        <div class="row">
+            <div class="col-sm-7">
+                <h4 style="margin-top: 20px;">@Html.DisplayTextFor(model => model.Description)</h4>
+                <h5><b>@Html.DisplayFor(model => model.Category)</b></h5>
+                @if (Request.IsAuthenticated && User.IsInRole("admin") && !Model.AdminStatus)
+                {
+                    <p>
+                        @Html.ActionLink("Confirm", "Confirm", "Orders", new
+                       {
+                           id = Model.Id,
+                           newApplications = true,
+                           categoryId = ViewBag.CurrentCategoryId,
+                           ordersSort = (OrderSorts)ViewBag.Sort
+                       }, new { @class = "btn btn-primary btn-lg" })
+                        @Html.ActionLink("Reject", "Reject", "Orders", new
+                       {
+                           id = Model.Id,
+                           newApplications = true,
+                           categoryId = ViewBag.CurrentCategoryId,
+                           ordersSort = (OrderSorts)ViewBag.Sort
+                       }, new { @class = "btn btn-primary btn-lg" })
+                    </p>
+                }
+            </div>
+            
+            <div class="col-sm-5">
+                <h4>@Html.DisplayFor(model => model.Price) $</h4>
+                <h4>@Html.DisplayFor(model => model.Status)</h4>
+                <h5>To finish by @Html.DisplayFor(model => model.CompletionDate) &emsp;</h5>
+            </div>
+        </div>
     </div>
 </div>
 
-@if (Request.IsAuthenticated && User.IsInRole("admin") && !Model.AdminStatus)
-{
-    <p>
-        @Html.ActionLink("Confirm", "Confirm", "Orders", new
-       {
-           id = Model.Id,
-           newApplications = true,
-           categoryId = ViewBag.CurrentCategoryId,
-           ordersSort = (OrderSorts)ViewBag.Sort
-       }, new {@class = "btn btn-primary btn-lg"})
-        @Html.ActionLink("Reject", "Reject", "Orders", new
-       {
-           id = Model.Id,
-           newApplications = true,
-           categoryId = ViewBag.CurrentCategoryId,
-           ordersSort = (OrderSorts)ViewBag.Sort
-       }, new {@class = "btn btn-primary btn-lg"})
-    </p>
-}
-else if (Model.AdminStatus)
+@if (Model.AdminStatus)
 {
     <h2>Responses</h2>
-    if ((bool)Session["isPerformer"] && User.Identity.GetUserId<int>() != Model.CustomerId &&
-         responses.Select(r => r.PerformerId).All(pid => pid != User.Identity.GetUserId<int>()))
-     {
-         @Html.Partial(@"~/Views/Responses/Create.cshtml", new CreateResponseViewModel {OrderId = Model.Id, Text = string.Empty})
-     }
+    if (Request.IsAuthenticated && (bool)Session["isPerformer"] && User.Identity.GetUserId<int>() != Model.CustomerId &&
+            responses.Select(r => r.PerformerId).All(pid => pid != User.Identity.GetUserId<int>()))
+    {
+        @Html.Partial(@"~/Views/Responses/Create.cshtml", new CreateResponseViewModel { OrderId = Model.Id, Text = string.Empty })
+    }
 
     if (!Model.Responses.Any())
-     {
-         <h3>No responses</h3>
-     }
-     else
-     {
-         @Html.Partial(@"~/Views/Responses/Index.cshtml", responses)
-     }
+    {
+        <h3>No responses</h3>
+    }
+    else
+    {
+        @Html.Partial(@"~/Views/Responses/Index.cshtml", responses)
+    }
 }

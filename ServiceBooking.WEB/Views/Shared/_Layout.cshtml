@@ -14,8 +14,10 @@
     
     <script src='@Url.Content("~/Scripts/jquery-1.10.2.min.js")' type="text/javascript"></script>
     <script src='@Url.Content("~/Scripts/jquery-ui-1.11.3.min.js")' type="text/javascript"></script>
+    <script type="text/javascript" src="~/Scripts/bootstrap-filestyle.min.js"> </script>
+    <script type="text/javascript" src="~/Scripts/bootstrap-filestyle.js"> </script>
 </head>
-<body>
+<body onload="init()">
     <div class="navbar navbar-inverse navbar-fixed-top">
         <div class="container">
             <div class="navbar-header">
@@ -75,8 +77,18 @@
             type="text/javascript"></script>
     <script src="@Url.Content("~/Scripts/jquery-ui.min.js")"
             type="text/javascript"></script>
-    <script src="@Url.Content("~/Scripts/DatePickerReady.js")"
-            type="text/javascript"></script>
-
+<script src="@Url.Content("~/Scripts/DatePickerReady.js")"
+        type="text/javascript"></script>
+<script type="text/javascript">
+    function init() {
+        if (@ViewBag.IsDefault == true){
+            $('#img').attr('style', "display: none;");
+        }
+        else {
+            $('#defaultImg').attr('style', "display: none;");
+        }
+    }
+</script>
+    
 </body>
 </html>

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -11,6 +12,7 @@ using ServiceBooking.WEB.Models;
 using AutoMapper;
 using ServiceBooking.BLL.Infrastructure;
 using PagedList;
+using ServiceBooking.DAL.UnitOfWork.DTO;
 
 namespace ServiceBooking.WEB.Controllers
 {
@@ -21,24 +23,27 @@ namespace ServiceBooking.WEB.Controllers
         private static IStatusService _statusService;
         private static IResponseService _responseService;
         private static IUserService _userService;
+        private static IPictureService _pictureService;
         private static IUnitOfWork _unitOfWork;
 
+        private const string DefaultImageName = @"~/Content/default-order.jpg";
+
         public OrdersController() : this(_orderService, _categoryService,
-            _statusService, _responseService, _userService, _unitOfWork) { }
+            _statusService, _responseService, _userService, _pictureService, _unitOfWork) { }
 
         public OrdersController(IOrderService orderService, ICategoryService categoryService,
             IStatusService statusService, IResponseService responseService,
-            IUserService userService, IUnitOfWork unitOfWork)
+            IUserService userService, IPictureService pictureService, IUnitOfWork unitOfWork)
         {
             _orderService = orderService;
             _categoryService = categoryService;
             _statusService = statusService;
             _responseService = responseService;
             _userService = userService;
+            _pictureService = pictureService;
             _unitOfWork = unitOfWork;
         }
 
-        // GET: Orders
         public ActionResult Index(int? page, int? categoryId, string searchName, 
             bool newApplications = false, bool myOrders = false, OrderSorts sort = OrderSorts.New)
         {
@@ -111,7 +116,11 @@ namespace ServiceBooking.WEB.Controllers
 
             Mapper.Initialize(cfg => cfg.CreateMap<OrderViewModelBLL, IndexOrderViewModel>()
                 .ForMember("Category", opt => opt.MapFrom(c => _categoryService.FindById(c.CategoryId).Name))
-                .ForMember("Status", opt => opt.MapFrom(c => _statusService.FindById(c.StatusId).Value)));
+                .ForMember("Status", opt => opt.MapFrom(c => _statusService.FindById(c.StatusId).Value))
+                .ForMember("Image", opt => opt.MapFrom(c => c.PictureId == null
+                    ? System.IO.File.ReadAllBytes(Server.MapPath(DefaultImageName))
+                    : _pictureService.FindById(c.PictureId.Value).Image))
+            );
             var orders = Mapper.Map<IEnumerable<OrderViewModelBLL>, List<IndexOrderViewModel>>(ordersDto);
 
             var orderNames = _orderService.GetAll().Select(o => o.Name).ToArray();
@@ -123,8 +132,8 @@ namespace ServiceBooking.WEB.Controllers
             return View(orders.ToPagedList(pageNumber, pageSize));
         }
 
-        // GET: Orders/Details/5
-        public ActionResult Details(int id, int? categoryId, bool? newApplications, bool? myOrders, OrderSorts sort = OrderSorts.New, bool emptyResponse = false)
+        public ActionResult Details(int id, int? categoryId, bool? newApplications, 
+            bool? myOrders, OrderSorts sort = OrderSorts.New, bool emptyResponse = false)
         {
             var responsesDto = _responseService.GetAllForOrder(id);
             Mapper.Initialize(cfg => cfg.CreateMap<ResponseViewModelBLL, IndexResponseViewModel>()
@@ -146,11 +155,15 @@ namespace ServiceBooking.WEB.Controllers
                 .ForMember("Category", opt => opt.MapFrom(c => _categoryService.FindById(c.CategoryId).Name))
                 .ForMember("Status", opt => opt.MapFrom(c => _statusService.FindById(c.StatusId).Value))
                 .ForMember("Responses", opt => opt.MapFrom(c => responses))
-                );
+                .ForMember("Image", opt => opt.MapFrom(c => c.PictureId == null
+                ? System.IO.File.ReadAllBytes(Server.MapPath(DefaultImageName))
+                : _pictureService.FindById(c.PictureId.Value).Image))
+            );
             DetailsOrderViewModel order = Mapper.Map<OrderViewModelBLL, DetailsOrderViewModel>(orderDto);
 
             var currentUser = _userService.FindById(User.Identity.GetUserId<int>());
-            ViewBag.Rating = currentUser.Rating;
+            if (!ReferenceEquals(currentUser, null))
+                ViewBag.Rating = currentUser.Rating;
             if (order.StatusId < 3)
                 ViewBag.StatusMessage = "Mark as" + _statusService.FindById(order.StatusId + 1).Value;
 
@@ -170,10 +183,10 @@ namespace ServiceBooking.WEB.Controllers
                 return View("~/Views/Error/Forbidden.cshtml");
 
             _orderService.ChangeStatus(orderId);
+            _unitOfWork.Save();
             return RedirectToAction("Details", new { id = orderId });
         }
 
-        // GET: Orders/Create
         [Authorize(Roles = "user")]
         public ActionResult Create()
         {
@@ -181,28 +194,46 @@ namespace ServiceBooking.WEB.Controllers
             return View();
         }
 
-        // POST: Orders/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "user")]
-        public ActionResult Create(CreateOrderViewModel order)
+        public ActionResult Create(CreateOrderViewModel order, HttpPostedFileBase loadImage)
         {
-            Mapper.Initialize(cfg => cfg.CreateMap<CreateOrderViewModel, OrderViewModelBLL>()
-                .ForMember("CategoryId", opt => opt.MapFrom(c => _categoryService.FindByName(c.Category).Id))
-                .ForMember("StatusId", opt => opt.MapFrom(c => 1))
-                .ForMember("AdminStatus", opt => opt.MapFrom(c => false))
-                .ForMember("UploadDate", opt => opt.MapFrom(c => DateTime.Now))
-                .ForMember("UserId", opt => opt.MapFrom(c => User.Identity.GetUserId<int>())));
-            OrderViewModelBLL orderDto = Mapper.Map<CreateOrderViewModel, OrderViewModelBLL>(order);
-
             if (ModelState.IsValid)
             {
+                PictureViewModelBLL picture = null;
+                if (!ReferenceEquals(loadImage, null))
+                {
+                    byte[] image;
+                    using (var binaryReader = new BinaryReader(loadImage.InputStream))
+                    {
+                        image = binaryReader.ReadBytes(loadImage.ContentLength);
+                    }
+                    picture = new PictureViewModelBLL {Image = image};
+                    _pictureService.Create(image);
+                    _unitOfWork.Save();
+                }
+
+                Mapper.Initialize(cfg => cfg.CreateMap<CreateOrderViewModel, OrderViewModelBLL>()
+                    .ForMember("CategoryId", opt => opt.MapFrom(c => _categoryService.FindByName(c.Category).Id))
+                    .ForMember("StatusId", opt => opt.MapFrom(c => 1))
+                    .ForMember("AdminStatus", opt => opt.MapFrom(c => false))
+                    .ForMember("UploadDate", opt => opt.MapFrom(c => DateTime.Now))
+                    .ForMember("UserId", opt => opt.MapFrom(c => User.Identity.GetUserId<int>()))
+                    .ForMember("PictureId", opt => opt.MapFrom(c => _pictureService.FindByBytes(picture.Image).Value))
+                );
+                OrderViewModelBLL orderDto = Mapper.Map<CreateOrderViewModel, OrderViewModelBLL>(order);
+
                 OperationDetails operationDetails = _orderService.Create(orderDto);
+                _unitOfWork.Save();
                 if (operationDetails.Succedeed)
                     return RedirectToAction("Index");
                 ModelState.AddModelError(operationDetails.Property, operationDetails.Message);
             }
+
             ViewBag.Category = new SelectList(_categoryService.GetAll(), "Name", "Name");
+            ViewBag.DefaultPath =
+                $"data: image/png; base64, {Convert.ToBase64String(System.IO.File.ReadAllBytes(Server.MapPath(DefaultImageName)))}";
             return View(order);
         }
 
@@ -210,6 +241,7 @@ namespace ServiceBooking.WEB.Controllers
         public ActionResult Confirm(int id, int? currentCategoryId, OrderSorts ordersSort)
         {
             _orderService.ConfirmOrder(id);
+            _unitOfWork.Save();
             return RedirectToAction("Index", new
             {
                 newApplications = _orderService.GetAll().Count(o => !o.AdminStatus) > 0,
@@ -221,7 +253,10 @@ namespace ServiceBooking.WEB.Controllers
         [Authorize(Roles = "admin")]
         public ActionResult Reject(int id, int? currentCategoryId, OrderSorts ordersSort)
         {
+            var pictureId = _userService.FindById(id).PictureId;
             _orderService.DeleteOrder(id);
+            _pictureService.Delete(pictureId);
+            _unitOfWork.Save();
             return RedirectToAction("Index", new
             {
                 newApplications = _orderService.GetAll().Count(o => !o.AdminStatus) > 0,
@@ -230,7 +265,6 @@ namespace ServiceBooking.WEB.Controllers
             });
         }
 
-        // GET: Orders/Delete/5
         [Authorize]
         public ActionResult Delete(int id, bool? isMyOrdersPage, bool? isNewOrdersPage, int? currentCategoryId)
         {
@@ -256,16 +290,30 @@ namespace ServiceBooking.WEB.Controllers
             return View(order);
         }
 
-        // POST: Orders/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         [Authorize]
-        public ActionResult DeleteConfirmed(int id, bool? isMyOrdersPage, bool? isNewOrdersPage, OrderSorts ordersSort, int? currentCategoryId)
+        public ActionResult DeleteConfirmed(int id, bool? isMyOrdersPage, bool? isNewOrdersPage, 
+            int? currentCategoryId, OrderSorts ordersSort = OrderSorts.New)
         {
             if (User.Identity.GetUserId<int>() != _orderService.Find(id).UserId)
                 return View("~/Views/Error/Forbidden.cshtml");
 
+            var responses = _responseService.GetAllForOrder(id);
+            if (responses.Any())
+            {
+                foreach (var response in responses)
+                {
+                    _responseService.Delete(response.Id);
+                }
+            }
             _orderService.DeleteOrder(id);
+
+            var picture = _orderService.Find(id).PictureId;
+            if (picture.HasValue)
+                _pictureService.Delete(picture.Value);
+            _unitOfWork.Save();
+
             return RedirectToAction("Index", new
             {
                 newApplications = isNewOrdersPage,
@@ -278,7 +326,8 @@ namespace ServiceBooking.WEB.Controllers
         public ActionResult AutocompleteSearch(string orderName)
         {
             var orderNames = _orderService.GetAll().Select(o => o.Name).ToArray();
-            var filteredNames = orderNames.Where(o => o.IndexOf(orderName, StringComparison.InvariantCultureIgnoreCase) >= 0);
+            var filteredNames = orderNames.Where(o => 
+                o.IndexOf(orderName, StringComparison.InvariantCultureIgnoreCase) >= 0);
             return Json(filteredNames, JsonRequestBehavior.AllowGet);
         }
     }

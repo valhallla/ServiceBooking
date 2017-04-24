@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using ServiceBooking.BLL.DTO;
 
 namespace ServiceBooking.WEB.Models
 {
@@ -19,6 +18,8 @@ namespace ServiceBooking.WEB.Models
         public DateTime RegistrationDate { get; set; }
 
         public string Category { get; set; }
+
+        public byte[] Image { get; set; }
     }
 
     public class DetailsPerformerViewModel
@@ -46,6 +47,8 @@ namespace ServiceBooking.WEB.Models
         public int? Rating { get; set; }
 
         public bool AdminStatus { get; set; }
+
+        public byte[] Image { get; set; }
 
         public IEnumerable<int> CustomersId { get; set; }
 
@@ -75,6 +78,9 @@ namespace ServiceBooking.WEB.Models
         [Display(Name = "Activity information")]
         [DataType(DataType.MultilineText)]
         public string Info { get; set; }
+
+        [Display(Name = "Avatar")]
+        public byte[] Image { get; set; }
 
         public EditPerformerViewModel()
         {

@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using System.ComponentModel.DataAnnotations;
 
 namespace ServiceBooking.DAL.Entities
@@ -14,17 +12,22 @@ namespace ServiceBooking.DAL.Entities
         [Required]
         public string Name { get; set; }
 
+        [Required]
         [DataType(DataType.MultilineText)]
         public string Description { get; set; }
 
-        public int? CategoryId { get; set; }
+        public int CategoryId { get; set; }
         public Category Category { get; set; }
+
+        public int? PictureId { get; set; }
+        public Picture Picture { get; set; }
 
         public int StatusId { get; set; }
         public Status Status { get; set; }
 
         public bool AdminStatus { get; set; }
 
+        [Required]
         [DataType(DataType.DateTime), DisplayFormat(DataFormatString = "{0:dd.MM.yyyy}", ApplyFormatInEditMode = true)]
         public DateTime UploadDate { get; set; }
 
@@ -32,7 +35,6 @@ namespace ServiceBooking.DAL.Entities
         [DataType(DataType.Date), DisplayFormat(DataFormatString = "{0:dd.MM.yyyy}", ApplyFormatInEditMode = true)]
         public DateTime CompletionDate { get; set; }
 
-        [Required]
         public int Price { get; set; }
 
         public virtual int UserId { get; set; }

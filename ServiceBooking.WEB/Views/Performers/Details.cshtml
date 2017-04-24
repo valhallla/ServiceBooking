@@ -9,58 +9,66 @@
     IEnumerable<IndexCommentViewModel> comments = Model.Comments;
 }
 
-<div class="row">
-    <div class="col-sm-10">
-        <h2>
-            @Html.DisplayFor(model => model.Name, new { Style = "margin-right: 0; padding-right: 0;" })
-            @if (Model.Company != null)
-            {
-                @Html.Label(", ", new { Style = "padding-left: 0; margin-right: 10px" })
-                @Html.DisplayFor(model => model.Company)
-            }
-        </h2>
-        Since @Html.DisplayFor(model => model.RegistrationDate)
-    </div>
-    <div class="col-sm-2">
-        <br />
-        @Html.ActionLink("Edit account information", "Edit", "Performers", new
+<div class="row" style="margin-top: 20px;">
+    <div class="col-sm-4" style="text-align: center">
+        @Html.Raw("<img style='width:330px; height:330px;' src=\"data:image/jpeg;base64,"
+                    + Convert.ToBase64String(Model.Image) + "\" />")
+        @if (Request.IsAuthenticated && Model.Id == User.Identity.GetUserId<int>())
         {
-            id = Model.Id
-        }, new {@class = "btn btn-primary btn-lg"})
-    </div>
-</div>
-<hr />
-<div class="row">
-    <div class="col-sm-9">
-        @if (ViewBag.ShowContacts)
-        {
-            <h4>
-                E-mail: @Html.DisplayFor(model => Model.Email)<br/>
-                Phone number: @Html.DisplayFor(model => Model.PhoneNumber)
-            </h4>
+            <br />
+            @Html.ActionLink("Edit account information", "Edit", "Performers", new { id = Model.Id }, 
+                new { Style = "margin-top: 20px;", @class = "btn btn-primary btn-lg" })
         }
-        <h4>@Html.DisplayTextFor(model => model.Info)</h4>
     </div>
-    <div class="col-sm-3">
-        @{
-            ViewBag.StarPath = @"~/Content/star_white.png";
-            ViewBag.EmptystarPath = @"~/Content/emptystar_white.png";
-        }
-        @Html.Partial("Rating", (int) (Model.Rating))
-        <h3>Services provided</h3>
-        <ul>
-            @foreach (var category in Model.Categories)
+    
+    <div class="col-sm-8">
+        <div class="row">
+            <h2>
+                @Html.DisplayFor(model => model.Name, new { Style = "margin-right: 0; padding-right: 0;" })
+                @if (Model.Company != null)
+                {
+                    @Html.Label(", ", new { Style = "padding-left: 0; margin-right: 10px" })
+                    @Html.DisplayFor(model => model.Company)
+                }
+            </h2>
+            Since @Html.DisplayFor(model => model.RegistrationDate)    
+        </div>
+        
+        <div class="row">
+            <div class="col-sm-7">
+                @if (ViewBag.ShowContacts)
+                {
+                    <h4>
+                        E-mail: @Html.DisplayFor(model => Model.Email)<br />
+                        Phone number: @Html.DisplayFor(model => Model.PhoneNumber)
+                    </h4>
+                }
+                <h4 style="margin-top: 20px;">@Html.DisplayTextFor(model => model.Info)</h4>
+            </div>
+            <div class="col-sm-5">
+                @{
+                    ViewBag.StarPath = @"~/Content/star_white.png";
+                    ViewBag.EmptystarPath = @"~/Content/emptystar_white.png";
+                }
+                @Html.Partial("Rating", Model.Rating ?? 0)
+                <h3>Services provided</h3>
+                <ul>
+                    @foreach (var category in Model.Categories)
             {
-                <li> <h4>
-                    @Html.ActionLink(category.Name, "Index", new
-                    {
-                        categoryId = category.Id,
-                        newApplications = ViewBag.IsNewPage
-                    })
-                    <br />
-                </h4></li>
-            }
-        </ul>
+                        <li>
+                            <h4>
+                                @Html.ActionLink(category.Name, "Index", new
+               {
+                   categoryId = category.Id,
+                   newApplications = ViewBag.IsNewPage
+               })
+                                <br />
+                            </h4>
+                        </li>
+                    }
+                </ul>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -84,8 +92,8 @@
 else
 {
     <h2>Comments</h2>
-    if (User.Identity.GetUserId<int>() != Model.Id &&
-         !Model.CustomersId.Contains(User.Identity.GetUserId<int>()))
+    if (Request.IsAuthenticated && User.Identity.GetUserId<int>() != Model.Id &&
+         !Model.CustomersId.Contains(User.Identity.GetUserId<int>()) && !User.IsInRole("admin"))
     {
         @Html.Partial(@"~/Views/Comments/Create.cshtml", new CreateCommentViewModel()
        {

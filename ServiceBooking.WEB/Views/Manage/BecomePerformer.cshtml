@@ -1,12 +1,10 @@
-﻿@using System.Web.UI.WebControls
-@using ServiceBooking.WEB.Models
-@model ServiceBooking.WEB.Models.BecomePerformerViewModel
+﻿@using ServiceBooking.WEB.Models
+@model BecomePerformerViewModel
 
 @{
     Model.Categories = new List<CategoryViewModel>();
     bool isPerformer = (bool)(Session["isPerformer"]);
     bool adminStatus = (bool)(Session["adminStatus"]);
-    string message = ViewBag.Message.ToString();
 
     ViewBag.Title = "Become a performer";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -21,11 +19,11 @@
 else if (adminStatus && !isPerformer)
 {
     <h3>Your request for becoming a performer has been rejected</h3>
-    @Html.ActionLink("Try once again", "Close", "Manage", new {tryOnceAgain = true}, new { @class = "btn btn-default close" })
-
+    @Html.ActionLink("Try once again", "Close", "Manage", new {tryOnceAgain = true}, new { @class = "btn btn-default btn-lg" })
+    <br/><br/>
 }
 
-else if (!adminStatus && !isPerformer)
+else if (!adminStatus)
 {
     using (Html.BeginForm("BecomePerformer", "Manage", FormMethod.Post, new { enctype = "multipart/form-data" }))
     {
@@ -33,56 +31,69 @@ else if (!adminStatus && !isPerformer)
         <div class="form-horizontal">
             <h4>Add some additional information about yourself</h4>
             <hr/>
-            <div class="form-group">
-                @Html.LabelFor(model => model.Company, htmlAttributes: new {@class = "control-label col-md-2"})
-                <div class="col-md-10">
-                    @Html.EditorFor(model => model.Company, new {htmlAttributes = new {Value = Model.Company, @class = "form-control custo"}})
-                    @Html.ValidationMessageFor(model => model.Company, "", new {@class = "text-danger"})
-                </div>
-            </div>
-                 
-            <div class="form-group">
-                @Html.LabelFor(model => model.PhoneNumber, htmlAttributes: new { @class = "control-label col-md-2" })
-                <div class="col-md-10">
-                    @Html.EditorFor(model => model.PhoneNumber, new { htmlAttributes = new { Value = Model.PhoneNumber, @class = "form-control custo" } })
-                    @Html.Label("Your phone number will be visible only for customers")<br />
-                    @Html.Label("which orders you have left a response to")<br/>
-                    @Html.ValidationMessageFor(model => model.PhoneNumber, "", new { @class = "text-danger" })
-                </div>
-            </div>
 
-            <div class="form-group">
-                @Html.LabelFor(model => model.Info, htmlAttributes: new {@class = "control-label col-md-2"})
-                <div class="col-md-10">
-                    @Html.EditorFor(model => model.Info, new {htmlAttributes = new { Value = Model.Company, Style = "resize: none;", @class = "form-control"}})
-                    @Html.ValidationMessageFor(model => model.Info, "", new {@class = "text-danger"})
-                </div>
-            </div>
+            <div class="row">
+                <div class="col-sm-1"></div>
+                <div class="col-sm-6" style="margin-right: 10px;">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Company, htmlAttributes: new {@class = "control-label col-md-2"})
+                        <div class="col-md-8">
+                            @Html.EditorFor(model => model.Company, new {htmlAttributes = new {Value = Model.Company, @class = "form-control custo"}})
+                            @Html.ValidationMessageFor(model => model.Company, "", new {@class = "text-danger"})
+                        </div>
+                    </div>
 
-            <div class="form-group">
-                @Html.LabelFor(model => model.Categories, htmlAttributes: new {@class = "control-label col-md-2"})
-                <div class="col-md-10">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.PhoneNumber, htmlAttributes: new {@class = "control-label col-md-2"})
+                        <div class="col-md-8">
+                            @Html.EditorFor(model => model.PhoneNumber, new {htmlAttributes = new {Value = Model.PhoneNumber, @class = "form-control custo"}})
+                            @Html.Label("Your phone number will be visible only for customers")<br/>
+                            @Html.Label("which orders you have left a response to")<br/>
+                            @Html.ValidationMessageFor(model => model.PhoneNumber, "", new {@class = "text-danger"})
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Info, htmlAttributes: new {@class = "control-label col-md-2"})
+                        <div class="col-md-8">
+                            @Html.EditorFor(model => model.Info, new {htmlAttributes = new {Value = Model.Company, Style = "resize: none;", @class = "form-control"}})
+                            @Html.ValidationMessageFor(model => model.Info, "", new {@class = "text-danger"})
+                        </div>
+                    </div>
+
+                    <div class="row" style="height: 200px;">
+                        <div class="form-group">
+                            @Html.ValidationSummary(true, "", new {@class = "text-danger"})
+                            @Html.LabelFor(model => model.Categories, htmlAttributes: new {@class = "control-label col-md-2"})
+                            @{
+                                List<CategoryViewModel> categories = ViewBag.Categories;
+                                <br/><br/>
+                                foreach (CategoryViewModel c in categories)
+                                {
+                                    <input type="checkbox" id="selectedCategories" name="selectedCategories" value="@c.Id"
+                                           @(Model.Categories.Contains(c) ? "checked=\"checked\"" : "")/>
+                                    @c.Name
+                                    <br/>
+                                }
+                            }
+                        </div>
+                    </div>
+
+                    <br/>
+                    <div class="form-group">
+                        <div class="col-md-offset-2 col-md-10">
+                            <input type="submit" value="Send application" class="btn btn-default"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4" style="margin-left: 0">
                     @{
-                        List<CategoryViewModel> categories = ViewBag.Categories;
-                    @Html.ValidationMessageFor(model => categories, message, new { @class = "text-danger" })
-                        <br/>
-                        foreach (CategoryViewModel c in categories)
-                        {
-                            <input type="checkbox" id="selectedCategories" name="selectedCategories" value="@c.Id"
-                                @(Model.Categories.Contains(c) ? "checked=\"checked\"" : "")/>
-                            @c.Name
-                            <br/>
-
-                        }
-                }
-                         
+                        ViewBag.SideLength = 360;
+                        ViewBag.Path = ViewBag.DefaultPath;
+                        @Html.Partial("ImagePicker")
+                    }
                 </div>
-            </div>
-
-            <div class="form-group">
-                <div class="col-md-offset-2 col-md-10">
-                    <input type="submit" value="Send application" class="btn btn-default"/>
-                </div>
+                <div class="col-sm-1"></div>
             </div>
         </div>
     }

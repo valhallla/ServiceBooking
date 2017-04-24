@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using ServiceBooking.DAL.Entities;
 
 namespace ServiceBooking.BLL.DTO
@@ -16,6 +13,8 @@ namespace ServiceBooking.BLL.DTO
         public string Description { get; set; }
 
         public int CategoryId { get; set; }
+
+        public int? PictureId { get; set; }
 
         public int StatusId { get; set; }
 

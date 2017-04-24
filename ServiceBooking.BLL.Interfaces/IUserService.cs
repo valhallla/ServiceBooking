@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNet.Identity;
@@ -16,6 +15,7 @@ namespace ServiceBooking.BLL.Interfaces
         Task<OperationDetails> DeleteAccount(ClientViewModelBLL userDto);
 
         ClientViewModelBLL FindById(int id);
+        ClientViewModelBLL FindByUserName(string name);
         IEnumerable<ClientViewModelBLL> GetAll();
 
         Task<ClaimsIdentity> Authenticate(ClientViewModelBLL userDto);

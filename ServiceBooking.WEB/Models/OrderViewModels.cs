@@ -25,6 +25,8 @@ namespace ServiceBooking.WEB.Models
         public DateTime CompletionDate { get; set; }
 
         public decimal Price { get; set; }
+
+        public byte[] Image { get; set; }
     }
 
     public class DetailsOrderViewModel
@@ -56,6 +58,8 @@ namespace ServiceBooking.WEB.Models
 
         public string CustomerName { get; set; }
 
+        public byte[] Image { get; set; }
+
         public IEnumerable<IndexResponseViewModel> Responses { get; set; }
     }
 
@@ -83,6 +87,9 @@ namespace ServiceBooking.WEB.Models
         [Required(ErrorMessage = "Price is required")]
         [Display(Name = "Price")]
         public decimal Price { get; set; }
+
+        [Display(Name = "Photo")]
+        public byte[] Image { get; set; }
     }
 
     public class DeleteOrderViewModel

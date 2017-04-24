@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using AutoMapper;
 using Ninject;
 using ServiceBooking.BLL.DTO;
@@ -23,6 +19,13 @@ namespace ServiceBooking.BLL.Services
             _responseRepository = responseRepository;
         }
 
+        public IEnumerable<ResponseViewModelBLL> GetAll()
+        {
+            var responses = _responseRepository.GetAll();
+            Mapper.Initialize(cfg => cfg.CreateMap<Response, ResponseViewModelBLL>());
+            return Mapper.Map<IEnumerable<Response>, List<ResponseViewModelBLL>>(responses);
+        }
+
         public IEnumerable<ResponseViewModelBLL> GetAllForOrder(int orderId)
         {
             var responses = _responseRepository.Find(r => r.OrderId == orderId);
@@ -36,7 +39,16 @@ namespace ServiceBooking.BLL.Services
             Mapper.Initialize(cfg => cfg.CreateMap<ResponseViewModelBLL, Response>()
                 .ForMember("UserId", opt => opt.MapFrom(c => c.PerformerId)));
             _responseRepository.Create(Mapper.Map<ResponseViewModelBLL, Response>(response));
-            return new OperationDetails(true, @"Sending response succeeded", string.Empty);
+            return new OperationDetails(true, "Sending response succeeded", string.Empty);
+        }
+
+        public OperationDetails Delete(int? id)
+        {
+            if (id == null)
+                return new OperationDetails(false, "Response doesn't exist", "Id");
+
+            _responseRepository.Delete(id.Value);
+            return new OperationDetails(true, "Deleting response succeeded", string.Empty);
         }
     }
 }
