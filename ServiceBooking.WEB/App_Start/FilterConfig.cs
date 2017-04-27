@@ -9,6 +9,7 @@ namespace ServiceBooking.WEB
         {
             filters.Add(new HandleErrorAttribute());
          //   filters.Add(new ForbiddenException());
+            //filters.Add(new ValidateAntiForgeryTokenAttribute());
         }
     }
 }

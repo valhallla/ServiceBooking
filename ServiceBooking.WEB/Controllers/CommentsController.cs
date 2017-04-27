@@ -55,6 +55,7 @@ namespace ServiceBooking.WEB.Controllers
                 if (user.CommentsBll != null)
                     user.Rating = (int)Math.Round((float)(user.CommentsBll.Select(c => c.Rating).Sum() / user.CommentsBll.Count));
                 operationDetails = _userService.Update(user);
+                _unitOfWork.Save();
                 if (!operationDetails.Succedeed)
                     ModelState.AddModelError(operationDetails.Property, operationDetails.Message);
             }

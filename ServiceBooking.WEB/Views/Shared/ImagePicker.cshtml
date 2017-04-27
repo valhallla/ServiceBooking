@@ -6,24 +6,26 @@
 
 <div class="row">
     <input type="button" id="loadButton" class="btn btn-lg" style="margin-top: 0; " value="Choose image" onclick="document.getElementById('loadImage').click();" />    
-    <label id="noFileLabel" style="margin-left: 15px; margin-top: 15px;" name="noFileLabel">No image chosen</label>
     <input type="file" style="display: none;" id="loadImage" name="loadImage" onchange="readURL(this);" /> &emsp;
 </div>
 <br />
 <div class="row">
     <input type="button" style="@closeButtonStyle" id="deleteButton" name="deleteButton" class="close" value="X" onclick="removeFile();" onchange="this.click();" />
-    <img src="@path" id="img" style="margin-right: 0;" width="@ViewBag.SideLength" height="@ViewBag.SideLength" />
-    <img src="@defaultPath" id="defaultImg" style="margin-right: 0; display: none;" width="@ViewBag.SideLength" height="@ViewBag.SideLength" />
-</div>
+    <div style="width: @ViewBag.SideLength; height: @ViewBag.SideLength; overflow: hidden;">
+        <img src="@path" id="img" style="margin-right: 0;" height="@ViewBag.SideLength" alt="" />
+    </div>
+    <img src="@defaultPath" id="defaultImg" style="margin-right: 0; display: none;" height="@ViewBag.SideLength" alt="" />
+   
+    </div>
 <script type="text/javascript">
-    function init() {
+    @*function init() {
         if (@ViewBag.IsDefault == true){
             $('#img').attr('style', "display: none;");
         }
         else {
             $('#defaultImg').attr('style', "display: none;");
         }
-    }
+    }*@
     function readURL(input) {
         if (input.files && input.files[0]) {
             var reader = new FileReader();
@@ -36,7 +38,6 @@
 
             reader.readAsDataURL(input.files[0]);
             $('#deleteButton').attr('style', "");
-            $('#noFileLabel').attr('style', "display: none;");
             $('#defaultImg').attr('style', "display: none;");
             $('#img').attr('style', "");
         }
@@ -46,7 +47,6 @@
         $('#img').attr('src', "").width(0).height(0).attr('style', "display: none;");
         @*@path = @defaultPath;*@
         $('#deleteButton').attr('style', "display: none;");
-        $('#noFileLabel').attr('style', "margin-left: 15px;");
         $('#defaultImg').attr('style', "");
         $('#img').attr('style', "display: none;");
     }

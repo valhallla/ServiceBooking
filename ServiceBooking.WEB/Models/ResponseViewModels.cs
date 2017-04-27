@@ -21,7 +21,7 @@ namespace ServiceBooking.WEB.Models
 
         public int PerformerRating { get; set; }
 
-        public byte[] Picture { get; set; }
+        public byte[] Image { get; set; }
     }
 
     public class CreateResponseViewModel
@@ -32,6 +32,6 @@ namespace ServiceBooking.WEB.Models
 
         public int OrderId { get; set; }
 
-        public byte[] Picture { get; set; }
+        public byte[] Image { get; set; }
     }
 }

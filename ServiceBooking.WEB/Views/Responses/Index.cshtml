@@ -2,26 +2,27 @@
 
 @foreach (var item in Model)
 {
-    <div class="well">
-        <div class="row">
-            <div class="col-sm-9">
-                <h4>@Html.DisplayFor(modelItem => item.Text)</h4>
-                <br />
-                @Html.DisplayFor(modelItem => item.Date)
-            </div>
-            <div class="col-sm-3" style="text-align:center">
-                <h4>@Html.DisplayFor(modelItem => item.PerformerName) </h4>
-                <br />
-                @for (int i = 0; i < item.PerformerRating; i++)
-                {
-                    <img style="height: 30px; float: none; margin-left: 7px; margin-right: 7px" src="@Url.Content(@"~/Content/star.png")" alt="" />
-                }
-                @for (int i = item.PerformerRating; i < 5; i++)
-                {
-                    <img style="height: 30px; float: none; margin-left: 7px; margin-right: 7px" src="@Url.Content(@"~/Content/emptystar.png")" alt="" />
-                }
-            </div>
+    <div class="media" style="margin-left: 20px;">
+        <div class="media-left media-top">
+            @Html.Raw("<img class=\"media-object\" style='width:100px; height:100px;' src=\"data:image/jpeg;base64,"
+                                       + Convert.ToBase64String(item.Image) + "\" />")
         </div>
+        <div class="media-body">
+            <h4 class="media-heading">@item.PerformerName</h4>
+            @Html.DisplayFor(modelItem => item.Date)
+            <div class="row">
+                <div class="col-sm-8">
+                    <p>@Html.DisplayFor(modelItem => item.Text)</p>
+                </div>
+                <div class="col-sm-4">
+                    @{
+                        ViewBag.StarPath = @"~/Content/star_white.png";
+                        ViewBag.EmptystarPath = @"~/Content/emptystar_white.png";
+                    }
+                    @Html.Partial("Rating", item.PerformerRating)
 
+                </div>
+            </div>  
+        </div>
     </div>
 }

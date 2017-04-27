@@ -135,19 +135,25 @@ namespace ServiceBooking.WEB.Controllers
         public ActionResult Details(int id, int? categoryId, bool? newApplications, 
             bool? myOrders, OrderSorts sort = OrderSorts.New, bool emptyResponse = false)
         {
+            var orderDto = _orderService.Find(id);
+            if (orderDto == null)
+                return HttpNotFound();
+            var clientUser = _userService.FindById(orderDto.UserId);
+
             var responsesDto = _responseService.GetAllForOrder(id);
             Mapper.Initialize(cfg => cfg.CreateMap<ResponseViewModelBLL, IndexResponseViewModel>()
                 .ForMember("PerformerId", opt => opt.MapFrom(c => c.PerformerId))
                 .ForMember("PerformerName", opt => opt.MapFrom(c => _userService.FindById(c.PerformerId).Surname
                     + " " + _userService.FindById(c.PerformerId).Name))
                 .ForMember("PerformerRating", opt => opt.MapFrom(c => _userService.FindById(c.PerformerId).Rating))
-                );
+                .ForMember("Image", opt => opt.MapFrom(c => _userService.FindById(c.PerformerId).PictureId == null
+                    ? System.IO.File.ReadAllBytes(Server.MapPath(DefaultImageName))
+                    : _pictureService.FindById(_userService.FindById(c.PerformerId).PictureId.Value).Image))
+            );
             var responses = Mapper.Map<IEnumerable<ResponseViewModelBLL>, List<IndexResponseViewModel>>(responsesDto);
-
-            var orderDto = _orderService.Find(id);
-            if (orderDto == null)
-                return HttpNotFound();
-            var clientUser = _userService.FindById(orderDto.UserId);
+            ViewBag.PerformerImage = _userService.FindById(User.Identity.GetUserId<int>()).PictureId == null
+                ? System.IO.File.ReadAllBytes(Server.MapPath(DefaultImageName))
+                : _pictureService.FindById(_userService.FindById(User.Identity.GetUserId<int>()).PictureId.Value).Image;
 
             Mapper.Initialize(cfg => cfg.CreateMap<OrderViewModelBLL, DetailsOrderViewModel>()
                 .ForMember("CustomerId", opt => opt.MapFrom(c => clientUser.Id))
@@ -165,7 +171,7 @@ namespace ServiceBooking.WEB.Controllers
             if (!ReferenceEquals(currentUser, null))
                 ViewBag.Rating = currentUser.Rating;
             if (order.StatusId < 3)
-                ViewBag.StatusMessage = "Mark as" + _statusService.FindById(order.StatusId + 1).Value;
+                ViewBag.StatusMessage = "Mark as " + _statusService.FindById(order.StatusId + 1).Value;
 
             ViewBag.CurrentCategoryId = categoryId;
             ViewBag.IsMyOrdersPage = myOrders;
@@ -191,6 +197,7 @@ namespace ServiceBooking.WEB.Controllers
         public ActionResult Create()
         {
             ViewBag.Category = new SelectList(_categoryService.GetAll(), "Name", "Name");
+            ViewBag.DefaultPath = $"data: image/png; base64, {Convert.ToBase64String(System.IO.File.ReadAllBytes(Server.MapPath(DefaultImageName)))}";
             return View();
         }
 

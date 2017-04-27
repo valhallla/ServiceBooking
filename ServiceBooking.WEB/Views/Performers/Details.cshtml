@@ -91,12 +91,13 @@
 }
 else
 {
-    <h2>Comments</h2>
+    <h2 style="margin-left: 20px;">Comments</h2>
     if (Request.IsAuthenticated && User.Identity.GetUserId<int>() != Model.Id &&
          !Model.CustomersId.Contains(User.Identity.GetUserId<int>()) && !User.IsInRole("admin"))
     {
         @Html.Partial(@"~/Views/Comments/Create.cshtml", new CreateCommentViewModel()
        {
+           Image = ViewBag.CustomerImage,
            PerformerId = Model.Id,
            Text = string.Empty,
        })
@@ -104,7 +105,7 @@ else
 
     if (!Model.Comments.Any())
     {
-        <h3>No comments</h3>
+        <h3 style="margin-left: 20px;">No comments</h3>
     }
     else
     {

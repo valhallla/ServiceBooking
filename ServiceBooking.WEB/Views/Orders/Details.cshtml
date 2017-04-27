@@ -31,7 +31,7 @@
                    isNewOrdersPage = ViewBag.IsNewPage,
                    currentCategoryId = ViewBag.CurrentCategoryId,
                    ordersSort = (OrderSorts)ViewBag.Sort
-               }, new { @class = "btn btn-primary" })
+               }, new { Style = "margin-top: 20px;", @class = "btn btn-primary btn-lg" })
             }
         }
     </div>
@@ -82,12 +82,12 @@
     if (Request.IsAuthenticated && (bool)Session["isPerformer"] && User.Identity.GetUserId<int>() != Model.CustomerId &&
             responses.Select(r => r.PerformerId).All(pid => pid != User.Identity.GetUserId<int>()))
     {
-        @Html.Partial(@"~/Views/Responses/Create.cshtml", new CreateResponseViewModel { OrderId = Model.Id, Text = string.Empty })
+        @Html.Partial(@"~/Views/Responses/Create.cshtml", new CreateResponseViewModel { Image = ViewBag.PerformerImage, OrderId = Model.Id, Text = string.Empty })
     }
 
     if (!Model.Responses.Any())
     {
-        <h3>No responses</h3>
+        <h3 style="margin-left: 20px;">No responses</h3>
     }
     else
     {

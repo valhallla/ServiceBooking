@@ -48,7 +48,7 @@ namespace ServiceBooking.WEB.Controllers
         public async Task<ActionResult> ChangePassword(IndexManageViewModel model)
         {
             if (!ModelState.IsValid)
-                return View(model);
+                return RedirectToAction("ChangePassword");
 
             Mapper.Initialize(cfg => cfg.CreateMap<IndexManageViewModel, ClientViewModelBLL>()
                 .ForMember("Id", opt => opt.MapFrom(c => User.Identity.GetUserId<int>()))
@@ -62,7 +62,7 @@ namespace ServiceBooking.WEB.Controllers
                 return RedirectToAction("Index", "Home", new { Message = ManageMessageId.ChangePasswordSuccess });
 
             AddErrors(result);
-            return View(model);
+            return RedirectToAction("ChangePassword");
         }
 
         [Authorize(Roles = "user")]

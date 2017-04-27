@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Web;
 using System.Web.Mvc;
 using ServiceBooking.BLL.Interfaces;
 using ServiceBooking.DAL.Interfaces;
@@ -8,6 +10,7 @@ using AutoMapper;
 using Microsoft.AspNet.Identity;
 using PagedList;
 using ServiceBooking.BLL.DTO;
+using ServiceBooking.DAL.UnitOfWork.DTO;
 using ServiceBooking.WEB.Models;
 
 namespace ServiceBooking.WEB.Controllers
@@ -88,8 +91,6 @@ namespace ServiceBooking.WEB.Controllers
             ViewBag.Sort = sort;
             ViewBag.ItemsAmount = perfomersDto.Count();
 
-            
-
             Mapper.Initialize(cfg => cfg.CreateMap<ClientViewModelBLL, IndexPerformerViewModel>()
                 .ForMember("Name", opt => opt.MapFrom(c => c.Surname + " " + c.Name))
                 .ForMember("Category", opt => opt.MapFrom(c => c.CategoriesBll.First().Name + 
@@ -112,16 +113,22 @@ namespace ServiceBooking.WEB.Controllers
         public ActionResult Details(int id, int? categoryId, bool? newApplications, 
             PerformerSorts sort = PerformerSorts.New, bool emptyComment = false)
         {
+            var performerDto = _userService.FindById(id);
+            if (performerDto == null)
+                return HttpNotFound();
+
             var commentsDto = _commentService.GetAllForPerformer(id);
             Mapper.Initialize(cfg => cfg.CreateMap<CommentViewModelBLL, IndexCommentViewModel>()
                 .ForMember("CustomerName", opt => opt.MapFrom(c => _userService.FindById(c.CustomerId).Surname
                     + " " + _userService.FindById(c.CustomerId).Name))
-                );
+                .ForMember("Image", opt => opt.MapFrom(c => _userService.FindById(c.CustomerId).PictureId == null
+                    ? System.IO.File.ReadAllBytes(Server.MapPath(DefaultImageName))
+                    : _pictureService.FindById(_userService.FindById(c.CustomerId).PictureId.Value).Image))
+            );
             var comments = Mapper.Map<IEnumerable<CommentViewModelBLL>, List<IndexCommentViewModel>>(commentsDto);
-
-            var performerDto = _userService.FindById(id);
-            if (performerDto == null)
-                return HttpNotFound();
+            ViewBag.CustomerImage = _userService.FindById(User.Identity.GetUserId<int>()).PictureId == null
+                ? System.IO.File.ReadAllBytes(Server.MapPath(DefaultImageName))
+                : _pictureService.FindById(_userService.FindById(User.Identity.GetUserId<int>()).PictureId.Value).Image;
 
             var categoriesDto =
                 _categoryService.GetAll().Where(c => c.Performers.Select(p => p.Id).Contains(id)).ToList();
@@ -217,7 +224,6 @@ namespace ServiceBooking.WEB.Controllers
             );
             var performer = Mapper.Map<ClientViewModelBLL, EditPerformerViewModel>(performerDto);
             ViewBag.Message = message;
-            ViewBag.IsDefault = performerDto.PictureId == null;
             ViewBag.DefaultPath = $"data: image/png; base64, {Convert.ToBase64String(System.IO.File.ReadAllBytes(Server.MapPath(DefaultImageName)))}";
             if (!ReferenceEquals(performerDto.PictureId, null))
                 ViewBag.CloseButtonStyle = string.Empty;
@@ -228,7 +234,7 @@ namespace ServiceBooking.WEB.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "user")]
-        public ActionResult Edit(EditPerformerViewModel model, int[] selectedCategories)
+        public ActionResult Edit(EditPerformerViewModel model, int[] selectedCategories, HttpPostedFileBase loadImage)
         {
             if (!(bool)Session["isPerformer"] || !(bool)Session["adminStatus"])
                 return View("~/Views/Error/Forbidden.cshtml");
@@ -245,10 +251,25 @@ namespace ServiceBooking.WEB.Controllers
                     phoneNumber = model.PhoneNumber
                 });
 
+            PictureViewModelBLL picture = null;
+            if (!ReferenceEquals(loadImage, null))
+            {
+                byte[] image;
+                using (var binaryReader = new BinaryReader(loadImage.InputStream))
+                {
+                    image = binaryReader.ReadBytes(loadImage.ContentLength);
+                }
+                picture = new PictureViewModelBLL { Image = image };
+
+                _pictureService.Create(image);
+                _unitOfWork.Save();
+            }
+
             ClientViewModelBLL client = _userService.FindById(User.Identity.GetUserId<int>());
             Mapper.Initialize(cfg => cfg.CreateMap<EditPerformerViewModel, ClientViewModelBLL>()
                 .ForMember("Name", opt => opt.MapFrom(c => client.Name))
                 .ForMember("CategoriesBll", opt => opt.MapFrom(c => c.Categories))
+                .ForMember("PictureId", opt => opt.MapFrom(c => _pictureService.FindByBytes(picture.Image).Value))
                 );
             Mapper.Map(model, client);
             _userService.Update(client, selectedCategories);

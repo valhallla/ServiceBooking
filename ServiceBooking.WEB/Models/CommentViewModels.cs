@@ -21,7 +21,7 @@ namespace ServiceBooking.WEB.Models
 
         public string CustomerName { get; set; }
 
-        public byte[] Picture { get; set; }
+        public byte[] Image { get; set; }
     }
 
     public class CreateCommentViewModel
@@ -35,7 +35,7 @@ namespace ServiceBooking.WEB.Models
         [Required]
         public string Rating { get; set; }
 
-        public byte[] Picture { get; set; }
+        public byte[] Image { get; set; }
 
         public int PerformerId { get; set; }
     }
