@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNet.Identity;
 using ServiceBooking.BLL.DTO;
 using ServiceBooking.BLL.Infrastructure;
+using ServiceBooking.DAL.Identity;
 
 namespace ServiceBooking.BLL.Interfaces
 {
@@ -20,6 +21,9 @@ namespace ServiceBooking.BLL.Interfaces
 
         Task<ClaimsIdentity> Authenticate(ClientViewModelBLL userDto);
         Task<IdentityResult> ChangePassword(ClientViewModelBLL userDto);
+        Task<string> GenerateEmailConfirmationToken(int userId);
+        void SendEmail(int userId, string callbackUrl);
+        Task<IdentityResult> ConfirmEmail(int userId, string code);
 
         OperationDetails ConfirmPerformer(int id);
         OperationDetails RejectPerformer(int id);

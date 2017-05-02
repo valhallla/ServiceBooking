@@ -15,6 +15,8 @@ using ServiceBooking.DAL.Entities;
 using ServiceBooking.DAL.Identity;
 using ServiceBooking.DAL.Interfaces;
 using AutoMapper;
+using Microsoft.AspNet.Identity.Owin;
+using Microsoft.Owin.Security.DataProtection;
 
 namespace ServiceBooking.BLL.Services
 {
@@ -22,7 +24,7 @@ namespace ServiceBooking.BLL.Services
     {
         private readonly IRepository<ApplicationUser> _clientRepository;
 
-        public ApplicationUserRepository UserManager { get; }
+        public ApplicationUserRepository UserManager { get; private set; }
         public ApplicationRoleRepository RoleManager { get; }
 
         [Inject]
@@ -30,8 +32,11 @@ namespace ServiceBooking.BLL.Services
         {
             _clientRepository = clientRepository;
             ApplicationContext db = new ApplicationContext("DefaultConnection");
+
+            var provider = new DpapiDataProtectionProvider("Sample");
             UserManager = new ApplicationUserRepository(new UserStore<ApplicationUser,
                 CustomRole, int, CustomUserLogin, CustomUserRole, CustomUserClaim>(db));
+            UserManager.UserTokenProvider = new DataProtectorTokenProvider<ApplicationUser, int>(provider.Create("EmailConfirmation"));
             RoleManager = new ApplicationRoleRepository(new RoleStore<ApplicationRole>(db));
 
             var currentUser = _clientRepository.Get(HttpContext.Current.User.Identity.GetUserId<int>());
@@ -85,10 +90,8 @@ namespace ServiceBooking.BLL.Services
             return claim;
         }
 
-        public async Task<IdentityResult> ChangePassword(ClientViewModelBLL userDto)
-        {
-            return await UserManager.ChangePasswordAsync(userDto.Id, userDto.UserName, userDto.Password);
-        }
+        public async Task<IdentityResult> ChangePassword(ClientViewModelBLL userDto) 
+            => await UserManager.ChangePasswordAsync(userDto.Id, userDto.UserName, userDto.Password);
 
         public ClientViewModelBLL FindById(int id)
         {
@@ -203,5 +206,16 @@ namespace ServiceBooking.BLL.Services
             }
             return new OperationDetails(false, @"User doesn't exist", "Id");
         }
+
+        public async Task<string> GenerateEmailConfirmationToken(int userId)
+            => await UserManager.GenerateEmailConfirmationTokenAsync(userId);
+
+        public async void SendEmail(int userId, string callbackUrl)
+            => await UserManager.SendEmailAsync(userId, 
+                "Confirm your account", "Please confirm your account by clicking <a href=\"" 
+                + callbackUrl + "\">here</a>");
+
+        public async Task<IdentityResult> ConfirmEmail(int userId, string code)
+            => await UserManager.ConfirmEmailAsync(userId, code);
     }
 }

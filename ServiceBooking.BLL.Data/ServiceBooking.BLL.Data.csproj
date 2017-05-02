@@ -43,6 +43,7 @@
     <Compile Include="DTO\CategoryViewModelBLL.cs" />
     <Compile Include="DTO\ClientViewModelBLL.cs" />
     <Compile Include="DTO\CommentViewModelBLL.cs" />
+    <Compile Include="DTO\ExceptionDetailViewModelBLL.cs" />
     <Compile Include="DTO\OrderViewModelBLL.cs" />
     <Compile Include="DTO\PictureViewModelBLL.cs" />
     <Compile Include="DTO\ResponseViewModelBLL.cs" />

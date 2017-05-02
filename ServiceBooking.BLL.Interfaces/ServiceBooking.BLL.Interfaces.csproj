@@ -74,6 +74,7 @@
   <ItemGroup>
     <Compile Include="ICategoryService.cs" />
     <Compile Include="ICommentService.cs" />
+    <Compile Include="IExceptionDetailService.cs" />
     <Compile Include="IOrderService.cs" />
     <Compile Include="IPictureService.cs" />
     <Compile Include="IResponseService.cs" />

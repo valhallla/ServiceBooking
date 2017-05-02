@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 using AutoMapper;
 using Microsoft.AspNet.Identity;
@@ -9,7 +7,6 @@ using ServiceBooking.BLL.DTO;
 using ServiceBooking.BLL.Infrastructure;
 using ServiceBooking.BLL.Interfaces;
 using ServiceBooking.DAL.Interfaces;
-using ServiceBooking.Util;
 using ServiceBooking.WEB.Models;
 
 namespace ServiceBooking.WEB.Controllers
@@ -29,12 +26,14 @@ namespace ServiceBooking.WEB.Controllers
             _unitOfWork = unitOfWork;
         }
 
-        // POST: Comments/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "user")]
         public ActionResult Send(CreateCommentViewModel comment)
         {
+            if (!User.IsInRole("user"))
+                throw new Exception("User is not authorized");
+
             bool commentIsEmpty = comment.Text == null || comment.Text.Equals(string.Empty);
 
             Mapper.Initialize(cfg => cfg.CreateMap<CreateCommentViewModel, CommentViewModelBLL>()
@@ -59,6 +58,9 @@ namespace ServiceBooking.WEB.Controllers
                 if (!operationDetails.Succedeed)
                     ModelState.AddModelError(operationDetails.Property, operationDetails.Message);
             }
+            else
+                throw new Exception("Model is not valid");
+
             return RedirectToAction("Details", "Performers", new { id = comment.PerformerId, emptyComment = commentIsEmpty });
         }
     }

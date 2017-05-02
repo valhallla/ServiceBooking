@@ -1,7 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+using System.Net;
+using System.Net.Http;
+using System.Web.Http;
 using System.Web.Mvc;
 
 namespace ServiceBooking.WEB.Controllers
@@ -10,32 +10,32 @@ namespace ServiceBooking.WEB.Controllers
     {
         public ActionResult NotFound()
         {
-            Response.StatusCode = 404;
-            return View();
+            throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.NotFound) {Content = new StringContent("Page not found")});
         }
 
         public ActionResult InternalServerError()
         {
-            Response.StatusCode = 500;
-            return View();
+            throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.InternalServerError) { Content = new StringContent("Internal server error") });
         }
 
         public ActionResult Forbidden()
         {
-            Response.StatusCode = 403;
-            return View();
+            throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.Forbidden) { Content = new StringContent("Access forbidden") });
         }
 
         public ActionResult ServiceTemporarilyUnavailable()
         {
-            Response.StatusCode = 503;
-            return View();
+            throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.ServiceUnavailable) { Content = new StringContent("Service in temporarily unavailable") });
+        }
+
+        public ActionResult BadRequest()
+        {
+            throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.BadRequest) { Content = new StringContent("Bad request") });
         }
 
         public ActionResult Default()
         {
-            Response.StatusCode = 500;
-            return View();
+            throw new Exception("An error occured duting th request");
         }
     }
 }

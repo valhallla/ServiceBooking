@@ -18,5 +18,6 @@ namespace ServiceBooking.DAL.EF
         public DbSet<Category> Categories { get; set; }
         public DbSet<Status> Status { get; set; }
         public DbSet<Picture> Pictures { get; set; }
+        public DbSet<ExceptionDetail> ExceptionDetails { get; set; }
     }
 }

@@ -16,6 +16,7 @@ using ServiceBooking.DAL.UnitOfWork.DTO;
 
 namespace ServiceBooking.WEB.Controllers
 {
+    [HandleError(View = "/Error/Default")]
     public class OrdersController : Controller
     {
         private static IOrderService _orderService;
@@ -138,6 +139,7 @@ namespace ServiceBooking.WEB.Controllers
             var orderDto = _orderService.Find(id);
             if (orderDto == null)
                 return HttpNotFound();
+
             var clientUser = _userService.FindById(orderDto.UserId);
 
             var responsesDto = _responseService.GetAllForOrder(id);

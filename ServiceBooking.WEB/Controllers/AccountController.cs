@@ -12,6 +12,9 @@ using ServiceBooking.BLL.Interfaces;
 using ServiceBooking.WEB.Models;
 using ServiceBooking.DAL.Interfaces;
 using AutoMapper;
+using Microsoft.AspNet.Identity.Owin;
+using ServiceBooking.DAL.Entities;
+using ServiceBooking.DAL.Identity;
 
 namespace ServiceBooking.WEB.Controllers
 {
@@ -24,12 +27,14 @@ namespace ServiceBooking.WEB.Controllers
         private static ICommentService _commentService;
         private static IUnitOfWork _unitOfWork;
 
-        public AccountController() : this(_userService, _pictureService, 
-            _responseService, _orderService, _commentService, _unitOfWork) { }
+        public AccountController() : this(_userService, _pictureService,
+            _responseService, _orderService, _commentService, _unitOfWork)
+        {
+        }
 
-        public AccountController(IUserService userService, IPictureService pictureService, 
-            IResponseService responseService, IOrderService orderService, 
-            ICommentService commentService, IUnitOfWork unitOfWork) 
+        public AccountController(IUserService userService, IPictureService pictureService,
+            IResponseService responseService, IOrderService orderService,
+            ICommentService commentService, IUnitOfWork unitOfWork)
         {
             _userService = userService;
             _pictureService = pictureService;
@@ -57,7 +62,11 @@ namespace ServiceBooking.WEB.Controllers
 
             if (ModelState.IsValid)
             {
-                ClientViewModelBLL userViewModel = new ClientViewModelBLL { Email = model.Email, Password = model.Password };
+                ClientViewModelBLL userViewModel = new ClientViewModelBLL
+                {
+                    Email = model.Email,
+                    Password = model.Password
+                };
                 ClaimsIdentity claim = await _userService.Authenticate(userViewModel);
                 if (claim == null)
                     ModelState.AddModelError("", "Wrong login or password");
@@ -92,7 +101,7 @@ namespace ServiceBooking.WEB.Controllers
             {
                 Mapper.Initialize(cfg => cfg.CreateMap<RegisterViewModel, ClientViewModelBLL>()
                     .ForMember("UserName", opt => opt.MapFrom(c => c.Email))
-                    .ForMember("EmailConfirmed", opt => opt.MapFrom(c => true))
+                    .ForMember("EmailConfirmed", opt => opt.MapFrom(c => false))
                     .ForMember("IsPerformer", opt => opt.MapFrom(c => false))
                     .ForMember("Rating", opt => opt.MapFrom(c => 0))
                     .ForMember("RegistrationDate", opt => opt.MapFrom(c => DateTime.Today))
@@ -105,12 +114,13 @@ namespace ServiceBooking.WEB.Controllers
                 _unitOfWork.Save();
                 if (operationDetails.Succedeed)
                 {
-                    //HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>(
-                    //string code = await UserManager.GenerateEmailConfirmationTokenAsync(userViewModel.Id);
-                    //var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = userViewModel.Id, EmailConfirmed = userViewModel.EmailConfirmed, code = code }, protocol: Request.Url.Scheme);
-                    //await UserManager.SendEmailAsync(userViewModel.Id, "Confirm your account", "Please confirm your account by clicking <a href=\"" + callbackUrl + "\">here</a>");
+                    int userId = _userService.FindByUserName(userViewModel.UserName).Id;
+                    string code = await _userService.GenerateEmailConfirmationToken(userId);
+                    var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = userViewModel.Id, EmailConfirmed = userViewModel.EmailConfirmed, code = code }, protocol: Request.Url.Scheme);
+                    _userService.SendEmail(userId, callbackUrl);
 
                     //return View("DisplayEmail");
+
                     return View("RegistrationSucceeded");
                 }
 
@@ -162,7 +172,11 @@ namespace ServiceBooking.WEB.Controllers
                     }
                 }
 
-                ClientViewModelBLL userDto = new ClientViewModelBLL {Password = model.Password, Email = User.Identity.Name};
+                ClientViewModelBLL userDto = new ClientViewModelBLL
+                {
+                    Password = model.Password,
+                    Email = User.Identity.Name
+                };
                 var operationDetails = await _userService.DeleteAccount(userDto);
                 if (operationDetails.Succedeed)
                 {
@@ -176,29 +190,6 @@ namespace ServiceBooking.WEB.Controllers
             return View(model);
         }
 
-        [AllowAnonymous]
-        [Authorize(Roles = "user")]
-        public async Task<ActionResult> ConfirmEmail(string userId, string code)
-        {
-            if (userId == null || code == null)
-            {
-                return View("Error");
-            }
-
-            //ClientViewModel user = _userService.Find(userId);
-            //var result = await UserManager.ConfirmEmailAsync(userId, code);
-            //if (result.Succeeded)
-            //{
-            //    user.EmailConfirmed = true;
-            //    return View("ConfirmEmail");
-            //}
-            //else
-            {
-                return View("Error");
-            }
-            //return View(result.Succeeded ? "ConfirmEmail" : "Error");
-        }
-
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult LogOff()
@@ -206,6 +197,21 @@ namespace ServiceBooking.WEB.Controllers
             AuthenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
             Session["adminStatus"] = Session["isPerformer"] = false;
             return RedirectToAction("Index", "Home");
+        }
+
+        [AllowAnonymous]
+        public async Task<ActionResult> ConfirmEmail(int userId, string code)
+        {
+            var result = await _userService.ConfirmEmail(userId, code);
+            if (result.Succeeded)
+            {
+                var user = _userService.FindById(userId);
+                user.EmailConfirmed = true;
+                _userService.Update(user);
+                _unitOfWork.Save();
+                return View("ConfirmEmail");
+            }
+            return View("Register");
         }
     }
 }

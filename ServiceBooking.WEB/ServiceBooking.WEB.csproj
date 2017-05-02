@@ -214,7 +214,6 @@
   <ItemGroup>
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
-    <Compile Include="App_Start\IdentityConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.cs" />
     <Compile Include="Controllers\AccountController.cs" />
@@ -225,7 +224,7 @@
     <Compile Include="Controllers\OrdersController.cs" />
     <Compile Include="Controllers\PerformersController.cs" />
     <Compile Include="Controllers\ResponsesController.cs" />
-    <Compile Include="Filters\ForbiddenException.cs" />
+    <Compile Include="Filters\ExceptionLoggerAttribute.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>

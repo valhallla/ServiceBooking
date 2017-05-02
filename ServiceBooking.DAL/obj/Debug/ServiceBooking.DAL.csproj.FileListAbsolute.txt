@@ -39,3 +39,5 @@ C:\ServiceBooking\ServiceBooking.DAL\obj\Debug\ServiceBooking.DAL.dll
 C:\ServiceBooking\ServiceBooking.DAL\obj\Debug\ServiceBooking.DAL.pdb
 C:\ServiceBooking\ServiceBooking.DAL\obj\Debug\ServiceBooking.DAL.Migrations.Version4.resources
 C:\ServiceBooking\ServiceBooking.DAL\obj\Debug\ServiceBooking.DAL.Migrations.Version5.resources
+C:\ServiceBooking\ServiceBooking.DAL\obj\Debug\ServiceBooking.DAL.Migrations.Version6.resources
+C:\ServiceBooking\ServiceBooking.DAL\obj\Debug\ServiceBooking.DAL.Migrations.Version7.resources

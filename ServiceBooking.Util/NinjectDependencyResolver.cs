@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using Ninject;
 using System.Web.Mvc;
 using Ninject.Web.Common;
-using ServiceBooking.BLL;
 using ServiceBooking.BLL.Interfaces;
 using ServiceBooking.BLL.Services;
 using ServiceBooking.DAL.EF;
@@ -68,6 +67,12 @@ namespace ServiceBooking.Util
             _kernel.Bind<IRepository<Picture>>().To<PictureRepository>();
             _kernel.Bind<PictureRepository>().ToConstructor(_ => new PictureRepository(context)).InRequestScope();
             _kernel.Bind<IPictureService>().To<PictureService>();
+
+            //_kernel.Bind<IRepository<ExceptionDetail>>().To<ExceptionDetailRepository>();
+            //_kernel.Bind<ExceptionDetailRepository>()
+            //    .ToConstructor(_ => new ExceptionDetailRepository(context))
+            //    .InRequestScope();
+            //_kernel.Bind<IExceptionDetailService>().To<ExceptionDetailService>();
         }
     }
 }
