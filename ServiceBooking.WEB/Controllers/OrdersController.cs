@@ -87,7 +87,7 @@ namespace ServiceBooking.WEB.Controllers
 
             var categoriesDto = _categoryService.GetAll().ToList();
             Mapper.Initialize(cfg => cfg.CreateMap<CategoryViewModelBLL, CategoryViewModel>()
-                .ForMember("ItemsAmount", opt => opt.MapFrom(c => c.Orders.Count(o =>
+                .ForMember("ItemsAmount", opt => opt.MapFrom(c => ordersDto.Count(o =>
                         newApplications ? o.AdminStatus != newApplications :
                         (myOrders ? o.UserId == User.Identity.GetUserId<int>() : o.AdminStatus)
                 )))

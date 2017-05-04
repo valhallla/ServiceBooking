@@ -96,3 +96,5 @@ C:\ServiceBooking\ServiceBooking.WEB\bin\ServiceBooking.BLL.pdb
 C:\ServiceBooking\ServiceBooking.WEB\obj\Debug\ServiceBooking.WEB.csprojResolveAssemblyReference.cache
 C:\ServiceBooking\ServiceBooking.WEB\obj\Debug\ServiceBooking.WEB.dll
 C:\ServiceBooking\ServiceBooking.WEB\obj\Debug\ServiceBooking.WEB.pdb
+C:\ServiceBooking\ServiceBooking.WEB\bin\NLog.dll
+C:\ServiceBooking\ServiceBooking.WEB\bin\NLog.xml

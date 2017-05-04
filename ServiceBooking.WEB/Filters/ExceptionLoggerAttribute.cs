@@ -1,15 +1,10 @@
 ﻿using System;
-using System.Linq;
-using System.Net;
-using System.Text;
 using System.Threading.Tasks;
-using System.Web;
 using System.Web.Http;
 using System.Web.Mvc;
-using System.Web.Routing;
-using System.Web.UI.WebControls;
 using Microsoft.AspNet.Identity;
 using Ninject;
+using NLog;
 using ServiceBooking.BLL.Interfaces;
 using ServiceBooking.DAL.Interfaces;
 using ServiceBooking.DAL.UnitOfWork.DTO;
@@ -22,17 +17,26 @@ namespace ServiceBooking.WEB.Filters
         private static IKernel _appKernel;
         private static IExceptionDetailService _exceptionDetailService;
         private static IUnitOfWork _unitOfWork;
+        private static Logger _logger;
 
         public void OnException(ExceptionContext filterContext)
         {
             string viewName = "Default";
             var statusCode = 0;
             Task<string> message = null;
+
             if (filterContext.Exception is HttpResponseException)
             {
                 statusCode = (int) ((HttpResponseException) filterContext.Exception).Response.StatusCode;
                 message = ((HttpResponseException) filterContext.Exception).Response.Content.ReadAsStringAsync();
             }
+
+            string innerExceptions = $"\n{filterContext.Exception}";
+            while (filterContext.Exception.InnerException != null)
+            {
+                innerExceptions = innerExceptions + $"\n{filterContext.Exception.InnerException}";
+            }
+
             switch (statusCode)
             {
                 case 400:
@@ -59,7 +63,7 @@ namespace ServiceBooking.WEB.Filters
             ExceptionDetailViewModelBLL exceptionDetail = new ExceptionDetailViewModelBLL()
             {
                 Guid = Guid.NewGuid(),
-                Message = message?.Result ?? filterContext.Exception.Message,
+                Message = (message?.Result ?? filterContext.Exception.Message) + innerExceptions,
                 Url = filterContext.HttpContext.Request.RawUrl,
                 UrlReferrere = filterContext.HttpContext.Request.UrlReferrer == null ? "" : filterContext.HttpContext.Request.UrlReferrer.AbsoluteUri,
                 StackTrace = filterContext.Exception.StackTrace,
@@ -69,6 +73,17 @@ namespace ServiceBooking.WEB.Filters
 
             _exceptionDetailService.Create(exceptionDetail);
             _unitOfWork.Save();
+
+            _logger = LogManager.GetCurrentClassLogger();
+            _logger.Error(filterContext.Exception, null, 
+                $"\n{nameof(exceptionDetail.Guid)}: " + exceptionDetail.Guid 
+                + $"\n{nameof(filterContext.Exception.Message)}: " + (message?.Result ?? filterContext.Exception.Message) + innerExceptions
+                + $"\n{nameof(exceptionDetail.Url)}: " + exceptionDetail.Url
+                + $"\n{nameof(exceptionDetail.UrlReferrere)}: " + exceptionDetail.UrlReferrere
+                + $"\n{nameof(exceptionDetail.StackTrace)}: " + exceptionDetail.StackTrace
+                + $"\n{nameof(exceptionDetail.Date)}: " + exceptionDetail.Date
+                + $"\n{nameof(exceptionDetail.UserId)}: " + (exceptionDetail.UserId?.ToString() ?? "anonim") + "\n\n"
+            );
 
             var result = new ViewResult
             {

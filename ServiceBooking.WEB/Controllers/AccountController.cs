@@ -12,9 +12,6 @@ using ServiceBooking.BLL.Interfaces;
 using ServiceBooking.WEB.Models;
 using ServiceBooking.DAL.Interfaces;
 using AutoMapper;
-using Microsoft.AspNet.Identity.Owin;
-using ServiceBooking.DAL.Entities;
-using ServiceBooking.DAL.Identity;
 
 namespace ServiceBooking.WEB.Controllers
 {
