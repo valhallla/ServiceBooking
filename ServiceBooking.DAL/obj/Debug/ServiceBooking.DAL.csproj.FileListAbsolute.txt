@@ -31,13 +31,9 @@ C:\ServiceBooking\ServiceBooking.DAL\bin\Debug\Newtonsoft.Json.xml
 C:\ServiceBooking\ServiceBooking.DAL\bin\Debug\Ninject.xml
 C:\ServiceBooking\ServiceBooking.DAL\bin\Debug\Ninject.Web.Mvc.xml
 C:\ServiceBooking\ServiceBooking.DAL\obj\Debug\ServiceBooking.DAL.csprojResolveAssemblyReference.cache
-C:\ServiceBooking\ServiceBooking.DAL\obj\Debug\ServiceBooking.DAL.Migrations.Version1.resources
-C:\ServiceBooking\ServiceBooking.DAL\obj\Debug\ServiceBooking.DAL.Migrations.Version2.resources
-C:\ServiceBooking\ServiceBooking.DAL\obj\Debug\ServiceBooking.DAL.Migrations.Version3.resources
-C:\ServiceBooking\ServiceBooking.DAL\obj\Debug\ServiceBooking.DAL.csproj.GenerateResource.Cache
 C:\ServiceBooking\ServiceBooking.DAL\obj\Debug\ServiceBooking.DAL.dll
 C:\ServiceBooking\ServiceBooking.DAL\obj\Debug\ServiceBooking.DAL.pdb
-C:\ServiceBooking\ServiceBooking.DAL\obj\Debug\ServiceBooking.DAL.Migrations.Version4.resources
-C:\ServiceBooking\ServiceBooking.DAL\obj\Debug\ServiceBooking.DAL.Migrations.Version5.resources
-C:\ServiceBooking\ServiceBooking.DAL\obj\Debug\ServiceBooking.DAL.Migrations.Version6.resources
-C:\ServiceBooking\ServiceBooking.DAL\obj\Debug\ServiceBooking.DAL.Migrations.Version7.resources
+C:\ServiceBooking\ServiceBooking.DAL\obj\Debug\ServiceBooking.DAL.Migrations.version1.resources
+C:\ServiceBooking\ServiceBooking.DAL\obj\Debug\ServiceBooking.DAL.csproj.GenerateResource.Cache
+C:\ServiceBooking\ServiceBooking.DAL\obj\Debug\ServiceBooking.DAL.Migrations.Version2.resources
+C:\ServiceBooking\ServiceBooking.DAL\obj\Debug\ServiceBooking.DAL.Migrations.Version3.resources
