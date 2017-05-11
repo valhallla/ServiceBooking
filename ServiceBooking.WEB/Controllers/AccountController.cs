@@ -111,10 +111,10 @@ namespace ServiceBooking.WEB.Controllers
                 _unitOfWork.Save();
                 if (operationDetails.Succedeed)
                 {
-                    int userId = _userService.FindByUserName(userViewModel.UserName).Id;
-                    string code = await _userService.GenerateEmailConfirmationToken(userId);
-                    var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = userViewModel.Id, EmailConfirmed = userViewModel.EmailConfirmed, code = code }, protocol: Request.Url.Scheme);
-                    _userService.SendEmail(userId, callbackUrl);
+                    //int userId = _userService.FindByUserName(userViewModel.UserName).Id;
+                    //string code = await _userService.GenerateEmailConfirmationToken(userId);
+                    //var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = userViewModel.Id, EmailConfirmed = userViewModel.EmailConfirmed, code = code }, protocol: Request.Url.Scheme);
+                    //_userService.SendEmail(userId, callbackUrl);
 
                     //return View("DisplayEmail");
 

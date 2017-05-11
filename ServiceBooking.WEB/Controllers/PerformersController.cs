@@ -122,11 +122,15 @@ namespace ServiceBooking.WEB.Controllers
                 .ForMember("CustomerName", opt => opt.MapFrom(c => _userService.FindById(c.CustomerId).Surname
                     + " " + _userService.FindById(c.CustomerId).Name))
                 .ForMember("Image", opt => opt.MapFrom(c => _userService.FindById(c.CustomerId).PictureId == null
+                    || (_userService.FindById(c.CustomerId).PictureId != null 
+                    && (!_userService.FindById(c.CustomerId).AdminStatus || !_userService.FindById(c.CustomerId).IsPerformer))
                     ? System.IO.File.ReadAllBytes(Server.MapPath(DefaultImageName))
                     : _pictureService.FindById(_userService.FindById(c.CustomerId).PictureId.Value).Image))
             );
             var comments = Mapper.Map<IEnumerable<CommentViewModelBLL>, List<IndexCommentViewModel>>(commentsDto);
-            ViewBag.CustomerImage = _userService.FindById(User.Identity.GetUserId<int>()).PictureId == null
+            var currentCustomer = _userService.FindById(User.Identity.GetUserId<int>());
+            ViewBag.CustomerImage = currentCustomer?.PictureId == null || (currentCustomer?.PictureId != null 
+                && (!currentCustomer.AdminStatus || !currentCustomer.IsPerformer))
                 ? System.IO.File.ReadAllBytes(Server.MapPath(DefaultImageName))
                 : _pictureService.FindById(_userService.FindById(User.Identity.GetUserId<int>()).PictureId.Value).Image;
 

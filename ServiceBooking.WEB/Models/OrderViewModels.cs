@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using ServiceBooking.WEB.Filters;
 
 namespace ServiceBooking.WEB.Models
 {
@@ -67,25 +68,29 @@ namespace ServiceBooking.WEB.Models
     {
         [Required(ErrorMessage = "Name is required")]
         [Display(Name = "Name")]
+        [StringLength(60, ErrorMessage = "The {0} must be from 2 to 60 characters long.", MinimumLength = 2)]
         public string Name { get; set; }
 
         [Required(ErrorMessage = "Description is required")]
         [Display(Name = "Description")]
         [DataType(DataType.MultilineText)]
+        [StringLength(1000, ErrorMessage = "The {0} must be from 10 to 1000 characters long.", MinimumLength = 10)]
         public string Description { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Category is required")]
         [Display(Name = "Category")]
         public string Category { get; set; }
-
 
         [Required(ErrorMessage = "Completion date is required")]
         [Display(Name = "Completion date")]
         [DataType(DataType.Date), DisplayFormat(DataFormatString = "{0:dd.MM.yyyy}", ApplyFormatInEditMode = true)]
+        [FutureDate(ErrorMessage = "Completion date must refere to future")]
         public DateTime CompletionDate { get; set; }
 
         [Required(ErrorMessage = "Price is required")]
         [Display(Name = "Price")]
+        [DataType(DataType.Currency)]
+        [Range(0, 10000000000, ErrorMessage = "The {0} must be from 0 to 10000000000 $")]
         public decimal Price { get; set; }
 
         [Display(Name = "Photo")]

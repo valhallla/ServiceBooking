@@ -10,27 +10,42 @@ namespace ServiceBooking.WEB.Controllers
     {
         public ActionResult NotFound()
         {
-            throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.NotFound) {Content = new StringContent("Page not found")});
+            throw new HttpResponseException(
+                new HttpResponseMessage(HttpStatusCode.NotFound)
+                { Content = new StringContent("Page not found") }
+            );
         }
 
         public ActionResult InternalServerError()
         {
-            throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.InternalServerError) { Content = new StringContent("Internal server error") });
+            throw new HttpResponseException(
+                new HttpResponseMessage(HttpStatusCode.InternalServerError)
+                { Content = new StringContent("Internal server error") }
+            );
         }
 
         public ActionResult Forbidden()
         {
-            throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.Forbidden) { Content = new StringContent("Access forbidden") });
+            throw new HttpResponseException(
+                new HttpResponseMessage(HttpStatusCode.Forbidden)
+                { Content = new StringContent("Access forbidden") }
+            );
         }
 
         public ActionResult ServiceTemporarilyUnavailable()
         {
-            throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.ServiceUnavailable) { Content = new StringContent("Service in temporarily unavailable") });
+            throw new HttpResponseException(
+                new HttpResponseMessage(HttpStatusCode.ServiceUnavailable)
+                { Content = new StringContent("Service in temporarily unavailable") }
+            );
         }
 
         public ActionResult BadRequest()
         {
-            throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.BadRequest) { Content = new StringContent("Bad request") });
+            throw new HttpResponseException(
+                new HttpResponseMessage(HttpStatusCode.BadRequest)
+                { Content = new StringContent("Bad request") }
+            );
         }
 
         public ActionResult Default()

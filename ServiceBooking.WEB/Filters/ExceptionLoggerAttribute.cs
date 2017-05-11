@@ -77,12 +77,12 @@ namespace ServiceBooking.WEB.Filters
             _logger = LogManager.GetCurrentClassLogger();
             _logger.Error(filterContext.Exception, null, 
                 $"\n{nameof(exceptionDetail.Guid)}: " + exceptionDetail.Guid 
-                + $"\n{nameof(filterContext.Exception.Message)}: " + (message?.Result ?? filterContext.Exception.Message) + innerExceptions
-                + $"\n{nameof(exceptionDetail.Url)}: " + exceptionDetail.Url
-                + $"\n{nameof(exceptionDetail.UrlReferrere)}: " + exceptionDetail.UrlReferrere
-                + $"\n{nameof(exceptionDetail.StackTrace)}: " + exceptionDetail.StackTrace
-                + $"\n{nameof(exceptionDetail.Date)}: " + exceptionDetail.Date
-                + $"\n{nameof(exceptionDetail.UserId)}: " + (exceptionDetail.UserId?.ToString() ?? "anonim") + "\n\n"
+                + $" \n{nameof(filterContext.Exception.Message)}: " + (message?.Result ?? filterContext.Exception.Message) + innerExceptions
+                + $" \n{nameof(exceptionDetail.Url)}: " + exceptionDetail.Url
+                + $" \n{nameof(exceptionDetail.UrlReferrere)}: " + exceptionDetail.UrlReferrere
+                + $" \n{nameof(exceptionDetail.StackTrace)}: " + exceptionDetail.StackTrace
+                + $" \n{nameof(exceptionDetail.Date)}: " + exceptionDetail.Date
+                + $" \n{nameof(exceptionDetail.UserId)}: " + (exceptionDetail.UserId?.ToString() ?? "anonim") + "\n\n"
             );
 
             var result = new ViewResult

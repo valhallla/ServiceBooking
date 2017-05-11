@@ -8,13 +8,15 @@
 
 @using (Html.BeginForm("DeleteAccount", "Account", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
 {
+    <input style="display:none">
+    <input type="password" style="display:none">
     @Html.AntiForgeryToken()
     <h4>Enter password to delete your account</h4>
     <hr />
     <div class="form-group">
         @Html.LabelFor(m => m.Password, new { @class = "col-md-2 control-label" })
         <div class="col-md-10">
-            @Html.PasswordFor(m => m.Password, new { @class = "form-control" })
+            @Html.PasswordFor(m => m.Password, new { autocomplete = "off", Style = "", @class = "form-control" })
             @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })
         </div>
     </div>

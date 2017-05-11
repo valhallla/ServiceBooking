@@ -86,13 +86,19 @@ namespace ServiceBooking.WEB.Controllers
             }
 
             var categoriesDto = _categoryService.GetAll().ToList();
-            Mapper.Initialize(cfg => cfg.CreateMap<CategoryViewModelBLL, CategoryViewModel>()
-                .ForMember("ItemsAmount", opt => opt.MapFrom(c => ordersDto.Count(o =>
-                        newApplications ? o.AdminStatus != newApplications :
-                        (myOrders ? o.UserId == User.Identity.GetUserId<int>() : o.AdminStatus)
-                )))
-            );
-            var categories = Mapper.Map<List<CategoryViewModelBLL>, List<CategoryViewModel>>(categoriesDto);
+            var categories = new List<CategoryViewModel>();
+            foreach (var category in categoriesDto)
+            {
+                categories.Add(new CategoryViewModel()
+                {
+                    Id = category.Id,
+                    Name = category.Name,
+                    ItemsAmount = ordersDto.Count(o =>
+                        newApplications ? o.AdminStatus != newApplications && o.CategoryId == category.Id :
+                        ((myOrders ? o.UserId == User.Identity.GetUserId<int>() : o.AdminStatus) && o.CategoryId == category.Id)
+                )
+                });
+            }
             ViewBag.CategoriesList = categories;
 
             if (searchName != null)
@@ -153,7 +159,7 @@ namespace ServiceBooking.WEB.Controllers
                     : _pictureService.FindById(_userService.FindById(c.PerformerId).PictureId.Value).Image))
             );
             var responses = Mapper.Map<IEnumerable<ResponseViewModelBLL>, List<IndexResponseViewModel>>(responsesDto);
-            ViewBag.PerformerImage = _userService.FindById(User.Identity.GetUserId<int>()).PictureId == null
+            ViewBag.PerformerImage = _userService.FindById(User.Identity.GetUserId<int>())?.PictureId == null
                 ? System.IO.File.ReadAllBytes(Server.MapPath(DefaultImageName))
                 : _pictureService.FindById(_userService.FindById(User.Identity.GetUserId<int>()).PictureId.Value).Image;
 
@@ -172,7 +178,7 @@ namespace ServiceBooking.WEB.Controllers
             var currentUser = _userService.FindById(User.Identity.GetUserId<int>());
             if (!ReferenceEquals(currentUser, null))
                 ViewBag.Rating = currentUser.Rating;
-            if (order.StatusId < 3)
+            if (order.StatusId < 4)
                 ViewBag.StatusMessage = "Mark as " + _statusService.FindById(order.StatusId + 1).Value;
 
             ViewBag.CurrentCategoryId = categoryId;
@@ -192,6 +198,10 @@ namespace ServiceBooking.WEB.Controllers
 
             _orderService.ChangeStatus(orderId);
             _unitOfWork.Save();
+
+            if (_orderService.Find(orderId).StatusId < 4)
+                ViewBag.StatusMessage = "Mark as " + _statusService.FindById(_orderService.Find(orderId).StatusId + 1).Value;
+
             return RedirectToAction("Details", new { id = orderId });
         }
 
@@ -240,6 +250,7 @@ namespace ServiceBooking.WEB.Controllers
                 ModelState.AddModelError(operationDetails.Property, operationDetails.Message);
             }
 
+            ModelState.AddModelError("", "Creation error");
             ViewBag.Category = new SelectList(_categoryService.GetAll(), "Name", "Name");
             ViewBag.DefaultPath =
                 $"data: image/png; base64, {Convert.ToBase64String(System.IO.File.ReadAllBytes(Server.MapPath(DefaultImageName)))}";

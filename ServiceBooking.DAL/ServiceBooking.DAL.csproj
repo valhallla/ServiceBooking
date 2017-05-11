@@ -128,13 +128,13 @@
     <Compile Include="Migrations\201705071845041_version1.Designer.cs">
       <DependentUpon>201705071845041_version1.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201705071853052_version2.cs" />
-    <Compile Include="Migrations\201705071853052_version2.Designer.cs">
-      <DependentUpon>201705071853052_version2.cs</DependentUpon>
+    <Compile Include="Migrations\201705092316487_version2.cs" />
+    <Compile Include="Migrations\201705092316487_version2.Designer.cs">
+      <DependentUpon>201705092316487_version2.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201705071918306_version3.cs" />
-    <Compile Include="Migrations\201705071918306_version3.Designer.cs">
-      <DependentUpon>201705071918306_version3.cs</DependentUpon>
+    <Compile Include="Migrations\201705092320111_version3.cs" />
+    <Compile Include="Migrations\201705092320111_version3.Designer.cs">
+      <DependentUpon>201705092320111_version3.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -152,6 +152,7 @@
     <None Include="App.config">
       <SubType>Designer</SubType>
     </None>
+    <None Include="ClassDiagram.cd" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
@@ -179,11 +180,11 @@
     <EmbeddedResource Include="Migrations\201705071845041_version1.resx">
       <DependentUpon>201705071845041_version1.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201705071853052_version2.resx">
-      <DependentUpon>201705071853052_version2.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201705092316487_version2.resx">
+      <DependentUpon>201705092316487_version2.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201705071918306_version3.resx">
-      <DependentUpon>201705071918306_version3.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201705092320111_version3.resx">
+      <DependentUpon>201705092320111_version3.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

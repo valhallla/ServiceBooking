@@ -5,8 +5,10 @@
 
 <h2>@ViewBag.Title.</h2>
 
-@using (Html.BeginForm("Register", "Account", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+@using (Html.BeginForm("Register", "Account", FormMethod.Post, new { autocomplete="off", @class = "form-horizontal", role = "form" }))
 {
+    <input style="display:none">
+    <input type="password" style="display:none">
     @Html.AntiForgeryToken()
     <h4>Create a new account.</h4>
     <hr />
@@ -32,17 +34,19 @@
         </div>
     </div>
     <div class="form-group">
-        @Html.LabelFor(m => m.Password, new { @class = "col-md-2 control-label" })
+        @Html.LabelFor(m => m.Password, new {  @class = "col-md-2 control-label" })
         <div class="col-md-10">
-            @Html.PasswordFor(m => m.Password, new { @class = "form-control" })
-            @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })
+            <input style="display:none">
+            <input type="password" style="display:none">
+            @Html.PasswordFor(m => m.Password, new {autocomplete = "off", @class = "form-control"})
+            @Html.ValidationMessageFor(model => model.Password, "", new {@class = "text-danger"})
         </div>
     </div>
     <div class="form-group">
         @Html.LabelFor(m => m.ConfirmPassword, new { @class = "col-md-2 control-label" })
         <div class="col-md-10">
-            @Html.PasswordFor(m => m.ConfirmPassword, new { @class = "form-control" })
-            @Html.ValidationMessageFor(model => model.ConfirmPassword, "", new { @class = "text-danger" })
+            @Html.PasswordFor(m => m.ConfirmPassword, new {autocomplete = "off", @class = "form-control"})
+            @Html.ValidationMessageFor(model => model.ConfirmPassword, "", new {@class = "text-danger"})
         </div>
     </div>
     <div class="form-group">
@@ -54,6 +58,14 @@
         Already have an account? @Html.ActionLink("Sign in", "Login")
     </p>
 }
+
+<style>
+    input[type=text].password-autocomplete-disabler {
+    position: absolute !important;
+    left: -10000px !important;
+    top: -10000px !important;
+}
+</style>
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
