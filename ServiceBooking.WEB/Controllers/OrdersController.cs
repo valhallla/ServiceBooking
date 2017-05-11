@@ -79,12 +79,7 @@ namespace ServiceBooking.WEB.Controllers
                 ViewBag.IsMyOrdersPage = true;
             }
 
-            if (categoryId != null)
-            {
-                ordersDto = ordersDto.Where(o => o.CategoryId == categoryId);
-                ViewBag.CurrentCategoryId = categoryId;
-            }
-
+            ViewBag.ItemsAmount = ordersDto.Count();
             var categoriesDto = _categoryService.GetAll().ToList();
             var categories = new List<CategoryViewModel>();
             foreach (var category in categoriesDto)
@@ -101,8 +96,14 @@ namespace ServiceBooking.WEB.Controllers
             }
             ViewBag.CategoriesList = categories;
 
+            if (categoryId != null)
+            {
+                ordersDto = ordersDto.Where(o => o.CategoryId == categoryId);
+                ViewBag.CurrentCategoryId = categoryId;
+            }
+
             if (searchName != null)
-                ordersDto = ordersDto.Where(o => o.Name.Contains(searchName));
+                ordersDto = ordersDto.Where(o => o.Name.ToLower().Contains(searchName.ToLower()));
             ViewBag.SearchName = searchName;
             if (!ordersDto.Any())
                 ViewBag.SearchMessage = "No orders found";
@@ -119,7 +120,6 @@ namespace ServiceBooking.WEB.Controllers
                     ordersDto = ordersDto.OrderBy(o => o.StatusId); break;
             }
             ViewBag.Sort = sort;
-            ViewBag.ItemsAmount = ordersDto.Count();
 
             Mapper.Initialize(cfg => cfg.CreateMap<OrderViewModelBLL, IndexOrderViewModel>()
                 .ForMember("Category", opt => opt.MapFrom(c => _categoryService.FindById(c.CategoryId).Name))

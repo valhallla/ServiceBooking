@@ -59,12 +59,7 @@ namespace ServiceBooking.WEB.Controllers
             else
                 perfomersDto = perfomersDto.Where(model => model.AdminStatus);
 
-            if (categoryId != null)
-            {
-                perfomersDto = perfomersDto.Where(o => o.CategoriesBll.Select(c => c.Id).Contains(categoryId.Value));
-                ViewBag.CurrentCategoryId = categoryId;
-            }
-
+            ViewBag.ItemsAmount = perfomersDto.Count();
             var categoriesDto = _categoryService.GetAll().ToList();
             Mapper.Initialize(cfg => cfg.CreateMap<CategoryViewModelBLL, CategoryViewModel>()
                 .ForMember("ItemsAmount", opt => opt.MapFrom(c => c.Performers.Count(o =>
@@ -74,10 +69,18 @@ namespace ServiceBooking.WEB.Controllers
             var categories = Mapper.Map<List<CategoryViewModelBLL>, List<CategoryViewModel>>(categoriesDto);
             ViewBag.CategoriesList = categories;
 
+            if (categoryId != null)
+            {
+                perfomersDto = perfomersDto.Where(o => o.CategoriesBll.Select(c => c.Id).Contains(categoryId.Value));
+                ViewBag.CurrentCategoryId = categoryId;
+            }
+
             if (searchName != null)
-                perfomersDto = perfomersDto.Where(o => o.Name.Contains(searchName) || 
-                o.Surname.Contains(searchName) || o.Company.Contains(searchName));
+                perfomersDto = perfomersDto.Where(o => o.Name.ToLower().Contains(searchName.ToLower()) || 
+                o.Surname.ToLower().Contains(searchName.ToLower()) || o.Company.ToLower().Contains(searchName.ToLower()));
             ViewBag.SearchName = searchName;
+            if (!perfomersDto.Any())
+                ViewBag.SearchMessage = "No performers found";
 
             switch (sort)
             {
@@ -89,7 +92,6 @@ namespace ServiceBooking.WEB.Controllers
                     break;
             }
             ViewBag.Sort = sort;
-            ViewBag.ItemsAmount = perfomersDto.Count();
 
             Mapper.Initialize(cfg => cfg.CreateMap<ClientViewModelBLL, IndexPerformerViewModel>()
                 .ForMember("Name", opt => opt.MapFrom(c => c.Surname + " " + c.Name))
